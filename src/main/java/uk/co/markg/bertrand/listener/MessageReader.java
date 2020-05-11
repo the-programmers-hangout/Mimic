@@ -13,17 +13,16 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 public class MessageReader extends ListenerAdapter {
 
   private DSLContext dsl;
-  private List<Predicate<String>> messagePredicates;
 
   public MessageReader(DSLContext context) {
     dsl = context;
-    messagePredicates = loadMessagePredicates();
   }
 
-  private List<Predicate<String>> loadMessagePredicates() {
+  private static List<Predicate<String>> getMessagePredicates() {
     List<Predicate<String>> predicates = new ArrayList<>();
-    predicates.add(msg -> msg.matches("^\\W.*"));
+    predicates.add(msg -> msg.matches("^\\W+[.*\\s\\S]*"));
     predicates.add(msg -> msg.split("\\s").length < 4);
+    predicates.add(msg -> msg.startsWith("`"));
     return predicates;
   }
 
@@ -40,9 +39,9 @@ public class MessageReader extends ListenerAdapter {
 
   }
 
-  private boolean messageIsValid(Message message) {
+  public static boolean messageIsValid(Message message) {
     String text = message.getContentRaw();
-    return messagePredicates.stream().noneMatch(predicate -> predicate.test(text));
+    return !getMessagePredicates().stream().anyMatch(predicate -> predicate.test(text));
   }
 
   private void saveMessage(long userid, Message message) {
