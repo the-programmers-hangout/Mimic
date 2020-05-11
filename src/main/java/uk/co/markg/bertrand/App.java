@@ -11,6 +11,8 @@ import org.jooq.meta.jaxb.Jdbc;
 import org.jooq.meta.jaxb.Target;
 import disparse.discord.Dispatcher;
 import net.dv8tion.jda.api.JDABuilder;
+import uk.co.markg.bertrand.injectable.JooqConnection;
+import uk.co.markg.bertrand.listener.MessageReader;
 
 /**
  * Hello world!
@@ -54,6 +56,7 @@ public class App {
 
   private static void launchBot() throws LoginException, InterruptedException {
     var builder = Dispatcher.init(JDABuilder.createDefault(System.getenv("B_TOKEN")), PREFIX);
+    builder.addEventListeners(new MessageReader(JooqConnection.getJooqContext()));
     builder.build().awaitReady();
   }
 }
