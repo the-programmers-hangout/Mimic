@@ -1,25 +1,27 @@
 package uk.co.markg.bertrand.command;
 
+import static uk.co.markg.bertrand.db.tables.Messages.MESSAGES;
 import static uk.co.markg.bertrand.db.tables.Users.USERS;
 import org.jooq.DSLContext;
 import disparse.parser.reflection.CommandHandler;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-public class OptIn {
+public class OptOut {
 
-  @CommandHandler(commandName = "opt-in", description = "Opt-in")
+  @CommandHandler(commandName = "opt-out", description = "Opt-out")
   public void execute(MessageReceivedEvent event, DSLContext dsl) {
     long userid = event.getAuthor().getIdLong();
     if (isUserOptedIn(dsl, userid)) {
-      event.getChannel().sendMessage("You're already in!").queue();
+      optOutUser(event, dsl, userid);
     } else {
-      optInUser(event, dsl, userid);
+      event.getChannel().sendMessage("You're already out!").queue();
     }
   }
 
-  private void optInUser(MessageReceivedEvent event, DSLContext dsl, long userid) {
-    dsl.insertInto(USERS).values(userid).execute();
-    event.getChannel().sendMessage("You have been opted-in").queue();
+  private void optOutUser(MessageReceivedEvent event, DSLContext dsl, long userid) {
+    dsl.deleteFrom(USERS).where(USERS.USERID.eq(userid)).execute();
+    dsl.deleteFrom(MESSAGES).where(MESSAGES.USERID.eq(userid)).execute();
+    event.getChannel().sendMessage("You've been opted out!").queue();
   }
 
   private boolean isUserOptedIn(DSLContext dsl, long userid) {
