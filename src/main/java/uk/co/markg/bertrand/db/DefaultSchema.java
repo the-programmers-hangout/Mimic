@@ -12,6 +12,7 @@ import org.jooq.Table;
 import org.jooq.impl.SchemaImpl;
 
 import uk.co.markg.bertrand.db.tables.Messages;
+import uk.co.markg.bertrand.db.tables.Users;
 
 
 /**
@@ -20,7 +21,7 @@ import uk.co.markg.bertrand.db.tables.Messages;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefaultSchema extends SchemaImpl {
 
-    private static final long serialVersionUID = 1586939692;
+    private static final long serialVersionUID = 588254216;
 
     /**
      * The reference instance of <code>DEFAULT_SCHEMA</code>
@@ -31,6 +32,11 @@ public class DefaultSchema extends SchemaImpl {
      * The table <code>messages</code>.
      */
     public final Messages MESSAGES = Messages.MESSAGES;
+
+    /**
+     * The table <code>users</code>.
+     */
+    public final Users USERS = Users.USERS;
 
     /**
      * No further instances allowed
@@ -48,6 +54,7 @@ public class DefaultSchema extends SchemaImpl {
     @Override
     public final List<Table<?>> getTables() {
         return Arrays.<Table<?>>asList(
-            Messages.MESSAGES);
+            Messages.MESSAGES,
+            Users.USERS);
     }
 }

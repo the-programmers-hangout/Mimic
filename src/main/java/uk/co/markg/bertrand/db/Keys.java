@@ -9,7 +9,9 @@ import org.jooq.UniqueKey;
 import org.jooq.impl.Internal;
 
 import uk.co.markg.bertrand.db.tables.Messages;
+import uk.co.markg.bertrand.db.tables.Users;
 import uk.co.markg.bertrand.db.tables.records.MessagesRecord;
+import uk.co.markg.bertrand.db.tables.records.UsersRecord;
 
 
 /**
@@ -29,6 +31,7 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final UniqueKey<MessagesRecord> MESSAGES_PKEY = UniqueKeys0.MESSAGES_PKEY;
+    public static final UniqueKey<UsersRecord> USERS_PKEY = UniqueKeys0.USERS_PKEY;
 
     // -------------------------------------------------------------------------
     // FOREIGN KEY definitions
@@ -41,5 +44,6 @@ public class Keys {
 
     private static class UniqueKeys0 {
         public static final UniqueKey<MessagesRecord> MESSAGES_PKEY = Internal.createUniqueKey(Messages.MESSAGES, "messages_pkey", new TableField[] { Messages.MESSAGES.MESSAGEID }, true);
+        public static final UniqueKey<UsersRecord> USERS_PKEY = Internal.createUniqueKey(Users.USERS, "users_pkey", new TableField[] { Users.USERS.USERID }, true);
     }
 }
