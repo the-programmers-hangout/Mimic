@@ -1,0 +1,3 @@
+CREATE TABLE IF NOT EXISTS users (
+  userid bigint UNIQUE NOT NULL PRIMARY KEY
+);
