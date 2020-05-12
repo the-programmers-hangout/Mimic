@@ -5,8 +5,19 @@ import java.util.List;
 import org.jooq.DSLContext;
 import disparse.parser.reflection.CommandHandler;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import uk.co.markg.bertrand.db.tables.pojos.Channels;
 
 public class ChannelConfig {
+
+  @CommandHandler(commandName = "channel", description = "Lists all channels registered")
+  public void executeList(MessageReceivedEvent event, DSLContext dsl) {
+    var channels = dsl.selectFrom(CHANNELS).fetchInto(Channels.class);
+    StringBuilder message = new StringBuilder();
+    for (Channels channel : channels) {
+      message.append("<#").append(channel.getChannelid()).append(">").append(System.lineSeparator());
+    }
+    event.getChannel().sendMessage(message.toString()).queue();
+  }
 
   @CommandHandler(commandName = "channel.add", description = "Add channels to read from")
   public void executeAdd(MessageReceivedEvent event, DSLContext dsl, List<String> args) {
