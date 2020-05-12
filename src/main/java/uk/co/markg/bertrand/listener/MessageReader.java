@@ -1,7 +1,6 @@
 package uk.co.markg.bertrand.listener;
 
 import static uk.co.markg.bertrand.db.tables.Messages.MESSAGES;
-import static uk.co.markg.bertrand.db.tables.Users.USERS;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -9,6 +8,7 @@ import org.jooq.DSLContext;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import uk.co.markg.bertrand.App;
 import uk.co.markg.bertrand.command.OptIn;
 
 public class MessageReader extends ListenerAdapter {
@@ -24,6 +24,7 @@ public class MessageReader extends ListenerAdapter {
     predicates.add(msg -> msg.matches("^\\W+[.*\\s\\S]*"));
     predicates.add(msg -> msg.split("\\s").length < 4);
     predicates.add(msg -> msg.startsWith("`"));
+    predicates.add(msg -> msg.startsWith(App.PREFIX));
     return predicates;
   }
 

@@ -20,7 +20,7 @@ import uk.co.markg.bertrand.listener.MessageReader;
  *
  */
 public class App {
-  private static final String PREFIX = "bertrand!";
+  public static final String PREFIX = "bertrand!";
 
   public static void main(String[] args) throws Exception {
     initDatabase();
