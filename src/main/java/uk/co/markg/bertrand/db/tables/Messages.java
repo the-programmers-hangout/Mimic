@@ -11,7 +11,7 @@ import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row3;
+import org.jooq.Row4;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -31,7 +31,7 @@ import uk.co.markg.bertrand.db.tables.records.MessagesRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Messages extends TableImpl<MessagesRecord> {
 
-    private static final long serialVersionUID = -147290294;
+    private static final long serialVersionUID = 1963933007;
 
     /**
      * The reference instance of <code>messages</code>
@@ -60,6 +60,11 @@ public class Messages extends TableImpl<MessagesRecord> {
      * The column <code>messages.content</code>.
      */
     public final TableField<MessagesRecord, String> CONTENT = createField(DSL.name("content"), org.jooq.impl.SQLDataType.CLOB.nullable(false), this, "");
+
+    /**
+     * The column <code>messages.channelid</code>.
+     */
+    public final TableField<MessagesRecord, Long> CHANNELID = createField(DSL.name("channelid"), org.jooq.impl.SQLDataType.BIGINT.nullable(false).defaultValue(org.jooq.impl.DSL.field("0", org.jooq.impl.SQLDataType.BIGINT)), this, "");
 
     /**
      * Create a <code>messages</code> table reference
@@ -136,11 +141,11 @@ public class Messages extends TableImpl<MessagesRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row3 type methods
+    // Row4 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row3<Long, Long, String> fieldsRow() {
-        return (Row3) super.fieldsRow();
+    public Row4<Long, Long, String, Long> fieldsRow() {
+        return (Row4) super.fieldsRow();
     }
 }
