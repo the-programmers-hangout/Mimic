@@ -12,7 +12,8 @@ import uk.co.markg.bertrand.db.tables.pojos.Users;
 
 public class ChannelConfig {
 
-  @CommandHandler(commandName = "channels", description = "Lists all channels registered")
+  @CommandHandler(commandName = "channels", description = "Lists all channels registered",
+      roles = "staff")
   public void executeList(MessageReceivedEvent event, DSLContext dsl) {
     var channels = dsl.selectFrom(CHANNELS).fetchInto(Channels.class);
     StringBuilder message = new StringBuilder();
@@ -23,7 +24,8 @@ public class ChannelConfig {
     event.getChannel().sendMessage(message.toString()).queue();
   }
 
-  @CommandHandler(commandName = "channels.add", description = "Add channels to read from")
+  @CommandHandler(commandName = "channels.add", description = "Add channels to read from",
+      roles = "staff")
   public void executeAdd(MessageReceivedEvent event, DSLContext dsl, List<String> args) {
     int addedChannels = 0;
     for (String channelid : args) {
@@ -51,7 +53,8 @@ public class ChannelConfig {
     return dsl.insertInto(CHANNELS).values(Long.parseLong(channelid)).execute();
   }
 
-  @CommandHandler(commandName = "channels.remove", description = "Remove channels to read from")
+  @CommandHandler(commandName = "channels.remove", description = "Remove channels to read from",
+      roles = "staff")
   public void executeRemove(MessageReceivedEvent event, DSLContext dsl, List<String> args) {
     int removedChannels = 0;
     for (String channelid : args) {
