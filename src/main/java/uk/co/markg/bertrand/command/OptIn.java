@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import uk.co.markg.bertrand.db.tables.pojos.Channels;
+import uk.co.markg.bertrand.db.tables.pojos.Users;
 import uk.co.markg.bertrand.db.tables.records.MessagesRecord;
 import uk.co.markg.bertrand.listener.MessageReader;
 
@@ -37,6 +38,10 @@ public class OptIn {
         saveUserHistory(textChannel, dsl, userid);
       }
     }
+  }
+
+  public static void saveUserHistory(TextChannel textChannel, DSLContext dsl, Users user) {
+    new OptIn().saveUserHistory(textChannel, dsl, user.getUserid());
   }
 
   private void saveUserHistory(TextChannel textChannel, DSLContext dsl, long userid) {
