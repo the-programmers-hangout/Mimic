@@ -22,7 +22,6 @@ public class MarkovResponse extends ListenerAdapter {
       return;
     }
     if (messageContainsBotMention(event)) {
-      System.out.println("Yes");
       Markov markov = loadMarkov(event.getMember().getIdLong());
       int noOfSentences = ThreadLocalRandom.current().nextInt(5) + 1;
       event.getChannel().sendMessage(markov.generate(noOfSentences)).queue();
