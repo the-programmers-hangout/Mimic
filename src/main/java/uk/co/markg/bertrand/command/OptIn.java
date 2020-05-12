@@ -17,7 +17,7 @@ import uk.co.markg.bertrand.listener.MessageReader;
 
 public class OptIn {
 
-  @CommandHandler(commandName = "opt-in", description = "Opt-in")
+  @CommandHandler(commandName = "opt-in", description = "Opt-in for your messages to be read.")
   public void execute(MessageReceivedEvent event, DSLContext dsl) {
     long userid = event.getAuthor().getIdLong();
     if (isUserOptedIn(dsl, userid)) {

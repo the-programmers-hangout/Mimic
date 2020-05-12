@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class OptOut {
 
-  @CommandHandler(commandName = "opt-out", description = "Opt-out")
+  @CommandHandler(commandName = "opt-out", description = "Opt-out for all messages to be removed.")
   public void execute(MessageReceivedEvent event, DSLContext dsl) {
     long userid = event.getAuthor().getIdLong();
     if (OptIn.isUserOptedIn(dsl, userid)) {
