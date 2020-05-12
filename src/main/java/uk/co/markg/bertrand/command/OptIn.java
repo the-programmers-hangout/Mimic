@@ -18,6 +18,8 @@ import uk.co.markg.bertrand.listener.MessageReader;
 
 public class OptIn {
 
+  private static final int HISTORY_LIMIT = 100_000;
+
   @CommandHandler(commandName = "opt-in", description = "Opt-in for your messages to be read.")
   public void execute(MessageReceivedEvent event, DSLContext dsl) {
     long userid = event.getAuthor().getIdLong();
@@ -67,7 +69,7 @@ public class OptIn {
   }
 
   private CompletableFuture<List<Message>> getUserHistory(TextChannel channel, long userid) {
-    return channel.getIterableHistory().takeAsync(20_000).thenApply(list -> list.stream()
+    return channel.getIterableHistory().takeAsync(HISTORY_LIMIT).thenApply(list -> list.stream()
         .filter(m -> m.getAuthor().getIdLong() == userid).collect(Collectors.toList()));
   }
 
