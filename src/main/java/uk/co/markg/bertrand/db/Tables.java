@@ -4,6 +4,7 @@
 package uk.co.markg.bertrand.db;
 
 
+import uk.co.markg.bertrand.db.tables.Channels;
 import uk.co.markg.bertrand.db.tables.Messages;
 import uk.co.markg.bertrand.db.tables.Users;
 
@@ -13,6 +14,11 @@ import uk.co.markg.bertrand.db.tables.Users;
  */
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Tables {
+
+    /**
+     * The table <code>channels</code>.
+     */
+    public static final Channels CHANNELS = Channels.CHANNELS;
 
     /**
      * The table <code>messages</code>.

@@ -11,6 +11,7 @@ import org.jooq.Catalog;
 import org.jooq.Table;
 import org.jooq.impl.SchemaImpl;
 
+import uk.co.markg.bertrand.db.tables.Channels;
 import uk.co.markg.bertrand.db.tables.Messages;
 import uk.co.markg.bertrand.db.tables.Users;
 
@@ -21,12 +22,17 @@ import uk.co.markg.bertrand.db.tables.Users;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefaultSchema extends SchemaImpl {
 
-    private static final long serialVersionUID = 588254216;
+    private static final long serialVersionUID = -400102062;
 
     /**
      * The reference instance of <code>DEFAULT_SCHEMA</code>
      */
     public static final DefaultSchema DEFAULT_SCHEMA = new DefaultSchema();
+
+    /**
+     * The table <code>channels</code>.
+     */
+    public final Channels CHANNELS = Channels.CHANNELS;
 
     /**
      * The table <code>messages</code>.
@@ -54,6 +60,7 @@ public class DefaultSchema extends SchemaImpl {
     @Override
     public final List<Table<?>> getTables() {
         return Arrays.<Table<?>>asList(
+            Channels.CHANNELS,
             Messages.MESSAGES,
             Users.USERS);
     }

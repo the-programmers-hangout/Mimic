@@ -8,8 +8,10 @@ import org.jooq.TableField;
 import org.jooq.UniqueKey;
 import org.jooq.impl.Internal;
 
+import uk.co.markg.bertrand.db.tables.Channels;
 import uk.co.markg.bertrand.db.tables.Messages;
 import uk.co.markg.bertrand.db.tables.Users;
+import uk.co.markg.bertrand.db.tables.records.ChannelsRecord;
 import uk.co.markg.bertrand.db.tables.records.MessagesRecord;
 import uk.co.markg.bertrand.db.tables.records.UsersRecord;
 
@@ -30,6 +32,7 @@ public class Keys {
     // UNIQUE and PRIMARY KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final UniqueKey<ChannelsRecord> CHANNELS_PKEY = UniqueKeys0.CHANNELS_PKEY;
     public static final UniqueKey<MessagesRecord> MESSAGES_PKEY = UniqueKeys0.MESSAGES_PKEY;
     public static final UniqueKey<UsersRecord> USERS_PKEY = UniqueKeys0.USERS_PKEY;
 
@@ -43,6 +46,7 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     private static class UniqueKeys0 {
+        public static final UniqueKey<ChannelsRecord> CHANNELS_PKEY = Internal.createUniqueKey(Channels.CHANNELS, "channels_pkey", new TableField[] { Channels.CHANNELS.CHANNELID }, true);
         public static final UniqueKey<MessagesRecord> MESSAGES_PKEY = Internal.createUniqueKey(Messages.MESSAGES, "messages_pkey", new TableField[] { Messages.MESSAGES.MESSAGEID }, true);
         public static final UniqueKey<UsersRecord> USERS_PKEY = Internal.createUniqueKey(Users.USERS, "users_pkey", new TableField[] { Users.USERS.USERID }, true);
     }
