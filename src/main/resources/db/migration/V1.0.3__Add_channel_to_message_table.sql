@@ -1,0 +1,1 @@
+ALTER TABLE messages ADD COLUMN channelid bigint NOT NULL default 0;
