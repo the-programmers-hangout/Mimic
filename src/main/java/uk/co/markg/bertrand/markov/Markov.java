@@ -77,6 +77,7 @@ public class Markov {
       if (word.isEmpty()) {
         continue;
       }
+      word = escapeUserMention(word);
       if (word.charAt(0) == word.toUpperCase().charAt(0)) {
         startWords.add(word);
       }
@@ -93,12 +94,17 @@ public class Markov {
       if (nextWord.isEmpty()) {
         continue;
       }
+      nextWord = escapeUserMention(nextWord);
       if (wordFrequencyMap.containsKey(word)) {
         updateWordFrequency(word, nextWord);
       } else {
         insertWordFrequency(word, nextWord);
       }
     }
+  }
+
+  private String escapeUserMention(String word) {
+    return word.matches("<@!?[0-9]+>") ? word.replace('@', '$') : word;
   }
 
   private boolean isEndWord(String word) {
