@@ -45,6 +45,7 @@ public class MessageReader extends ListenerAdapter {
   }
 
   private void saveMessage(long userid, Message message) {
-    dsl.insertInto(MESSAGES).values(message.getIdLong(), userid, message.getContentRaw()).execute();
+    dsl.insertInto(MESSAGES).values(message.getIdLong(), userid, message.getContentRaw(),
+        message.getChannel().getIdLong()).execute();
   }
 }

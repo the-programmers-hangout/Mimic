@@ -52,7 +52,8 @@ public class OptIn {
   }
 
   private MessagesRecord buildMessage(Message message, long userid) {
-    return new MessagesRecord(message.getIdLong(), userid, message.getContentRaw());
+    return new MessagesRecord(message.getIdLong(), userid, message.getContentRaw(),
+        message.getChannel().getIdLong());
   }
 
   private Function<? super List<Message>, ? extends List<Message>> filterMessages() {
