@@ -1,6 +1,7 @@
 package uk.co.markg.bertrand.listener;
 
 import static uk.co.markg.bertrand.db.tables.Messages.MESSAGES;
+import static uk.co.markg.bertrand.db.tables.Channels.CHANNELS;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -34,9 +35,14 @@ public class MessageReader extends ListenerAdapter {
       return;
     }
     long userid = e.getAuthor().getIdLong();
-    if (OptIn.isUserOptedIn(dsl, userid) && messageIsValid(e.getMessage())) {
+    if (OptIn.isUserOptedIn(dsl, userid) && messageIsValid(e.getMessage()) && isChannelAdded(e)) {
       saveMessage(userid, e.getMessage());
     }
+  }
+
+  private boolean isChannelAdded(MessageReceivedEvent e) {
+    return dsl.selectFrom(CHANNELS).where(CHANNELS.CHANNELID.eq(e.getChannel().getIdLong()))
+        .fetchOne(0, int.class) != 0;
   }
 
   public static boolean messageIsValid(Message message) {
