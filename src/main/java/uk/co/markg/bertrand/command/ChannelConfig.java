@@ -29,7 +29,7 @@ public class ChannelConfig {
     int removedChannels = 0;
     for (String channelid : args) {
       if (channelidIsValid(channelid)) {
-        removedChannels = +deleteChannel(dsl, channelid);
+        removedChannels += deleteChannel(dsl, channelid);
       }
     }
     event.getChannel()
