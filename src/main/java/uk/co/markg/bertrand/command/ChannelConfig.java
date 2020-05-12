@@ -1,5 +1,6 @@
 package uk.co.markg.bertrand.command;
 
+import static uk.co.markg.bertrand.db.tables.Messages.MESSAGES;
 import static uk.co.markg.bertrand.db.tables.Channels.CHANNELS;
 import java.util.List;
 import org.jooq.DSLContext;
@@ -14,7 +15,8 @@ public class ChannelConfig {
     var channels = dsl.selectFrom(CHANNELS).fetchInto(Channels.class);
     StringBuilder message = new StringBuilder();
     for (Channels channel : channels) {
-      message.append("<#").append(channel.getChannelid()).append(">").append(System.lineSeparator());
+      message.append("<#").append(channel.getChannelid()).append(">")
+          .append(System.lineSeparator());
     }
     event.getChannel().sendMessage(message.toString()).queue();
   }
@@ -41,10 +43,15 @@ public class ChannelConfig {
     for (String channelid : args) {
       if (channelidIsValid(channelid)) {
         removedChannels += deleteChannel(dsl, channelid);
+        deleteMessagesInChannel(dsl, channelid);
       }
     }
     event.getChannel()
         .sendMessage("Removed " + removedChannels + " from " + args.size() + " inputs").queue();
+  }
+
+  private void deleteMessagesInChannel(DSLContext dsl, String channelid) {
+    dsl.deleteFrom(MESSAGES).where(MESSAGES.CHANNELID.eq(Long.parseLong(channelid))).execute();
   }
 
   private int deleteChannel(DSLContext dsl, String channelid) {
