@@ -6,6 +6,7 @@ import org.jooq.DSLContext;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import uk.co.markg.bertrand.command.OptIn;
 import uk.co.markg.bertrand.markov.Markov;
 
 public class MarkovResponse extends ListenerAdapter {
@@ -21,8 +22,9 @@ public class MarkovResponse extends ListenerAdapter {
     if (event.getAuthor().isBot()) {
       return;
     }
-    if (messageContainsBotMention(event)) {
-      Markov markov = loadMarkov(event.getMember().getIdLong());
+    long userid = event.getAuthor().getIdLong();
+    if (messageContainsBotMention(event) && OptIn.isUserOptedIn(dsl, userid)) {
+      Markov markov = loadMarkov(userid);
       int noOfSentences = ThreadLocalRandom.current().nextInt(5) + 1;
       event.getChannel().sendMessage(markov.generate(noOfSentences)).queue();
     }

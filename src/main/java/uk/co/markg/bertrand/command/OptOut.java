@@ -11,7 +11,7 @@ public class OptOut {
   @CommandHandler(commandName = "opt-out", description = "Opt-out")
   public void execute(MessageReceivedEvent event, DSLContext dsl) {
     long userid = event.getAuthor().getIdLong();
-    if (isUserOptedIn(dsl, userid)) {
+    if (OptIn.isUserOptedIn(dsl, userid)) {
       optOutUser(event, dsl, userid);
     } else {
       event.getChannel().sendMessage("You're already out!").queue();
@@ -22,9 +22,5 @@ public class OptOut {
     dsl.deleteFrom(USERS).where(USERS.USERID.eq(userid)).execute();
     dsl.deleteFrom(MESSAGES).where(MESSAGES.USERID.eq(userid)).execute();
     event.getChannel().sendMessage("You've been opted out!").queue();
-  }
-
-  private boolean isUserOptedIn(DSLContext dsl, long userid) {
-    return dsl.fetchCount(dsl.selectFrom(USERS).where(USERS.USERID.eq(userid))) != 0;
   }
 }

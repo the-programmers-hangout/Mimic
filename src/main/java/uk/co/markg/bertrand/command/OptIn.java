@@ -56,7 +56,7 @@ public class OptIn {
         .filter(m -> m.getAuthor().getIdLong() == userid).collect(Collectors.toList()));
   }
 
-  private boolean isUserOptedIn(DSLContext dsl, long userid) {
-    return dsl.fetchCount(dsl.selectFrom(USERS).where(USERS.USERID.eq(userid))) != 0;
+  public static boolean isUserOptedIn(DSLContext dsl, long userid) {
+    return dsl.selectFrom(USERS).where(USERS.USERID.eq(userid)).fetchOne(0, int.class) != 0;
   }
 }

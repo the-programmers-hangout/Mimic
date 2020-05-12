@@ -9,6 +9,7 @@ import org.jooq.DSLContext;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import uk.co.markg.bertrand.command.OptIn;
 
 public class MessageReader extends ListenerAdapter {
 
@@ -32,11 +33,9 @@ public class MessageReader extends ListenerAdapter {
       return;
     }
     long userid = e.getAuthor().getIdLong();
-
-    if (authorIsOptedIn(userid) && messageIsValid(e.getMessage())) {
+    if (OptIn.isUserOptedIn(dsl, userid) && messageIsValid(e.getMessage())) {
       saveMessage(userid, e.getMessage());
     }
-
   }
 
   public static boolean messageIsValid(Message message) {
@@ -47,9 +46,4 @@ public class MessageReader extends ListenerAdapter {
   private void saveMessage(long userid, Message message) {
     dsl.insertInto(MESSAGES).values(message.getIdLong(), userid, message.getContentRaw()).execute();
   }
-
-  private boolean authorIsOptedIn(long userid) {
-    return dsl.selectFrom(USERS).where(USERS.USERID.eq(userid)).fetchOne(0, int.class) != 0;
-  }
-
 }
