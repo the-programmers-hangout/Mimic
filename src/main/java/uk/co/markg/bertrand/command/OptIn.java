@@ -1,5 +1,6 @@
 package uk.co.markg.bertrand.command;
 
+import static uk.co.markg.bertrand.db.tables.Channels.CHANNELS;
 import static uk.co.markg.bertrand.db.tables.Users.USERS;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -8,7 +9,9 @@ import java.util.stream.Collectors;
 import org.jooq.DSLContext;
 import disparse.parser.reflection.CommandHandler;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import uk.co.markg.bertrand.db.tables.pojos.Channels;
 import uk.co.markg.bertrand.db.tables.records.MessagesRecord;
 import uk.co.markg.bertrand.listener.MessageReader;
 
@@ -27,11 +30,17 @@ public class OptIn {
   private void optInUser(MessageReceivedEvent event, DSLContext dsl, long userid) {
     dsl.insertInto(USERS).values(userid).execute();
     event.getChannel().sendMessage("You have been opted-in").queue();
-    saveUserHistory(event, dsl, userid);
+    var channels = dsl.selectFrom(CHANNELS).fetchInto(Channels.class);
+    for (Channels channel : channels) {
+      var textChannel = event.getJDA().getTextChannelById(channel.getChannelid());
+      if (textChannel != null) {
+        saveUserHistory(textChannel, dsl, userid);
+      }
+    }
   }
 
-  private void saveUserHistory(MessageReceivedEvent event, DSLContext dsl, long userid) {
-    var validHistoryMessages = getUserHistory(event, userid).thenApply(filterMessages());
+  private void saveUserHistory(TextChannel textChannel, DSLContext dsl, long userid) {
+    var validHistoryMessages = getUserHistory(textChannel, userid).thenApply(filterMessages());
     var messages = buildMessageList(userid, validHistoryMessages);
     messages.thenAccept(msgs -> dsl.batchInsert(msgs).execute());
   }
@@ -51,8 +60,8 @@ public class OptIn {
         .collect(Collectors.toList());
   }
 
-  private CompletableFuture<List<Message>> getUserHistory(MessageReceivedEvent event, long userid) {
-    return event.getChannel().getIterableHistory().takeAsync(20_000).thenApply(list -> list.stream()
+  private CompletableFuture<List<Message>> getUserHistory(TextChannel channel, long userid) {
+    return channel.getIterableHistory().takeAsync(20_000).thenApply(list -> list.stream()
         .filter(m -> m.getAuthor().getIdLong() == userid).collect(Collectors.toList()));
   }
 
