@@ -1,4 +1,4 @@
-package uk.co.markg.bertrand.injectable;
+package uk.co.markg.bertrand.database;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;

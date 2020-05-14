@@ -1,13 +1,13 @@
 package uk.co.markg.bertrand.command;
 
-import static uk.co.markg.bertrand.db.tables.Messages.MESSAGES;
-import static uk.co.markg.bertrand.db.tables.Channels.CHANNELS;
 import static uk.co.markg.bertrand.db.tables.Users.USERS;
 import java.util.ArrayList;
 import java.util.List;
 import org.jooq.DSLContext;
 import disparse.parser.reflection.CommandHandler;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import uk.co.markg.bertrand.database.ChannelRepository;
 import uk.co.markg.bertrand.db.tables.pojos.Channels;
 import uk.co.markg.bertrand.db.tables.pojos.Users;
 
@@ -15,32 +15,35 @@ public class ChannelConfig {
 
   @CommandHandler(commandName = "channels", description = "Lists all channels registered",
       roles = "staff")
-  public void executeList(MessageReceivedEvent event, DSLContext dsl) {
-    var channels = getAllChannels(dsl);
+  public void executeList(MessageReceivedEvent event, ChannelRepository repo) {
+    var channels = repo.getAll();
     String message = buildListOfChannels(channels);
     event.getChannel().sendMessage(message).queue();
   }
 
   @CommandHandler(commandName = "channels.add", description = "Add channels to read from",
       roles = "staff")
-  public void executeAdd(MessageReceivedEvent event, DSLContext dsl, List<String> args) {
-    String response = addChannels(event, dsl, args);
+  public void executeAdd(MessageReceivedEvent event, ChannelRepository repo, DSLContext dsl,
+      List<String> args) {
+    String response = addChannels(event, repo, dsl, args);
     event.getChannel().sendMessage(response).queue();
   }
 
   @CommandHandler(commandName = "channels.remove", description = "Remove channels to read from",
       roles = "staff")
-  public void executeRemove(MessageReceivedEvent event, DSLContext dsl, List<String> args) {
-    String response = removeChannels(dsl, args);
+  public void executeRemove(MessageReceivedEvent event, ChannelRepository repo, List<String> args) {
+    String response = removeChannels(repo, args);
     event.getChannel().sendMessage(response).queue();
   }
 
-  private String addChannels(MessageReceivedEvent event, DSLContext dsl, List<String> args) {
+  private String addChannels(MessageReceivedEvent event, ChannelRepository repo, DSLContext dsl,
+      List<String> args) {
     var badChannels = new ArrayList<String>();
     for (String channelid : args) {
-      if (channelidIsValid(channelid)) {
-        saveChannel(dsl, channelid);
-        retrieveChannelHistory(event, dsl, channelid);
+      var textChannel = event.getJDA().getTextChannelById(channelid);
+      if (textChannel != null) {
+        repo.save(channelid);
+        retrieveChannelHistory(textChannel, dsl);
       } else {
         badChannels.add(channelid);
       }
@@ -49,13 +52,10 @@ public class ChannelConfig {
         : "Ignored arguments: " + String.join(",", badChannels);
   }
 
-  private String removeChannels(DSLContext dsl, List<String> args) {
+  private String removeChannels(ChannelRepository repo, List<String> args) {
     var badChannels = new ArrayList<String>();
     for (String channelid : args) {
-      if (channelidIsValid(channelid)) {
-        deleteChannel(dsl, channelid);
-        deleteMessagesInChannel(dsl, channelid);
-      } else {
+      if (repo.delete(channelid) != 1) {
         badChannels.add(channelid);
       }
     }
@@ -63,14 +63,10 @@ public class ChannelConfig {
         : "Ignored arguments: " + String.join(",", badChannels);
   }
 
-  private void retrieveChannelHistory(MessageReceivedEvent event, DSLContext dsl,
-      String channelid) {
+  private void retrieveChannelHistory(TextChannel channel, DSLContext dsl) {
     var users = dsl.selectFrom(USERS).fetchInto(Users.class);
-    var textChannel = event.getJDA().getTextChannelById(channelid);
-    if (textChannel != null) {
-      for (Users user : users) {
-        OptIn.saveUserHistory(textChannel, dsl, user);
-      }
+    for (Users user : users) {
+      OptIn.saveUserHistory(channel, dsl, user);
     }
   }
 
@@ -81,26 +77,5 @@ public class ChannelConfig {
       message.append(">").append(System.lineSeparator());
     }
     return message.toString();
-  }
-
-  private boolean channelidIsValid(String channelid) {
-    return channelid.matches("[0-9]+");
-  }
-
-  private int saveChannel(DSLContext dsl, String channelid) {
-    return dsl.insertInto(CHANNELS).values(Long.parseLong(channelid)).execute();
-  }
-
-  private List<Channels> getAllChannels(DSLContext dsl) {
-    return dsl.selectFrom(CHANNELS).fetchInto(Channels.class);
-  }
-
-  private void deleteMessagesInChannel(DSLContext dsl, String channelid) {
-    dsl.deleteFrom(MESSAGES).where(MESSAGES.CHANNELID.eq(Long.parseLong(channelid))).execute();
-  }
-
-  private int deleteChannel(DSLContext dsl, String channelid) {
-    return dsl.deleteFrom(CHANNELS).where(CHANNELS.CHANNELID.eq(Long.parseLong(channelid)))
-        .execute();
   }
 }
