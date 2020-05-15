@@ -1,13 +1,12 @@
 package uk.co.markg.bertrand.command;
 
-import static uk.co.markg.bertrand.db.tables.Users.USERS;
 import java.util.ArrayList;
 import java.util.List;
-import org.jooq.DSLContext;
 import disparse.parser.reflection.CommandHandler;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import uk.co.markg.bertrand.database.ChannelRepository;
+import uk.co.markg.bertrand.database.UserRepository;
 import uk.co.markg.bertrand.db.tables.pojos.Channels;
 import uk.co.markg.bertrand.db.tables.pojos.Users;
 
@@ -23,9 +22,9 @@ public class ChannelConfig {
 
   @CommandHandler(commandName = "channels.add", description = "Add channels to read from",
       roles = "staff")
-  public void executeAdd(MessageReceivedEvent event, ChannelRepository repo, DSLContext dsl,
-      List<String> args) {
-    String response = addChannels(event, repo, dsl, args);
+  public void executeAdd(MessageReceivedEvent event, ChannelRepository repo,
+      UserRepository userRepo, List<String> args) {
+    String response = addChannels(event, repo, userRepo, args);
     event.getChannel().sendMessage(response).queue();
   }
 
@@ -36,14 +35,14 @@ public class ChannelConfig {
     event.getChannel().sendMessage(response).queue();
   }
 
-  private String addChannels(MessageReceivedEvent event, ChannelRepository repo, DSLContext dsl,
-      List<String> args) {
+  private String addChannels(MessageReceivedEvent event, ChannelRepository repo,
+      UserRepository userRepo, List<String> args) {
     var badChannels = new ArrayList<String>();
     for (String channelid : args) {
       var textChannel = event.getJDA().getTextChannelById(channelid);
       if (textChannel != null) {
         repo.save(channelid);
-        retrieveChannelHistory(textChannel, dsl);
+        retrieveChannelHistory(textChannel, userRepo);
       } else {
         badChannels.add(channelid);
       }
@@ -63,10 +62,10 @@ public class ChannelConfig {
         : "Ignored arguments: " + String.join(",", badChannels);
   }
 
-  private void retrieveChannelHistory(TextChannel channel, DSLContext dsl) {
-    var users = dsl.selectFrom(USERS).fetchInto(Users.class);
+  private void retrieveChannelHistory(TextChannel channel, UserRepository userRepo) {
+    var users = userRepo.getAll();
     for (Users user : users) {
-      OptIn.saveUserHistory(channel, dsl, user);
+      OptIn.saveUserHistory(channel, user);
     }
   }
 
