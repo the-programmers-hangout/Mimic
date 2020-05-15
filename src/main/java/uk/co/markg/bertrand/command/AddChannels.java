@@ -23,7 +23,7 @@ public class AddChannels {
     this.args = args;
   }
 
-  @CommandHandler(commandName = "channels", description = "Lists all channels registered",
+  @CommandHandler(commandName = "channels.add", description = "Add channels to read from",
       roles = "staff")
   public static void executeAdd(MessageReceivedEvent event, ChannelRepository channelRepo,
       UserRepository userRepo, List<String> args) {
