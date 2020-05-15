@@ -1,26 +1,35 @@
 package uk.co.markg.bertrand.command;
 
-import static uk.co.markg.bertrand.db.tables.Messages.MESSAGES;
-import static uk.co.markg.bertrand.db.tables.Users.USERS;
-import org.jooq.DSLContext;
 import disparse.parser.reflection.CommandHandler;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import uk.co.markg.bertrand.database.UserRepository;
 
 public class OptOut {
 
+  private MessageReceivedEvent event;
+  private UserRepository userRepo;
+
+  public OptOut(MessageReceivedEvent event, UserRepository userRepo) {
+    this.event = event;
+    this.userRepo = userRepo;
+  }
+
   @CommandHandler(commandName = "opt-out", description = "Opt-out for all messages to be removed.")
-  public void execute(MessageReceivedEvent event, DSLContext dsl) {
+  public static void execute(MessageReceivedEvent event, UserRepository userRepo) {
+    new OptOut(event, userRepo).execute();
+  }
+
+  private void execute() {
     long userid = event.getAuthor().getIdLong();
-    if (OptIn.isUserOptedIn(dsl, userid)) {
-      optOutUser(event, dsl, userid);
+    if (userRepo.isUserOptedIn(userid)) {
+      optOutUser(userid);
     } else {
       event.getChannel().sendMessage("You're already out!").queue();
     }
   }
 
-  private void optOutUser(MessageReceivedEvent event, DSLContext dsl, long userid) {
-    dsl.deleteFrom(USERS).where(USERS.USERID.eq(userid)).execute();
-    dsl.deleteFrom(MESSAGES).where(MESSAGES.USERID.eq(userid)).execute();
+  private void optOutUser(long userid) {
+    userRepo.delete(userid);
     event.getChannel().sendMessage("You've been opted out!").queue();
   }
 }
