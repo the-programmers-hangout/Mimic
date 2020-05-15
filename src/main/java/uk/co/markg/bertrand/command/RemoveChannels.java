@@ -38,7 +38,7 @@ public class RemoveChannels {
         badChannels.add(channelid);
       }
     }
-    return badChannels.isEmpty() ? "All channels successfully deleted"
+    return badChannels.isEmpty() ? "All input channels successfully deleted"
         : "Ignored arguments: " + String.join(",", badChannels);
   }
 }

@@ -61,7 +61,7 @@ public class AddChannels {
         badChannels.add(channelid);
       }
     }
-    return badChannels.isEmpty() ? "All channels succesfully added"
+    return badChannels.isEmpty() ? "All input channels succesfully added"
         : "Ignored arguments: " + String.join(",", badChannels);
   }
 
