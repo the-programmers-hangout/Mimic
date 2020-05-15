@@ -1,27 +1,30 @@
 package uk.co.markg.bertrand.listener;
 
-import static uk.co.markg.bertrand.db.tables.Messages.MESSAGES;
-import static uk.co.markg.bertrand.db.tables.Channels.CHANNELS;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
-import org.jooq.DSLContext;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import uk.co.markg.bertrand.App;
-import uk.co.markg.bertrand.command.OptIn;
+import uk.co.markg.bertrand.database.ChannelRepository;
+import uk.co.markg.bertrand.database.MessageRepository;
+import uk.co.markg.bertrand.database.UserRepository;
 
 public class MessageReader extends ListenerAdapter {
 
-  private DSLContext dsl;
+  private ChannelRepository channelRepo;
+  private UserRepository userRepo;
+  private MessageRepository messageRepo;
 
-  public MessageReader(DSLContext context) {
-    dsl = context;
+  public MessageReader() {
+    this.channelRepo = ChannelRepository.getRepository();
+    this.userRepo = UserRepository.getRepository();
+    this.messageRepo = MessageRepository.getRepository();
   }
 
   private static List<Predicate<String>> getMessagePredicates() {
-    List<Predicate<String>> predicates = new ArrayList<>();
+    var predicates = new ArrayList<Predicate<String>>();
     predicates.add(msg -> msg.matches("^\\W+[.*\\s\\S]*"));
     predicates.add(msg -> msg.split("\\s").length < 4);
     predicates.add(msg -> msg.startsWith("`"));
@@ -35,23 +38,18 @@ public class MessageReader extends ListenerAdapter {
       return;
     }
     long userid = e.getAuthor().getIdLong();
-    if (OptIn.isUserOptedIn(dsl, userid) && messageIsValid(e.getMessage()) && isChannelAdded(e)) {
-      saveMessage(userid, e.getMessage());
+    if (isMessageConstraintsMet(e, userid)) {
+      messageRepo.save(userid, e.getMessage());
     }
   }
 
-  private boolean isChannelAdded(MessageReceivedEvent e) {
-    return dsl.selectFrom(CHANNELS).where(CHANNELS.CHANNELID.eq(e.getChannel().getIdLong()))
-        .fetchOne(0, int.class) != 0;
+  private boolean isMessageConstraintsMet(MessageReceivedEvent e, long userid) {
+    return userRepo.isUserOptedIn(userid) && messageIsValid(e.getMessage())
+        && channelRepo.isChannelAdded(userid);
   }
 
   public static boolean messageIsValid(Message message) {
     String text = message.getContentRaw();
     return !getMessagePredicates().stream().anyMatch(predicate -> predicate.test(text));
-  }
-
-  private void saveMessage(long userid, Message message) {
-    dsl.insertInto(MESSAGES).values(message.getIdLong(), userid, message.getContentRaw(),
-        message.getChannel().getIdLong()).execute();
   }
 }

@@ -28,6 +28,11 @@ public class ChannelRepository {
     return dsl.executeInsert(dsl.newRecord(CHANNELS, channel));
   }
 
+  public boolean isChannelAdded(long channelid) {
+    return dsl.selectFrom(CHANNELS).where(CHANNELS.CHANNELID.eq(channelid)).fetchOne(0,
+        int.class) != 0;
+  }
+
   public List<Channels> getAll() {
     return dsl.selectFrom(CHANNELS).fetchInto(Channels.class);
   }
