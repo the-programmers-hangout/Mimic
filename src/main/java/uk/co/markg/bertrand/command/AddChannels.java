@@ -20,10 +20,12 @@ public class AddChannels {
 
   @ParsedEntity
   static class ChannelRequest {
-    @Flag(shortName = 'r')
+    @Flag(shortName = 'r', longName = "read",
+        description = "Whether the bot should read from the channel. Defaults to true")
     Boolean read = Boolean.TRUE;
 
-    @Flag(shortName = 'w')
+    @Flag(shortName = 'w', longName = "write",
+        description = "Whether the bot can write to the channel. Defaults to false")
     Boolean write = Boolean.FALSE;
   }
 
