@@ -57,8 +57,7 @@ public class App {
 
   private static void launchBot() throws LoginException, InterruptedException {
     var builder = Dispatcher.init(JDABuilder.createDefault(System.getenv("B_TOKEN")), PREFIX, 10);
-    var context = JooqConnection.getJooqContext();
-    builder.addEventListeners(new MessageReader(), new MarkovResponse(context));
+    builder.addEventListeners(new MessageReader(), new MarkovResponse());
     builder.build().awaitReady();
   }
 }

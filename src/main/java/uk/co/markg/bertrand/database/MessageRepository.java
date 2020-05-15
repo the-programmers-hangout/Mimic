@@ -1,6 +1,7 @@
 package uk.co.markg.bertrand.database;
 
 import static uk.co.markg.bertrand.db.tables.Messages.MESSAGES;
+import java.util.List;
 import org.jooq.DSLContext;
 import disparse.parser.reflection.Injectable;
 import net.dv8tion.jda.api.entities.Message;
@@ -27,6 +28,11 @@ public class MessageRepository {
 
   public int save(Messages message) {
     return dsl.insertInto(MESSAGES).values(message).execute();
+  }
+  
+  public List<String> getByUser(long userid) {
+    return dsl.select(MESSAGES.CONTENT).from(MESSAGES).where(MESSAGES.USERID.eq(userid))
+        .fetchInto(String.class);
   }
 
 }

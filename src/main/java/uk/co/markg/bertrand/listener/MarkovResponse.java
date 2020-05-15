@@ -1,22 +1,21 @@
 package uk.co.markg.bertrand.listener;
 
-import static uk.co.markg.bertrand.db.tables.Messages.MESSAGES;
-import static uk.co.markg.bertrand.db.tables.Users.USERS;
 import java.util.concurrent.ThreadLocalRandom;
-import org.jooq.DSLContext;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import uk.co.markg.bertrand.command.OptIn;
+import uk.co.markg.bertrand.database.MessageRepository;
+import uk.co.markg.bertrand.database.UserRepository;
 import uk.co.markg.bertrand.markov.Markov;
-import uk.co.markg.bertrand.db.tables.pojos.Users;
 
 public class MarkovResponse extends ListenerAdapter {
 
-  private DSLContext dsl;
+  private MessageRepository messageRepo;
+  private UserRepository userRepo;
 
-  public MarkovResponse(DSLContext context) {
-    dsl = context;
+  public MarkovResponse() {
+    this.messageRepo = MessageRepository.getRepository();
+    this.userRepo = UserRepository.getRepository();
   }
 
   @Override
@@ -25,7 +24,7 @@ public class MarkovResponse extends ListenerAdapter {
       return;
     }
     long userid = event.getAuthor().getIdLong();
-    if (messageContainsBotMention(event) && OptIn.isUserOptedIn(dsl, userid)) {
+    if (messageContainsBotMention(event) && userRepo.isUserOptedIn(userid)) {
       event.getChannel().sendMessage(generateReply()).queue();
     }
   }
@@ -38,7 +37,7 @@ public class MarkovResponse extends ListenerAdapter {
   }
 
   private long getRandomUserId() {
-    var users = dsl.selectFrom(USERS).fetchInto(Users.class);
+    var users = userRepo.getAll();
     return users.get(ThreadLocalRandom.current().nextInt(users.size())).getUserid();
   }
 
@@ -48,8 +47,7 @@ public class MarkovResponse extends ListenerAdapter {
   }
 
   private Markov loadMarkov(long userid) {
-    var inputs = dsl.select(MESSAGES.CONTENT).from(MESSAGES).where(MESSAGES.USERID.eq(userid))
-        .fetchInto(String.class);
+    var inputs = messageRepo.getByUser(userid);
     return new Markov(inputs);
   }
 
