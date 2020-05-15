@@ -11,7 +11,7 @@ import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row1;
+import org.jooq.Row3;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -31,7 +31,7 @@ import uk.co.markg.bertrand.db.tables.records.ChannelsRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Channels extends TableImpl<ChannelsRecord> {
 
-    private static final long serialVersionUID = 1644478068;
+    private static final long serialVersionUID = -1777087028;
 
     /**
      * The reference instance of <code>channels</code>
@@ -50,6 +50,16 @@ public class Channels extends TableImpl<ChannelsRecord> {
      * The column <code>channels.channelid</code>.
      */
     public final TableField<ChannelsRecord, Long> CHANNELID = createField(DSL.name("channelid"), org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
+
+    /**
+     * The column <code>channels.read_perm</code>.
+     */
+    public final TableField<ChannelsRecord, Boolean> READ_PERM = createField(DSL.name("read_perm"), org.jooq.impl.SQLDataType.BOOLEAN.nullable(false).defaultValue(org.jooq.impl.DSL.field("true", org.jooq.impl.SQLDataType.BOOLEAN)), this, "");
+
+    /**
+     * The column <code>channels.write_perm</code>.
+     */
+    public final TableField<ChannelsRecord, Boolean> WRITE_PERM = createField(DSL.name("write_perm"), org.jooq.impl.SQLDataType.BOOLEAN.nullable(false).defaultValue(org.jooq.impl.DSL.field("false", org.jooq.impl.SQLDataType.BOOLEAN)), this, "");
 
     /**
      * Create a <code>channels</code> table reference
@@ -126,11 +136,11 @@ public class Channels extends TableImpl<ChannelsRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row1 type methods
+    // Row3 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row1<Long> fieldsRow() {
-        return (Row1) super.fieldsRow();
+    public Row3<Long, Boolean, Boolean> fieldsRow() {
+        return (Row3) super.fieldsRow();
     }
 }

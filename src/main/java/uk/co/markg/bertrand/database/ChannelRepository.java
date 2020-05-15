@@ -21,7 +21,7 @@ public class ChannelRepository {
   }
 
   public int save(String channelid) {
-    return save(new Channels(Long.parseLong(channelid)));
+    return save(new Channels(Long.parseLong(channelid), Boolean.TRUE, Boolean.FALSE));
   }
 
   public int save(Channels channel) {
