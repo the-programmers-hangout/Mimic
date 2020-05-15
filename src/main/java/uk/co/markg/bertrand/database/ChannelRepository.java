@@ -20,8 +20,8 @@ public class ChannelRepository {
     dsl = JooqConnection.getJooqContext();
   }
 
-  public int save(String channelid) {
-    return save(new Channels(Long.parseLong(channelid), Boolean.TRUE, Boolean.FALSE));
+  public int save(String channelid, Boolean read, Boolean write) {
+    return save(new Channels(Long.parseLong(channelid), read, write));
   }
 
   public int save(Channels channel) {
@@ -31,6 +31,11 @@ public class ChannelRepository {
   public boolean isChannelAdded(long channelid) {
     return dsl.selectFrom(CHANNELS).where(CHANNELS.CHANNELID.eq(channelid)).fetchOne(0,
         int.class) != 0;
+  }
+
+  public boolean hasWritePermission(long channelid) {
+    return dsl.selectFrom(CHANNELS).where(CHANNELS.CHANNELID.eq(channelid).and(CHANNELS.WRITE_PERM))
+        .fetchOne(0, int.class) != 0;
   }
 
   public List<Channels> getAll() {

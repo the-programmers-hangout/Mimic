@@ -29,9 +29,11 @@ public class ListChannels {
 
   private String buildListOfChannels(List<Channels> channels) {
     StringBuilder message = new StringBuilder();
+    message.append("channel | read | write").append(System.lineSeparator());
     for (Channels channel : channels) {
       message.append("<#").append(channel.getChannelid());
-      message.append(">").append(System.lineSeparator());
+      message.append("> | ").append(channel.getReadPerm()).append(" | ")
+          .append(channel.getWritePerm()).append(System.lineSeparator());
     }
     return message.toString();
   }

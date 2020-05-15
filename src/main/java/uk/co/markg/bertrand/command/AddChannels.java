@@ -3,6 +3,8 @@ package uk.co.markg.bertrand.command;
 import java.util.ArrayList;
 import java.util.List;
 import disparse.parser.reflection.CommandHandler;
+import disparse.parser.reflection.Flag;
+import disparse.parser.reflection.ParsedEntity;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import uk.co.markg.bertrand.database.ChannelRepository;
@@ -11,13 +13,24 @@ import uk.co.markg.bertrand.db.tables.pojos.Users;
 
 public class AddChannels {
   private MessageReceivedEvent event;
+  private ChannelRequest req;
   private ChannelRepository channelRepo;
   private UserRepository userRepo;
   private List<String> args;
 
-  public AddChannels(MessageReceivedEvent event, ChannelRepository channelRepo,
+  @ParsedEntity
+  static class ChannelRequest {
+    @Flag(shortName = 'r')
+    Boolean read = Boolean.TRUE;
+
+    @Flag(shortName = 'w')
+    Boolean write = Boolean.FALSE;
+  }
+
+  public AddChannels(MessageReceivedEvent event, ChannelRequest req, ChannelRepository channelRepo,
       UserRepository userRepo, List<String> args) {
     this.event = event;
+    this.req = req;
     this.channelRepo = channelRepo;
     this.userRepo = userRepo;
     this.args = args;
@@ -25,9 +38,9 @@ public class AddChannels {
 
   @CommandHandler(commandName = "channels.add", description = "Add channels to read from",
       roles = "staff")
-  public static void executeAdd(MessageReceivedEvent event, ChannelRepository channelRepo,
-      UserRepository userRepo, List<String> args) {
-    new AddChannels(event, channelRepo, userRepo, args).execute();
+  public static void executeAdd(MessageReceivedEvent event, ChannelRequest req,
+      ChannelRepository channelRepo, UserRepository userRepo, List<String> args) {
+    new AddChannels(event, req, channelRepo, userRepo, args).execute();
   }
 
   private void execute() {
@@ -40,7 +53,7 @@ public class AddChannels {
     for (String channelid : args) {
       var textChannel = event.getJDA().getTextChannelById(channelid);
       if (textChannel != null) {
-        channelRepo.save(channelid);
+        channelRepo.save(channelid, req.read, req.write);
         retrieveChannelHistory(textChannel);
       } else {
         badChannels.add(channelid);
