@@ -1,17 +1,15 @@
 package uk.co.markg.bertrand.command;
 
-import static uk.co.markg.bertrand.db.tables.Users.USERS;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import org.jooq.DSLContext;
 import disparse.parser.reflection.CommandHandler;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import uk.co.markg.bertrand.database.ChannelRepository;
-import uk.co.markg.bertrand.database.JooqConnection;
+import uk.co.markg.bertrand.database.MessageRepository;
 import uk.co.markg.bertrand.database.UserRepository;
 import uk.co.markg.bertrand.db.tables.pojos.Channels;
 import uk.co.markg.bertrand.db.tables.pojos.Users;
@@ -26,6 +24,7 @@ public class OptIn {
   private ChannelRepository channelRepo;
 
   private OptIn() {
+
   }
 
   public OptIn(MessageReceivedEvent event, UserRepository userRepo, ChannelRepository channelRepo) {
@@ -68,8 +67,8 @@ public class OptIn {
   private void saveUserHistory(TextChannel textChannel, long userid) {
     var validHistoryMessages = getUserHistory(textChannel, userid).thenApply(filterMessages());
     var messages = buildMessageList(userid, validHistoryMessages);
-    DSLContext dsl = JooqConnection.getJooqContext();
-    messages.thenAccept(msgs -> dsl.batchInsert(msgs).execute());
+    MessageRepository messageRepository = MessageRepository.getRepository();
+    messages.thenAccept(messageRepository::batchInsert);
   }
 
   private CompletableFuture<List<MessagesRecord>> buildMessageList(long userid,
@@ -91,9 +90,5 @@ public class OptIn {
   private CompletableFuture<List<Message>> getUserHistory(TextChannel channel, long userid) {
     return channel.getIterableHistory().takeAsync(HISTORY_LIMIT).thenApply(list -> list.stream()
         .filter(m -> m.getAuthor().getIdLong() == userid).collect(Collectors.toList()));
-  }
-
-  public static boolean isUserOptedIn(DSLContext dsl, long userid) {
-    return dsl.selectFrom(USERS).where(USERS.USERID.eq(userid)).fetchOne(0, int.class) != 0;
   }
 }

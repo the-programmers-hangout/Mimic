@@ -6,6 +6,7 @@ import org.jooq.DSLContext;
 import disparse.parser.reflection.Injectable;
 import net.dv8tion.jda.api.entities.Message;
 import uk.co.markg.bertrand.db.tables.pojos.Messages;
+import uk.co.markg.bertrand.db.tables.records.MessagesRecord;
 
 public class MessageRepository {
 
@@ -29,10 +30,14 @@ public class MessageRepository {
   public int save(Messages message) {
     return dsl.insertInto(MESSAGES).values(message).execute();
   }
-  
+
   public List<String> getByUser(long userid) {
     return dsl.select(MESSAGES.CONTENT).from(MESSAGES).where(MESSAGES.USERID.eq(userid))
         .fetchInto(String.class);
+  }
+
+  public void batchInsert(List<MessagesRecord> batch) {
+    dsl.batchInsert(batch).execute();
   }
 
 }
