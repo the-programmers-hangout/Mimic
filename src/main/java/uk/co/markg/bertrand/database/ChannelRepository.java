@@ -97,7 +97,6 @@ public class ChannelRepository {
    * @return the number of rows deleted in the channel table
    */
   public int delete(long channelid) {
-    dsl.deleteFrom(MESSAGES).where(MESSAGES.CHANNELID.eq(channelid)).execute();
     return dsl.deleteFrom(CHANNELS).where(CHANNELS.CHANNELID.eq(channelid)).execute();
   }
 }
