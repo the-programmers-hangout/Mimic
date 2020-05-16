@@ -47,7 +47,7 @@ public class App {
   private static void executeJooqGeneration() throws Exception {
     var configuration =
         new Configuration()
-            .withJdbc(new Jdbc().withDriver(System.getenv("B_DRIVER"))
+            .withJdbc(new Jdbc().withDriver("org.postgresql.Driver")
                 .withUrl(System.getenv("B_HOST")).withUser(
                     System.getenv("B_USER"))
                 .withPassword(System.getenv("B_PASS")))
