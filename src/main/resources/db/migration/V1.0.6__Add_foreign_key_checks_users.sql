@@ -1,0 +1,1 @@
+ALTER TABLE messages ADD CONSTRAINT user_fkey FOREIGN KEY (userid) REFERENCES users (userid) ON DELETE CASCADE;
