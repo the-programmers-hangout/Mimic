@@ -70,7 +70,8 @@ public class OptIn {
    */
   private void optInUser(long userid) {
     userRepo.save(userid);
-    event.getChannel().sendMessage("You have been opted-in").queue();
+    event.getChannel().sendMessage("You have been opted-in. I'll start saving your messages!")
+        .queue();
     var channels = channelRepo.getAll();
     for (Channels channel : channels) {
       var textChannel = event.getJDA().getTextChannelById(channel.getChannelid());
