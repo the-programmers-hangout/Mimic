@@ -19,6 +19,12 @@ public class RemoveChannels {
     this.args = args;
   }
 
+  /**
+   * Command execution method held by Disparse
+   * 
+   * @param event The message event from discord that triggered the command
+   * @param repo  The channel repository used to communicate with the database
+   */
   @CommandHandler(commandName = "channels.remove", description = "Remove channels to read from",
       roles = "staff")
   public static void executeRemove(MessageReceivedEvent event, ChannelRepository repo,
@@ -26,11 +32,17 @@ public class RemoveChannels {
     new RemoveChannels(event, repo, args).execute();
   }
 
-  public void execute() {
+  private void execute() {
     String response = removeChannels();
     event.getChannel().sendMessage(response).queue();
   }
 
+  /**
+   * Removes existing channels from the database and any messages saved from those channels
+   * 
+   * @return A string indicating success or failure. Failure message includes a list of channels
+   *         that could not be removed from the database
+   */
   private String removeChannels() {
     var badChannels = new ArrayList<String>();
     for (String channelid : args) {

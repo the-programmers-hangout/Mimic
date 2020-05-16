@@ -29,6 +29,15 @@ public class AddChannels {
     Boolean write = Boolean.FALSE;
   }
 
+  /**
+   * Constructs a new channel command
+   * 
+   * @param event       The discord message event that triggered the command
+   * @param req         The parsed flags passed with the command
+   * @param channelRepo The channel repository
+   * @param userRepo    The user repository
+   * @param args        The arguments passed with the command. Should be a list of channel ids
+   */
   public AddChannels(MessageReceivedEvent event, ChannelRequest req, ChannelRepository channelRepo,
       UserRepository userRepo, List<String> args) {
     this.event = event;
@@ -38,6 +47,17 @@ public class AddChannels {
     this.args = args;
   }
 
+  /**
+   * Method held by Disparse to begin command execution
+   * 
+   * @param event       The message event from discord that triggered the command
+   * @param req         The command request flags
+   * @param channelRepo The {@link uk.co.markg.bertrand.database.ChannelRepository
+   *                    ChannelRepository} instance
+   * @param userRepo    The {@link uk.co.markg.bertrand.database.UserRepository UserRepository}
+   *                    instance
+   * @param args        A list of parsed command arguments. Should be a list of channel ids
+   */
   @CommandHandler(commandName = "channels.add", description = "Add channels to read from",
       roles = "staff")
   public static void executeAdd(MessageReceivedEvent event, ChannelRequest req,
@@ -45,11 +65,21 @@ public class AddChannels {
     new AddChannels(event, req, channelRepo, userRepo, args).execute();
   }
 
+  /**
+   * Executes the command. Adds any valid channels to the database. Sends a confirmation message to
+   * discord.
+   */
   private void execute() {
     String response = addChannels();
     event.getChannel().sendMessage(response).queue();
   }
 
+  /**
+   * Takes all channelids passed in and adds them to the database. Collects user message history of
+   * all users for each channel
+   * 
+   * @return The response message to send back to the channel
+   */
   private String addChannels() {
     var badChannels = new ArrayList<String>();
     for (String channelid : args) {
@@ -65,6 +95,12 @@ public class AddChannels {
         : "Ignored arguments: " + String.join(",", badChannels);
   }
 
+  /**
+   * Collect channel history for the specificed {@link net.dv8tion.jda.api.entities.TextChannel
+   * TextChannel} for all users in the database
+   * 
+   * @param channel The target channel
+   */
   private void retrieveChannelHistory(TextChannel channel) {
     var users = userRepo.getAll();
     for (Users user : users) {

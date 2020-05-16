@@ -26,6 +26,12 @@ public class Markov {
     this(List.of(input));
   }
 
+  /**
+   * Convenience method to generate multiple sentences
+   * 
+   * @param sentences the number of sentences to generate
+   * @return the sentences joined together by a space character
+   */
   public String generate(int sentences) {
     StringBuilder sb = new StringBuilder();
     for (int i = 0; i < sentences; i++) {
@@ -34,6 +40,11 @@ public class Markov {
     return sb.toString();
   }
 
+  /**
+   * Generates a sentence from the markov chain
+   * 
+   * @return a complete sentence
+   */
   public String generate() {
     int startNo = ThreadLocalRandom.current().nextInt(startWords.size());
     String word = startWords.get(startNo);
@@ -61,12 +72,22 @@ public class Markov {
     return String.join(" ", sentence);
   }
 
+  /**
+   * Convenience method to parse multiple sentences
+   * 
+   * @param inputs the list of sentences
+   */
   private void parseInput(List<String> inputs) {
     for (String input : inputs) {
       parseInput(input);
     }
   }
 
+  /**
+   * Parses a sentence into the word frequency map
+   * 
+   * @param input the sentence to parse
+   */
   private void parseInput(String input) {
     String[] tokens = input.split("\\s+");
     if (tokens.length < 4) {
@@ -103,10 +124,22 @@ public class Markov {
     }
   }
 
-  private String escapeUserMention(String word) {
-    return word.matches("<@!?[0-9]+>") ? word.replace('@', '$') : word;
+  /**
+   * Escapes user mentions to avoid accidental pings
+   * 
+   * @param token the token to escape
+   * @return the escaped token
+   */
+  private String escapeUserMention(String token) {
+    return token.matches("<@!?[0-9]+>") ? token.replace('@', '$') : token;
   }
 
+  /**
+   * Checks whether a word can be matched as an end word. i.e. the word ends a sentence.
+   * 
+   * @param word the word to check
+   * @return true if the word can be matched as an end word
+   */
   private boolean isEndWord(String word) {
     List<Predicate<String>> predicates = new ArrayList<>();
     predicates.add(w -> w.endsWith("."));
@@ -115,12 +148,24 @@ public class Markov {
     return predicates.stream().anyMatch(predicate -> predicate.test(word));
   }
 
+  /**
+   * Inserts a new word and follow word into the wordFrequencyMap
+   * 
+   * @param word       the main word
+   * @param followWord the follow word
+   */
   private void insertWordFrequency(String word, String followWord) {
     var followFrequency = new HashMap<String, Double>();
     followFrequency.put(followWord, 1.0);
     wordFrequencyMap.put(word, followFrequency);
   }
 
+  /**
+   * Updates the follow word frequency of a word in the wordFrequencyMap
+   * 
+   * @param key        the main word
+   * @param followWord the follow word
+   */
   private void updateWordFrequency(String key, String followWord) {
     var followFrequency = wordFrequencyMap.get(key);
     if (followFrequency.containsKey(followWord)) {
@@ -131,6 +176,9 @@ public class Markov {
     wordFrequencyMap.put(key, followFrequency);
   }
 
+  /**
+   * Calculate the probabilities for each of the follow words of each word in the map.
+   */
   private void calculateProbabilities() {
     for (var entry : wordFrequencyMap.entrySet()) {
       int sum = 0;

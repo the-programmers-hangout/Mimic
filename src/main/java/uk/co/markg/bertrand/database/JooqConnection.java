@@ -17,6 +17,12 @@ public class JooqConnection {
   private JooqConnection() {
   }
 
+  /**
+   * Initialises the Jooq {@link org.jooq.DSLContext DSLContext} if it has not been initialised and
+   * returns it
+   * 
+   * @return the dsl context
+   */
   @Injectable
   public static DSLContext getJooqContext() {
     if (dsl == null && config == null) {
@@ -25,6 +31,10 @@ public class JooqConnection {
     return dsl;
   }
 
+  /**
+   * Initialises the Jooq {@link org.jooq.DSLContext DSLContext} with a
+   * {@link com.zaxxer.hikari.HikariDataSource HikariDataSource}
+   */
   private static void init() {
     logger.info("Initialising Jooq context");
     config = new HikariConfig();

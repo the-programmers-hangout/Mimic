@@ -29,12 +29,21 @@ public class App {
     launchBot();
   }
 
+  /**
+   * Initialises Flyway and initiates any required db migrations
+   */
   private static void initDatabase() {
     Flyway.configure()
         .dataSource(System.getenv("B_HOST"), System.getenv("B_USER"), System.getenv("B_PASS"))
         .load().migrate();
   }
 
+  /**
+   * Will run jooq code generation to build records, pojos etc for jooq. Run only when database
+   * structure has been migrated.
+   * 
+   * @throws Exception When code generation fails
+   */
   private static void executeJooqGeneration() throws Exception {
     var configuration =
         new Configuration()
@@ -54,6 +63,13 @@ public class App {
     GenerationTool.generate(configuration);
   }
 
+  /**
+   * Prepares the disparse {@link disparse.discord.Dispatcher Dispatcher}, adds listeners to the bot
+   * and builds the jda instance
+   * 
+   * @throws LoginException
+   * @throws InterruptedException
+   */
   private static void launchBot() throws LoginException, InterruptedException {
     var builder = Dispatcher.init(JDABuilder.createDefault(System.getenv("B_TOKEN")), PREFIX, 10);
     builder.addEventListeners(new MessageReader(), new MarkovResponse());

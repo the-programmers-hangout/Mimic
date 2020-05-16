@@ -23,6 +23,11 @@ public class MessageReader extends ListenerAdapter {
     this.messageRepo = MessageRepository.getRepository();
   }
 
+  /**
+   * Builds a list of predicates to filter messages that will be used for building the markov chains
+   * 
+   * @return the list of predicates
+   */
   private static List<Predicate<String>> getMessagePredicates() {
     var predicates = new ArrayList<Predicate<String>>();
     predicates.add(msg -> msg.matches("^\\W+[.*\\s\\S]*"));
@@ -32,6 +37,11 @@ public class MessageReader extends ListenerAdapter {
     return predicates;
   }
 
+  /**
+   * Listener method triggered by the discord bot receiving a message
+   * 
+   * @param event the discord event
+   */
   @Override
   public void onMessageReceived(MessageReceivedEvent e) {
     if (e.getAuthor().isBot()) {
@@ -43,11 +53,25 @@ public class MessageReader extends ListenerAdapter {
     }
   }
 
+  /**
+   * Convenience method to hold message constraints. Checks whether the invoking user is opted in,
+   * whether the bot has read access to the channel, and whether the message is considered valid
+   * 
+   * @param e      the discord event
+   * @param userid the target userid
+   * @return true if all constraints are satisfied
+   */
   private boolean isMessageConstraintsMet(MessageReceivedEvent e, long userid) {
     return userRepo.isUserOptedIn(userid) && messageIsValid(e.getMessage())
         && channelRepo.isChannelAdded(userid);
   }
 
+  /**
+   * Tests a message against the list of predicates
+   * 
+   * @param message the message to test
+   * @return true if the message is valid
+   */
   public static boolean messageIsValid(Message message) {
     String text = message.getContentRaw();
     return !getMessagePredicates().stream().anyMatch(predicate -> predicate.test(text));

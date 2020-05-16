@@ -18,18 +18,35 @@ public class ListChannels {
     this.channelRepo = channelRepo;
   }
 
+  /**
+   * Command execution method held by Disparse
+   * 
+   * @param event The message event from discord that triggered the command
+   * @param repo  The channel repository used to communicate with the database
+   */
   @CommandHandler(commandName = "channels", description = "Lists all channels registered",
       roles = "staff")
   public static void executeList(MessageReceivedEvent event, ChannelRepository repo) {
     new ListChannels(event, repo).execute();
   }
 
+  /**
+   * Controls execution of the command. Retrieves all channels from the database and builds an embed
+   * to send to discord
+   */
   private void execute() {
     var channels = channelRepo.getAll();
     var message = buildListOfChannels(channels);
     event.getChannel().sendMessage(message).queue();
   }
 
+  /**
+   * Create a {@link net.dv8tion.jda.api.entities.MessageEmbed MessageEmbed} to display all the
+   * channels and their respective permissions.
+   * 
+   * @param channels the list of channels retrieved from the database
+   * @return a {@link net.dv8tion.jda.api.entities.MessageEmbed MessageEmbed}
+   */
   private MessageEmbed buildListOfChannels(List<Channels> channels) {
     EmbedBuilder eb = new EmbedBuilder();
     eb.setTitle("Channels");
