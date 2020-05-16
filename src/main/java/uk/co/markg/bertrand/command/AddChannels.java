@@ -58,8 +58,8 @@ public class AddChannels {
    *                    instance
    * @param args        A list of parsed command arguments. Should be a list of channel ids
    */
-  @CommandHandler(commandName = "channels.add", description = "Add channels to read from",
-      roles = "staff")
+  @CommandHandler(commandName = "channels.add",
+      description = "Add channels. Defaults to read access only.", roles = "staff")
   public static void executeAdd(MessageReceivedEvent event, ChannelRequest req,
       ChannelRepository channelRepo, UserRepository userRepo, List<String> args) {
     new AddChannels(event, req, channelRepo, userRepo, args).execute();
