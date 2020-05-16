@@ -1,6 +1,5 @@
 package uk.co.markg.bertrand.database;
 
-import static uk.co.markg.bertrand.db.tables.Messages.MESSAGES;
 import static uk.co.markg.bertrand.db.tables.Users.USERS;
 import java.util.List;
 import org.jooq.DSLContext;
