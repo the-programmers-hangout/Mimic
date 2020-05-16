@@ -1,0 +1,1 @@
+ALTER TABLE messages ADD CONSTRAINT channel_fkey FOREIGN KEY (channelid) REFERENCES channels (channelid) ON DELETE CASCADE;
