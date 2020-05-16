@@ -25,7 +25,8 @@ public class RemoveChannels {
    * @param event The message event from discord that triggered the command
    * @param repo  The channel repository used to communicate with the database
    */
-  @CommandHandler(commandName = "channels.remove", description = "Remove channels to read from",
+  @CommandHandler(commandName = "channels.remove",
+      description = "Remove channels from the database. All related messages are also removed.",
       roles = "staff")
   public static void executeRemove(MessageReceivedEvent event, ChannelRepository repo,
       List<String> args) {
