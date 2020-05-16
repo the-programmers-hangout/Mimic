@@ -62,7 +62,6 @@ public class UserRepository {
    * @return the number of rows deleted from the user table
    */
   public int delete(long userid) {
-    dsl.deleteFrom(MESSAGES).where(MESSAGES.USERID.eq(userid)).execute();
     return dsl.deleteFrom(USERS).where(USERS.USERID.eq(userid)).execute();
   }
 }
