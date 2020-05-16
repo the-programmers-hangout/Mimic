@@ -22,4 +22,4 @@ B_PASS=my_password
 B_TOKEN=my_discord_token
 ```
 * Run bot via main.
-* If making changes to the database, add a new migration file. Run the bot normally, then run the bot again and pass `--generate` to the main method.
+* If making changes to the database, add a new migration file. Run the bot normally (so flyway runs the migrations), then run the bot again and pass `--generate` to the main method so that Jooq generates the relevant database changes.
