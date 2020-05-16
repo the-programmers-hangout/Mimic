@@ -1,6 +1,6 @@
 # Bertrand
 
-Bertrand(Mimic Bot) is a discord bot built of [The Programmer's Hangout](https://theprogrammershangout.com/) that creates sentences based on it's users.
+Bertrand(Mimic Bot) is a discord bot built for [The Programmer's Hangout](https://theprogrammershangout.com/) that creates sentences based on it's users.
 
 ## Features
 
