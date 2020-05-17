@@ -76,7 +76,7 @@ public class OptIn {
     for (Channels channel : channels) {
       var textChannel = event.getJDA().getTextChannelById(channel.getChannelid());
       if (textChannel != null && channel.getReadPerm()) {
-        saveUserHistory(textChannel, userid);
+        saveUserHistory(textChannel, List.of(userid));
       }
     }
   }
@@ -88,8 +88,8 @@ public class OptIn {
    * @param textChannel the target channel to read messages from
    * @param user        the target user to save history for
    */
-  public static void saveUserHistory(TextChannel textChannel, Users user) {
-    new OptIn().saveUserHistory(textChannel, user.getUserid());
+  public static void saveUserHistory(TextChannel textChannel, Users users) {
+    new OptIn().saveUserHistory(List.of(users), textChannel);
   }
 
   /**
@@ -98,12 +98,19 @@ public class OptIn {
    * @param textChannel the target text channel
    * @param userid      the target user
    */
-  private void saveUserHistory(TextChannel textChannel, long userid) {
-    var validHistoryMessages = getUserHistory(textChannel, userid).thenApply(filterMessages());
-    var messages = buildMessageList(userid, validHistoryMessages);
+  private void saveUserHistory(List<Users> users, TextChannel textChannel) {
+    var userids = users.stream().map(Users::getUserid).collect(Collectors.toList());
+    saveUserHistory(textChannel, userids);
+  }
+  
+  
+  private void saveUserHistory(TextChannel textChannel, List<Long> userids) {
+    var validHistoryMessages = getUserHistory(textChannel, userids).thenApply(filterMessages());
+    var messages = buildMessageList(validHistoryMessages);
     MessageRepository messageRepository = MessageRepository.getRepository();
     messages.thenAccept(messageRepository::batchInsert);
   }
+  
 
   /**
    * Transforms the list of discord {@link net.dv8tion.jda.api.entities.Message Message}s into a
@@ -114,10 +121,10 @@ public class OptIn {
    * @param validHistoryMessages A list of valid history messages
    * @return the list of MessagesRecord
    */
-  private CompletableFuture<List<MessagesRecord>> buildMessageList(long userid,
+  private CompletableFuture<List<MessagesRecord>> buildMessageList(
       CompletableFuture<? extends List<Message>> validHistoryMessages) {
-    return validHistoryMessages.thenApply(history -> history.stream()
-        .map(msg -> buildMessage(msg, userid)).collect(Collectors.toList()));
+    return validHistoryMessages.thenApply(
+        history -> history.stream().map(msg -> buildMessage(msg)).collect(Collectors.toList()));
   }
 
   /**
@@ -128,9 +135,9 @@ public class OptIn {
    * @param userid  the sender of the message
    * @return the message as a {@link uk.co.markg.bertrand.db.tables.records.MessagesRecord}
    */
-  private MessagesRecord buildMessage(Message message, long userid) {
-    return new MessagesRecord(message.getIdLong(), userid, message.getContentRaw(),
-        message.getChannel().getIdLong());
+  private MessagesRecord buildMessage(Message message) {
+    return new MessagesRecord(message.getIdLong(), message.getAuthor().getIdLong(),
+        message.getContentRaw(), message.getChannel().getIdLong());
   }
 
   /**
@@ -152,8 +159,8 @@ public class OptIn {
    * @param userid  the target user
    * @return a {@link java.util.concurrent.CompletableFuture CompletableFuture} list of messages
    */
-  private CompletableFuture<List<Message>> getUserHistory(TextChannel channel, long userid) {
+  private CompletableFuture<List<Message>> getUserHistory(TextChannel channel, List<Long> userids) {
     return channel.getIterableHistory().takeAsync(HISTORY_LIMIT).thenApply(list -> list.stream()
-        .filter(m -> m.getAuthor().getIdLong() == userid).collect(Collectors.toList()));
+        .filter(m -> userids.contains(m.getAuthor().getIdLong())).collect(Collectors.toList()));
   }
 }
