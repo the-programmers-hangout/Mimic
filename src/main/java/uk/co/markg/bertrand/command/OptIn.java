@@ -75,7 +75,7 @@ public class OptIn {
     var channels = channelRepo.getAll();
     for (Channels channel : channels) {
       var textChannel = event.getJDA().getTextChannelById(channel.getChannelid());
-      if (textChannel != null) {
+      if (textChannel != null && channel.getReadPerm()) {
         saveUserHistory(textChannel, userid);
       }
     }
