@@ -4,6 +4,7 @@
 package uk.co.markg.bertrand.db;
 
 
+import org.jooq.ForeignKey;
 import org.jooq.TableField;
 import org.jooq.UniqueKey;
 import org.jooq.impl.Internal;
@@ -40,6 +41,8 @@ public class Keys {
     // FOREIGN KEY definitions
     // -------------------------------------------------------------------------
 
+    public static final ForeignKey<MessagesRecord, UsersRecord> MESSAGES__USER_FKEY = ForeignKeys0.MESSAGES__USER_FKEY;
+    public static final ForeignKey<MessagesRecord, ChannelsRecord> MESSAGES__CHANNEL_FKEY = ForeignKeys0.MESSAGES__CHANNEL_FKEY;
 
     // -------------------------------------------------------------------------
     // [#1459] distribute members to avoid static initialisers > 64kb
@@ -49,5 +52,10 @@ public class Keys {
         public static final UniqueKey<ChannelsRecord> CHANNELS_PKEY = Internal.createUniqueKey(Channels.CHANNELS, "channels_pkey", new TableField[] { Channels.CHANNELS.CHANNELID }, true);
         public static final UniqueKey<MessagesRecord> MESSAGES_PKEY = Internal.createUniqueKey(Messages.MESSAGES, "messages_pkey", new TableField[] { Messages.MESSAGES.MESSAGEID }, true);
         public static final UniqueKey<UsersRecord> USERS_PKEY = Internal.createUniqueKey(Users.USERS, "users_pkey", new TableField[] { Users.USERS.USERID }, true);
+    }
+
+    private static class ForeignKeys0 {
+        public static final ForeignKey<MessagesRecord, UsersRecord> MESSAGES__USER_FKEY = Internal.createForeignKey(Keys.USERS_PKEY, Messages.MESSAGES, "user_fkey", new TableField[] { Messages.MESSAGES.USERID }, true);
+        public static final ForeignKey<MessagesRecord, ChannelsRecord> MESSAGES__CHANNEL_FKEY = Internal.createForeignKey(Keys.CHANNELS_PKEY, Messages.MESSAGES, "channel_fkey", new TableField[] { Messages.MESSAGES.CHANNELID }, true);
     }
 }

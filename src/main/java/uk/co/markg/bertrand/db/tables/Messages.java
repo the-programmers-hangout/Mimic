@@ -31,7 +31,7 @@ import uk.co.markg.bertrand.db.tables.records.MessagesRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Messages extends TableImpl<MessagesRecord> {
 
-    private static final long serialVersionUID = 1963933007;
+    private static final long serialVersionUID = 1395826401;
 
     /**
      * The reference instance of <code>messages</code>
@@ -112,6 +112,19 @@ public class Messages extends TableImpl<MessagesRecord> {
     @Override
     public List<UniqueKey<MessagesRecord>> getKeys() {
         return Arrays.<UniqueKey<MessagesRecord>>asList(Keys.MESSAGES_PKEY);
+    }
+
+    @Override
+    public List<ForeignKey<MessagesRecord, ?>> getReferences() {
+        return Arrays.<ForeignKey<MessagesRecord, ?>>asList(Keys.MESSAGES__USER_FKEY, Keys.MESSAGES__CHANNEL_FKEY);
+    }
+
+    public Users users() {
+        return new Users(this, Keys.MESSAGES__USER_FKEY);
+    }
+
+    public Channels channels() {
+        return new Channels(this, Keys.MESSAGES__CHANNEL_FKEY);
     }
 
     @Override
