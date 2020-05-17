@@ -99,7 +99,7 @@ public class Markov {
         continue;
       }
       word = escapeUserMention(word);
-      if (word.charAt(0) == word.toUpperCase().charAt(0)) {
+      if (isValidStartWord(word)) {
         startWords.add(word);
       }
       if (isEndWord(word) && !endWords.contains(word)) {
@@ -122,6 +122,10 @@ public class Markov {
         insertWordFrequency(word, nextWord);
       }
     }
+  }
+
+  private boolean isValidStartWord(String word) {
+    return word.charAt(0) == word.toUpperCase().charAt(0) && !startWords.contains(word);
   }
 
   /**
