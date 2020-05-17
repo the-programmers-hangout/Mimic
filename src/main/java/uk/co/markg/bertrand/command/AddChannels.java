@@ -86,7 +86,9 @@ public class AddChannels {
       var textChannel = event.getJDA().getTextChannelById(channelid);
       if (textChannel != null) {
         channelRepo.save(channelid, req.read, req.write);
-        retrieveChannelHistory(textChannel);
+        if (req.read) {
+          retrieveChannelHistory(textChannel);
+        }
       } else {
         badChannels.add(channelid);
       }
