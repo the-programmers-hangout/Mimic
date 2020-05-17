@@ -1,5 +1,6 @@
 package uk.co.markg.bertrand.database;
 
+import static uk.co.markg.bertrand.db.tables.Messages.MESSAGES;
 import static uk.co.markg.bertrand.db.tables.Users.USERS;
 import java.util.List;
 import org.jooq.DSLContext;
@@ -32,6 +33,17 @@ public class UserRepository {
    */
   public List<Users> getAll() {
     return dsl.selectFrom(USERS).fetchInto(Users.class);
+  }
+
+  /**
+   * Retrieves the list of opted in users that have messages saved into the messages table. This
+   * means they are a candidate for markov generation
+   * 
+   * @return the list of users
+   */
+  public List<Users> getAllMarkovCandidates() {
+    return dsl.select(MESSAGES.USERID).from(MESSAGES).groupBy(MESSAGES.USERID)
+        .fetchInto(Users.class);
   }
 
   /**

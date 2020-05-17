@@ -80,7 +80,7 @@ public class MarkovResponse extends ListenerAdapter {
    * @return the random user id
    */
   private long getRandomUserId() {
-    var users = userRepo.getAll();
+    var users = userRepo.getAllMarkovCandidates();
     return users.get(ThreadLocalRandom.current().nextInt(users.size())).getUserid();
   }
 
