@@ -18,7 +18,7 @@ import uk.co.markg.bertrand.listener.MessageReader;
 
 public class OptIn {
 
-  private static final int HISTORY_LIMIT = 10_000;
+  private static final int HISTORY_LIMIT = 100_000;
   private MessageReceivedEvent event;
   private UserRepository userRepo;
   private ChannelRepository channelRepo;
