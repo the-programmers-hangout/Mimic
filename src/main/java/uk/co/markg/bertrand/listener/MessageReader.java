@@ -31,7 +31,7 @@ public class MessageReader extends ListenerAdapter {
   private static List<Predicate<String>> getMessagePredicates() {
     var predicates = new ArrayList<Predicate<String>>();
     predicates.add(msg -> msg.matches("^\\W+[.*\\s\\S]*"));
-    predicates.add(msg -> msg.split("\\s").length < 4);
+    predicates.add(msg -> msg.split("\\s").length < 3);
     predicates.add(msg -> msg.startsWith("`"));
     predicates.add(msg -> msg.startsWith(App.PREFIX));
     return predicates;
