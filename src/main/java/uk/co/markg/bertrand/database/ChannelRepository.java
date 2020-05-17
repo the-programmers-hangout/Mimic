@@ -61,6 +61,17 @@ public class ChannelRepository {
   }
 
   /**
+   * Returns whether a channel exists in the database and has read permission for the bot.
+   * 
+   * @param channelid the target channel
+   * @return true if the channel has read permission
+   */
+  public boolean hasReadPermission(long channelid) {
+    return dsl.selectFrom(CHANNELS).where(CHANNELS.CHANNELID.eq(channelid).and(CHANNELS.READ_PERM))
+        .fetchOne(0, int.class) != 0;
+  }
+
+  /**
    * Returns whether a channel exists in the database and has write permission for the bot.
    * 
    * @param channelid the target channel

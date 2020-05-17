@@ -47,9 +47,8 @@ public class MessageReader extends ListenerAdapter {
     if (e.getAuthor().isBot()) {
       return;
     }
-    long userid = e.getAuthor().getIdLong();
-    if (isMessageConstraintsMet(e, userid)) {
-      messageRepo.save(userid, e.getMessage());
+    if (isMessageConstraintsMet(e)) {
+      messageRepo.save(e.getAuthor().getIdLong(), e.getMessage());
     }
   }
 
@@ -61,9 +60,9 @@ public class MessageReader extends ListenerAdapter {
    * @param userid the target userid
    * @return true if all constraints are satisfied
    */
-  private boolean isMessageConstraintsMet(MessageReceivedEvent e, long userid) {
-    return userRepo.isUserOptedIn(userid) && messageIsValid(e.getMessage())
-        && channelRepo.isChannelAdded(userid);
+  private boolean isMessageConstraintsMet(MessageReceivedEvent e) {
+    return userRepo.isUserOptedIn(e.getAuthor().getIdLong()) && messageIsValid(e.getMessage())
+        && channelRepo.hasReadPermission(e.getChannel().getIdLong());
   }
 
   /**

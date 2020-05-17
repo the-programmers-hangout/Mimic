@@ -22,7 +22,7 @@ public class AddChannels {
   static class ChannelRequest {
     @Flag(shortName = 'r', longName = "read",
         description = "Whether the bot should read from the channel. Defaults to true")
-    Boolean read = Boolean.TRUE;
+    Boolean read = Boolean.FALSE;
 
     @Flag(shortName = 'w', longName = "write",
         description = "Whether the bot can write to the channel. Defaults to false")
