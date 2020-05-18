@@ -2,6 +2,7 @@ package uk.co.markg.bertrand.database;
 
 import static uk.co.markg.bertrand.db.tables.Messages.MESSAGES;
 import static uk.co.markg.bertrand.db.tables.Users.USERS;
+import static org.jooq.impl.DSL.count;
 import java.util.List;
 import org.jooq.DSLContext;
 import disparse.parser.reflection.Injectable;
@@ -43,7 +44,7 @@ public class UserRepository {
    */
   public List<Users> getAllMarkovCandidates() {
     return dsl.select(MESSAGES.USERID).from(MESSAGES).groupBy(MESSAGES.USERID)
-        .fetchInto(Users.class);
+        .having(count().ge(5)).fetchInto(Users.class);
   }
 
   /**
