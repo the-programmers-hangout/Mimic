@@ -1,6 +1,8 @@
 package uk.co.markg.bertrand.listener;
 
 import java.util.concurrent.ThreadLocalRandom;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -10,6 +12,7 @@ import uk.co.markg.bertrand.database.UserRepository;
 import uk.co.markg.bertrand.markov.Markov;
 
 public class MarkovResponse extends ListenerAdapter {
+  private static final Logger logger = LogManager.getLogger(MarkovResponse.class);
 
   private ChannelRepository channelRepo;
   private MessageRepository messageRepo;
@@ -69,9 +72,13 @@ public class MarkovResponse extends ListenerAdapter {
    */
   private String generateReply() {
     long userid = getRandomUserId();
+    logger.info("Loading markov chain for user {}", userid);
     Markov markov = loadMarkov(userid);
     int noOfSentences = ThreadLocalRandom.current().nextInt(5) + 1;
-    return markov.generate(noOfSentences);
+    logger.info("Generating {} sentences", noOfSentences);
+    String response = markov.generate(noOfSentences);
+    logger.info("Generated response: {}", response);
+    return response;
   }
 
   /**
