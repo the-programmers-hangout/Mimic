@@ -135,7 +135,7 @@ public class Markov {
    * @return the escaped token
    */
   private String escapeUserMention(String token) {
-    return token.matches("<@!?[0-9]+>") ? token.replace('@', '$') : token;
+    return token.matches("\\S*(<@!?[0-9]+>)\\S*") ? token.replace('@', '$') : token;
   }
 
   /**
