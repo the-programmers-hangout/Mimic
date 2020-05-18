@@ -4,7 +4,7 @@
         "name": "bertrand",
         "packages": "uk.co.markg.bertrand",
         "ThresholdFilter": {
-            "level": "debug"
+            "level": "info"
         },
         "appenders": {
             "Console": {
