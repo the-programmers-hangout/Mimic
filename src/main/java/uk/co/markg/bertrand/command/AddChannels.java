@@ -2,6 +2,8 @@ package uk.co.markg.bertrand.command;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import disparse.parser.reflection.CommandHandler;
 import disparse.parser.reflection.Flag;
 import disparse.parser.reflection.ParsedEntity;
@@ -9,9 +11,10 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import uk.co.markg.bertrand.database.ChannelRepository;
 import uk.co.markg.bertrand.database.UserRepository;
-import uk.co.markg.bertrand.db.tables.pojos.Users;
 
 public class AddChannels {
+  private static final Logger logger = LogManager.getLogger(AddChannels.class);
+
   private MessageReceivedEvent event;
   private ChannelRequest req;
   private ChannelRepository channelRepo;
@@ -87,6 +90,7 @@ public class AddChannels {
       if (textChannel != null) {
         channelRepo.save(channelid, req.read, req.write);
         if (req.read) {
+          logger.info("Reading from channel {}", channelid);
           retrieveChannelHistory(textChannel);
         }
       } else {
@@ -105,8 +109,8 @@ public class AddChannels {
    */
   private void retrieveChannelHistory(TextChannel channel) {
     var users = userRepo.getAll();
-    for (Users user : users) {
-      OptIn.saveUserHistory(channel, user);
-    }
+    logger.info("Found {} users", users.size());
+    OptIn.initiateSaveUserHistory(channel, users);
+
   }
 }

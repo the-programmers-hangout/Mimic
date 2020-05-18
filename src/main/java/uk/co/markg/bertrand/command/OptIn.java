@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import disparse.parser.reflection.CommandHandler;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -17,7 +19,7 @@ import uk.co.markg.bertrand.db.tables.records.MessagesRecord;
 import uk.co.markg.bertrand.listener.MessageReader;
 
 public class OptIn {
-
+  private static final Logger logger = LogManager.getLogger(OptIn.class);
   private static final int HISTORY_LIMIT = 50_000;
   private MessageReceivedEvent event;
   private UserRepository userRepo;
@@ -88,8 +90,8 @@ public class OptIn {
    * @param textChannel the target channel to read messages from
    * @param user        the target user to save history for
    */
-  public static void saveUserHistory(TextChannel textChannel, Users users) {
-    new OptIn().saveUserHistory(List.of(users), textChannel);
+  public static void initiateSaveUserHistory(TextChannel textChannel, List<Users> users) {
+    new OptIn().saveUserHistory(users, textChannel);
   }
 
   /**
@@ -102,15 +104,16 @@ public class OptIn {
     var userids = users.stream().map(Users::getUserid).collect(Collectors.toList());
     saveUserHistory(textChannel, userids);
   }
-  
-  
+
+
   private void saveUserHistory(TextChannel textChannel, List<Long> userids) {
     var validHistoryMessages = getUserHistory(textChannel, userids).thenApply(filterMessages());
     var messages = buildMessageList(validHistoryMessages);
     MessageRepository messageRepository = MessageRepository.getRepository();
     messages.thenAccept(messageRepository::batchInsert);
+    logger.info("Finished saving history");
   }
-  
+
 
   /**
    * Transforms the list of discord {@link net.dv8tion.jda.api.entities.Message Message}s into a
