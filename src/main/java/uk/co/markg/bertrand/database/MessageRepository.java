@@ -48,7 +48,7 @@ public class MessageRepository {
    * @return the number of rows inserted
    */
   public int save(Messages message) {
-    return dsl.insertInto(MESSAGES).values(message).execute();
+    return dsl.executeInsert(dsl.newRecord(MESSAGES, message));
   }
 
   /**
