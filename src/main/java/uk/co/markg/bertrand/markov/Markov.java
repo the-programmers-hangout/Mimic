@@ -89,7 +89,7 @@ public class Markov {
    * @param input the sentence to parse
    */
   private void parseInput(String input) {
-    String[] tokens = input.split("\\s+");
+    String[] tokens = input.split("\\s+\\v?");
     if (tokens.length < 3) {
       throw new IllegalArgumentException(
           "Input '" + input + "'is too short. Must be greater than 5 tokens.");
