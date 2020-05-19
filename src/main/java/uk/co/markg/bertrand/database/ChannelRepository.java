@@ -1,7 +1,6 @@
 package uk.co.markg.bertrand.database;
 
 import static uk.co.markg.bertrand.db.tables.Channels.CHANNELS;
-import static uk.co.markg.bertrand.db.tables.Messages.MESSAGES;
 import java.util.List;
 import org.jooq.DSLContext;
 import disparse.parser.reflection.Injectable;
