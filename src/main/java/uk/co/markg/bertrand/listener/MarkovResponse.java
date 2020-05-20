@@ -3,6 +3,7 @@ package uk.co.markg.bertrand.listener;
 import java.util.concurrent.ThreadLocalRandom;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -32,6 +33,9 @@ public class MarkovResponse extends ListenerAdapter {
   @Override
   public void onMessageReceived(MessageReceivedEvent event) {
     if (event.getAuthor().isBot()) {
+      return;
+    }
+    if (event.isFromType(ChannelType.PRIVATE)) {
       return;
     }
     long userid = event.getAuthor().getIdLong();
