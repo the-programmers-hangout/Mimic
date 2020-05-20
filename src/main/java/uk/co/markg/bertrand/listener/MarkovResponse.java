@@ -69,18 +69,22 @@ public class MarkovResponse extends ListenerAdapter {
   }
 
   /**
-   * Selects a random user and loads up a markov chain of their messages and generates a random
-   * number of sentences.
+   * Generates a random number of sentences using a random user for each sentence. May revert, we'll
+   * see how it plays out
    * 
    * @return Sentence generated
    */
   private String generateReply() {
-    long userid = getRandomUserId();
-    logger.info("Loading markov chain for user {}", userid);
-    Markov markov = loadMarkov(userid);
-    int noOfSentences = ThreadLocalRandom.current().nextInt(5) + 1;
+    int noOfSentences = ThreadLocalRandom.current().nextInt(4) + 1;
     logger.info("Generating {} sentences", noOfSentences);
-    String response = markov.generate(noOfSentences);
+    var sb = new StringBuilder();
+    for (int i = 0; i < noOfSentences; i++) {
+      long userid = getRandomUserId();
+      logger.info("Loading markov chain for user {}", userid);
+      Markov markov = loadMarkov(userid);
+      sb.append(markov.generate()).append(" ");
+    }
+    String response = sb.toString();
     logger.info("Generated response: {}", response);
     return response;
   }
