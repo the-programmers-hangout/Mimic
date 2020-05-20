@@ -11,6 +11,7 @@ import org.jooq.meta.jaxb.Jdbc;
 import org.jooq.meta.jaxb.Target;
 import disparse.discord.Dispatcher;
 import net.dv8tion.jda.api.JDABuilder;
+import uk.co.markg.bertrand.listener.DeleteMessage;
 import uk.co.markg.bertrand.listener.MarkovResponse;
 import uk.co.markg.bertrand.listener.MessageReader;
 
@@ -72,7 +73,7 @@ public class App {
    */
   private static void launchBot() throws LoginException, InterruptedException {
     var builder = Dispatcher.init(JDABuilder.createDefault(System.getenv("B_TOKEN")), PREFIX, 10);
-    builder.addEventListeners(new MessageReader(), new MarkovResponse());
+    builder.addEventListeners(new MessageReader(), new MarkovResponse(), new DeleteMessage());
     builder.build().awaitReady();
   }
 }

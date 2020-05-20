@@ -72,4 +72,14 @@ public class MessageRepository {
     dsl.batchInsert(batch).execute();
   }
 
+  /**
+   * Deletes a message by its message id from the database if it exists
+   * 
+   * @param messageid the messageid of the message to delete
+   * @return the number of rows deleted
+   */
+  public int deleteById(long messageid) {
+    return dsl.deleteFrom(MESSAGES).where(MESSAGES.MESSAGEID.eq(messageid)).execute();
+  }
+
 }
