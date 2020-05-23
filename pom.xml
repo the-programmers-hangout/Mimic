@@ -58,8 +58,8 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.github.BoscoJared</groupId>
-      <artifactId>disparse</artifactId>
+      <groupId>com.github.BoscoJared.disparse</groupId>
+      <artifactId>disparse-jda</artifactId>
       <version>${disparse.version}</version>
     </dependency>
     <dependency>

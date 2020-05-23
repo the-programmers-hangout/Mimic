@@ -9,7 +9,7 @@ import org.jooq.meta.jaxb.Generate;
 import org.jooq.meta.jaxb.Generator;
 import org.jooq.meta.jaxb.Jdbc;
 import org.jooq.meta.jaxb.Target;
-import disparse.discord.Dispatcher;
+import disparse.discord.jda.Dispatcher;
 import net.dv8tion.jda.api.JDABuilder;
 import uk.co.markg.bertrand.listener.DeleteMessage;
 import uk.co.markg.bertrand.listener.MarkovResponse;
