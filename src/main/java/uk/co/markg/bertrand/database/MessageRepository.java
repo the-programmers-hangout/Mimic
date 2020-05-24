@@ -52,13 +52,13 @@ public class MessageRepository {
   }
 
   /**
-   * Returns a list of messages as strings belonging to a particular user
+   * Returns a list of messages as strings belonging to all userids in the list
    * 
-   * @param userid the target user
+   * @param userids the userids to get the messages for
    * @return the list of messages
    */
-  public List<String> getByUser(long userid) {
-    return dsl.select(MESSAGES.CONTENT).from(MESSAGES).where(MESSAGES.USERID.eq(userid))
+  public List<String> getByUsers(List<Long> userids) {
+    return dsl.select(MESSAGES.CONTENT).from(MESSAGES).where(MESSAGES.USERID.in(userids))
         .fetchInto(String.class);
   }
 

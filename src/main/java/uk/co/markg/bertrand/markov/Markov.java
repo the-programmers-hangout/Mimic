@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Predicate;
+import uk.co.markg.bertrand.database.MessageRepository;
 
 public class Markov {
 
@@ -14,7 +15,7 @@ public class Markov {
   private List<String> startWords;
   private List<String> endWords;
 
-  public Markov(List<String> inputs) {
+  private Markov(List<String> inputs) {
     wordFrequencyMap = new HashMap<>();
     startWords = new ArrayList<>();
     endWords = new ArrayList<>();
@@ -22,8 +23,13 @@ public class Markov {
     calculateProbabilities();
   }
 
-  public Markov(String input) {
-    this(List.of(input));
+  public static Markov load(long userid) {
+    return load(List.of(userid));
+  }
+
+  public static Markov load(List<Long> userids) {
+    var inputs = MessageRepository.getRepository().getByUsers(userids);
+    return new Markov(inputs);
   }
 
   /**

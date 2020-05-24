@@ -8,7 +8,6 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import uk.co.markg.bertrand.database.ChannelRepository;
-import uk.co.markg.bertrand.database.MessageRepository;
 import uk.co.markg.bertrand.database.UserRepository;
 import uk.co.markg.bertrand.markov.Markov;
 
@@ -16,12 +15,10 @@ public class MarkovResponse extends ListenerAdapter {
   private static final Logger logger = LogManager.getLogger(MarkovResponse.class);
 
   private ChannelRepository channelRepo;
-  private MessageRepository messageRepo;
   private UserRepository userRepo;
 
   public MarkovResponse() {
     this.channelRepo = ChannelRepository.getRepository();
-    this.messageRepo = MessageRepository.getRepository();
     this.userRepo = UserRepository.getRepository();
   }
 
@@ -81,8 +78,7 @@ public class MarkovResponse extends ListenerAdapter {
     for (int i = 0; i < noOfSentences; i++) {
       long userid = getRandomUserId();
       logger.info("Loading markov chain for user {}", userid);
-      Markov markov = loadMarkov(userid);
-      sb.append(markov.generate()).append(" ");
+      sb.append(Markov.load(userid).generate()).append(" ");
     }
     String response = sb.toString();
     logger.info("Generated response: {}", response);
@@ -108,17 +104,6 @@ public class MarkovResponse extends ListenerAdapter {
   private boolean messageContainsBotMention(MessageReceivedEvent event) {
     Member botMember = event.getGuild().getSelfMember();
     return event.getMessage().getMentionedMembers().contains(botMember);
-  }
-
-  /**
-   * Loads a markov chain with messages from the specified user.
-   * 
-   * @param userid the target user
-   * @return the markov chain for the user
-   */
-  private Markov loadMarkov(long userid) {
-    var inputs = messageRepo.getByUser(userid);
-    return new Markov(inputs);
   }
 
 }
