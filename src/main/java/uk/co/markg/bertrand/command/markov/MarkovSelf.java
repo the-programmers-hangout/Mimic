@@ -1,6 +1,5 @@
 package uk.co.markg.bertrand.command.markov;
 
-import java.util.concurrent.ThreadLocalRandom;
 import disparse.parser.reflection.CommandHandler;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import uk.co.markg.bertrand.database.ChannelRepository;
