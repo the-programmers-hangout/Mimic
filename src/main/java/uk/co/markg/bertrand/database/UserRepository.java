@@ -43,8 +43,19 @@ public class UserRepository {
    * @return the list of users
    */
   public List<Users> getAllMarkovCandidates() {
-    return dsl.select(MESSAGES.USERID).from(MESSAGES).groupBy(MESSAGES.USERID)
-        .having(count().ge(5)).fetchInto(Users.class);
+    return dsl.select(MESSAGES.USERID).from(MESSAGES).groupBy(MESSAGES.USERID).having(count().ge(5))
+        .fetchInto(Users.class);
+  }
+
+  /**
+   * Retrieves the list of opted in users that have messages saved into the messages table. This
+   * means they are a candidate for markov generation
+   * 
+   * @return the list of users
+   */
+  public List<Long> getAllMarkovCandidateIds() {
+    return dsl.select(MESSAGES.USERID).from(MESSAGES).groupBy(MESSAGES.USERID).having(count().ge(5))
+        .fetchInto(Long.class);
   }
 
   /**
