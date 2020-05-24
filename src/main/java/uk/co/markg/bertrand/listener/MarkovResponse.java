@@ -19,9 +19,11 @@ public class MarkovResponse extends ListenerAdapter {
     if (event.isFromType(ChannelType.PRIVATE)) {
       return;
     }
-    event.getChannel().sendMessage(
-        "Deprecated! Use `mimic!self`, `mimic!rand`, or `mimic!all`. Make sure you are opted in with `mimic!opt-in`. For more info see `mimic!help`.")
-        .queue();
+    if (event.getMessage().getMentionedMembers().contains(event.getGuild().getSelfMember())) {
+      event.getChannel().sendMessage(
+          "Deprecated! Use `mimic!self`, `mimic!rand`, or `mimic!all`. Make sure you are opted in with `mimic!opt-in`. For more info see `mimic!help`.")
+          .queue();
+    }
   }
 
 }
