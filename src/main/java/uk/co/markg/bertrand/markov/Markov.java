@@ -98,7 +98,7 @@ public class Markov {
     String[] tokens = input.split("\\s+\\v?");
     if (tokens.length < 3) {
       throw new IllegalArgumentException(
-          "Input '" + input + "'is too short. Must be greater than 5 tokens.");
+          "Input '" + input + "'is too short. Must be greater than 3 tokens.");
     }
     for (int i = 0; i < tokens.length; i++) {
       String word = tokens[i].trim();
