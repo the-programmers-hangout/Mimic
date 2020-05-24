@@ -7,13 +7,13 @@ import uk.co.markg.bertrand.database.ChannelRepository;
 import uk.co.markg.bertrand.database.UserRepository;
 import uk.co.markg.bertrand.markov.Markov;
 
-public class Self {
+public class MarkovSelf {
 
   private MessageReceivedEvent event;
   private ChannelRepository channelRepo;
   private UserRepository userRepo;
 
-  public Self(MessageReceivedEvent event, ChannelRepository channelRepo, UserRepository userRepo) {
+  public MarkovSelf(MessageReceivedEvent event, ChannelRepository channelRepo, UserRepository userRepo) {
     this.event = event;
     this.channelRepo = channelRepo;
     this.userRepo = userRepo;
@@ -23,7 +23,7 @@ public class Self {
       description = "Generate a markov chain from your own messages!")
   public static void execute(MessageReceivedEvent event, ChannelRepository channelRepo,
       UserRepository userRepo) {
-    new Self(event, channelRepo, userRepo).execute();
+    new MarkovSelf(event, channelRepo, userRepo).execute();
   }
 
   private void execute() {
