@@ -111,7 +111,7 @@ public class Markov {
         continue;
       }
       word = escapeUserMention(word);
-      if (isValidStartWord(word)) {
+      if (i == 0 || isValidStartWord(word)) {
         startWords.add(word);
       }
       if (isEndWord(word) && !endWords.contains(word)) {
