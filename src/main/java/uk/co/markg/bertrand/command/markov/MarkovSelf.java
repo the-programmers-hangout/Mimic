@@ -20,6 +20,7 @@ public class MarkovSelf {
       event.getChannel().sendMessage("You are not opted in! Use `mimic!opt-in`").queue();
       return;
     }
+    event.getChannel().sendTyping().queue();
     if (!userRepo.isMarkovCandidate(userid)) {
       event.getChannel().sendMessage("I don't know enough about you!").queue();
     }

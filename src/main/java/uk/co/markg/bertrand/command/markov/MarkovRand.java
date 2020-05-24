@@ -21,6 +21,7 @@ public class MarkovRand {
       event.getChannel().sendMessage("You are not opted in! Use `mimic!opt-in`").queue();
       return;
     }
+    event.getChannel().sendTyping().queue();
     var users = userRepo.getAllMarkovCandidateIds();
     var sb = new StringBuilder();
     int noOfSentences = ThreadLocalRandom.current().nextInt(5) + 1;
