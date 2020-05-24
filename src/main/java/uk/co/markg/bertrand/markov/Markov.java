@@ -35,10 +35,10 @@ public class Markov {
   /**
    * Convenience method to generate multiple sentences
    * 
-   * @param sentences the number of sentences to generate
    * @return the sentences joined together by a space character
    */
-  public String generate(int sentences) {
+  public String generateRandom() {
+    int sentences = ThreadLocalRandom.current().nextInt(5) + 1;
     StringBuilder sb = new StringBuilder();
     for (int i = 0; i < sentences; i++) {
       sb.append(generate()).append(" ");

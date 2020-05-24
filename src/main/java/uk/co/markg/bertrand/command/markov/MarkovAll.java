@@ -21,8 +21,7 @@ public class MarkovAll {
       event.getChannel().sendMessage("You are not opted in! Use `mimic!opt-in`").queue();
       return;
     }
-    int rand = ThreadLocalRandom.current().nextInt(5) + 1;
     var users = userRepo.getAllMarkovCandidateIds();
-    event.getChannel().sendMessage(Markov.load(users).generate(rand)).queue();
+    event.getChannel().sendMessage(Markov.load(users).generateRandom()).queue();
   }
 }
