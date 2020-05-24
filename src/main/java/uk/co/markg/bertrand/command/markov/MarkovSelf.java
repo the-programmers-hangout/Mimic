@@ -21,6 +21,9 @@ public class MarkovSelf {
       event.getChannel().sendMessage("You are not opted in! Use `mimic!opt-in`").queue();
       return;
     }
+    if (!userRepo.isMarkovCandidate(userid)) {
+      event.getChannel().sendMessage("I don't know enough about you!").queue();
+    }
     int rand = ThreadLocalRandom.current().nextInt(5) + 1;
     event.getChannel().sendMessage(Markov.load(userid).generate(rand)).queue();
   }

@@ -77,6 +77,10 @@ public class UserRepository {
   public boolean isUserOptedIn(long userid) {
     return dsl.selectFrom(USERS).where(USERS.USERID.eq(userid)).fetchOne(0, int.class) != 0;
   }
+  
+  public boolean isMarkovCandidate(long userid) {
+    return getAllMarkovCandidateIds().contains(userid);
+  }
 
   /**
    * Delete the user entry and any message content associated with the user
