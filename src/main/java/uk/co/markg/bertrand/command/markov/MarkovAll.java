@@ -9,30 +9,15 @@ import uk.co.markg.bertrand.markov.Markov;
 
 public class MarkovAll {
 
-  private MessageReceivedEvent event;
-  private ChannelRepository channelRepo;
-  private UserRepository userRepo;
-
-  public MarkovAll(MessageReceivedEvent event, ChannelRepository channelRepo,
-      UserRepository userRepo) {
-    this.event = event;
-    this.channelRepo = channelRepo;
-    this.userRepo = userRepo;
-  }
-
   @CommandHandler(commandName = "all",
       description = "Generate a markov chain from all user messages!")
   public static void execute(MessageReceivedEvent event, ChannelRepository channelRepo,
       UserRepository userRepo) {
-    new MarkovAll(event, channelRepo, userRepo).execute();
-  }
-
-  private void execute() {
-    if (!hasWritePermission(event)) {
+    if (!channelRepo.hasWritePermission(event.getChannel().getIdLong())) {
       return;
     }
     long userid = event.getAuthor().getIdLong();
-    if (!isUserOptedIn(userid)) {
+    if (!userRepo.isUserOptedIn(userid)) {
       event.getChannel().sendMessage("You are not opted in! Use `mimic!opt-in`").queue();
       return;
     }
@@ -40,21 +25,4 @@ public class MarkovAll {
     var users = userRepo.getAllMarkovCandidateIds();
     event.getChannel().sendMessage(Markov.load(users).generate(rand)).queue();
   }
-
-
-  private boolean isUserOptedIn(long userid) {
-    return userRepo.isUserOptedIn(userid);
-  }
-
-  /**
-   * Returns whether the bot has write permissions for a channel to send a markov chain response
-   * 
-   * @param event the discord event
-   * @return true if the bot has write permissions for the channel
-   */
-  private boolean hasWritePermission(MessageReceivedEvent event) {
-    return channelRepo.hasWritePermission(event.getChannel().getIdLong());
-  }
-
-
 }
