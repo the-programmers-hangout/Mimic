@@ -10,7 +10,7 @@ import uk.co.markg.bertrand.markov.Markov;
 public class MarkovSelf {
 
   @CommandHandler(commandName = "self",
-      description = "Generate a markov chain from your own messages!")
+      description = "Generate a random number of sentences from your own messages!")
   public static void execute(MessageReceivedEvent event, ChannelRepository channelRepo,
       UserRepository userRepo) {
     if (!channelRepo.hasWritePermission(event.getChannel().getIdLong())) {
