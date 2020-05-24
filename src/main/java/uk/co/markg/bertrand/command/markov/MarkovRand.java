@@ -1,6 +1,8 @@
 package uk.co.markg.bertrand.command.markov;
 
 import java.util.concurrent.ThreadLocalRandom;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import disparse.parser.reflection.CommandHandler;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import uk.co.markg.bertrand.database.ChannelRepository;
@@ -8,6 +10,7 @@ import uk.co.markg.bertrand.database.UserRepository;
 import uk.co.markg.bertrand.markov.Markov;
 
 public class MarkovRand {
+  private static final Logger logger = LogManager.getLogger(MarkovRand.class);
 
   @CommandHandler(commandName = "rand",
       description = "Generate a random number of sentences from random user's messages!")
@@ -21,6 +24,7 @@ public class MarkovRand {
       event.getChannel().sendMessage("You are not opted in! Use `mimic!opt-in`").queue();
       return;
     }
+    logger.info("Generating random chain");
     event.getChannel().sendTyping().queue();
     var users = userRepo.getAllMarkovCandidateIds();
     var sb = new StringBuilder();

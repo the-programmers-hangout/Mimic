@@ -6,9 +6,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Predicate;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import uk.co.markg.bertrand.database.MessageRepository;
 
 public class Markov {
+
+  private static final Logger logger = LogManager.getLogger(Markov.class);
 
   private static final String END_WORD = "END_WORD";
   private Map<String, Map<String, Double>> wordFrequencyMap;
@@ -28,6 +32,7 @@ public class Markov {
   }
 
   public static Markov load(List<Long> userids) {
+    logger.info("Loaded chain for {}", userids);
     var inputs = MessageRepository.getRepository().getByUsers(userids);
     return new Markov(inputs);
   }
