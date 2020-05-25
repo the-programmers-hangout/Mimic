@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
+import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Row4;
@@ -21,6 +22,7 @@ import org.jooq.impl.DSL;
 import org.jooq.impl.TableImpl;
 
 import uk.co.markg.bertrand.db.DefaultSchema;
+import uk.co.markg.bertrand.db.Indexes;
 import uk.co.markg.bertrand.db.Keys;
 import uk.co.markg.bertrand.db.tables.records.MessagesRecord;
 
@@ -31,7 +33,7 @@ import uk.co.markg.bertrand.db.tables.records.MessagesRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Messages extends TableImpl<MessagesRecord> {
 
-    private static final long serialVersionUID = 1395826401;
+    private static final long serialVersionUID = -2058538460;
 
     /**
      * The reference instance of <code>messages</code>
@@ -102,6 +104,11 @@ public class Messages extends TableImpl<MessagesRecord> {
     @Override
     public Schema getSchema() {
         return DefaultSchema.DEFAULT_SCHEMA;
+    }
+
+    @Override
+    public List<Index> getIndexes() {
+        return Arrays.<Index>asList(Indexes.USER_MESSAGE_INDEX);
     }
 
     @Override

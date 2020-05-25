@@ -1,0 +1,1 @@
+CREATE INDEX user_message_index ON messages (userid);
