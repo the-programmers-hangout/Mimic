@@ -17,6 +17,7 @@ import uk.co.markg.bertrand.db.tables.pojos.Channels;
 import uk.co.markg.bertrand.db.tables.pojos.Users;
 import uk.co.markg.bertrand.db.tables.records.MessagesRecord;
 import uk.co.markg.bertrand.listener.MessageReader;
+import uk.co.markg.bertrand.markov.MarkovSender;
 
 public class OptIn {
   private static final Logger logger = LogManager.getLogger(OptIn.class);
@@ -58,7 +59,7 @@ public class OptIn {
   private void execute() {
     long userid = event.getAuthor().getIdLong();
     if (userRepo.isUserOptedIn(userid)) {
-      event.getChannel().sendMessage("You're already in!").queue();
+      MarkovSender.alreadyOptedIn(event.getChannel());
     } else {
       optInUser(userid);
     }
@@ -72,8 +73,7 @@ public class OptIn {
    */
   private void optInUser(long userid) {
     userRepo.save(userid);
-    event.getChannel().sendMessage("You have been opted-in. I'll start saving your messages!")
-        .queue();
+    MarkovSender.optedIn(event.getChannel());
     var channels = channelRepo.getAll();
     for (Channels channel : channels) {
       var textChannel = event.getJDA().getTextChannelById(channel.getChannelid());

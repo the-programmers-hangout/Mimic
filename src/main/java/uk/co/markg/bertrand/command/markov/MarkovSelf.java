@@ -22,7 +22,7 @@ public class MarkovSelf {
       return;
     }
     if (!userRepo.isMarkovCandidate(userid)) {
-      event.getChannel().sendMessage("I don't know enough about you!").queue();
+      MarkovSender.notMarkovCandidate(event.getChannel());
     }
     MarkovSender.sendMessage(event, Markov.load(userid).generateRandom());
   }

@@ -3,6 +3,7 @@ package uk.co.markg.bertrand.command;
 import disparse.parser.reflection.CommandHandler;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import uk.co.markg.bertrand.database.UserRepository;
+import uk.co.markg.bertrand.markov.MarkovSender;
 
 public class OptOut {
 
@@ -34,7 +35,7 @@ public class OptOut {
     if (userRepo.isUserOptedIn(userid)) {
       optOutUser(userid);
     } else {
-      event.getChannel().sendMessage("You're already out!").queue();
+      MarkovSender.alreadyOptedOut(event.getChannel());
     }
   }
 
@@ -45,6 +46,6 @@ public class OptOut {
    */
   private void optOutUser(long userid) {
     userRepo.delete(userid);
-    event.getChannel().sendMessage("You've been opted out!").queue();
+    MarkovSender.optedOut(event.getChannel());
   }
 }
