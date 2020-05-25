@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import uk.co.markg.bertrand.database.ChannelRepository;
 import uk.co.markg.bertrand.database.UserRepository;
 import uk.co.markg.bertrand.markov.Markov;
+import uk.co.markg.bertrand.markov.MarkovSender;
 
 public class MarkovAll {
 
@@ -17,11 +18,11 @@ public class MarkovAll {
     }
     long userid = event.getAuthor().getIdLong();
     if (!userRepo.isUserOptedIn(userid)) {
-      event.getChannel().sendMessage("You are not opted in! Use `mimic!opt-in`").queue();
+      MarkovSender.notOptedIn(event.getChannel());
       return;
     }
     event.getChannel().sendTyping().queue();
     var users = userRepo.getAllMarkovCandidateIds();
-    event.getChannel().sendMessage(Markov.load(users).generateRandom()).queue();
+    MarkovSender.sendMessage(event, Markov.load(users).generateRandom());
   }
 }

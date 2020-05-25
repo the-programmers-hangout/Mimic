@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import uk.co.markg.bertrand.database.ChannelRepository;
 import uk.co.markg.bertrand.database.UserRepository;
 import uk.co.markg.bertrand.markov.Markov;
+import uk.co.markg.bertrand.markov.MarkovSender;
 
 public class MarkovRand {
   private static final Logger logger = LogManager.getLogger(MarkovRand.class);
@@ -21,7 +22,7 @@ public class MarkovRand {
     }
     long userid = event.getAuthor().getIdLong();
     if (!userRepo.isUserOptedIn(userid)) {
-      event.getChannel().sendMessage("You are not opted in! Use `mimic!opt-in`").queue();
+      MarkovSender.notOptedIn(event.getChannel());
       return;
     }
     logger.info("Generating random chain");
@@ -33,8 +34,7 @@ public class MarkovRand {
       long targetUser = users.get(ThreadLocalRandom.current().nextInt(users.size()));
       sb.append(Markov.load(targetUser).generate()).append(" ");
     }
-    String response = sb.toString();
-    event.getChannel().sendMessage(response).queue();
+    MarkovSender.sendMessage(event, sb.toString());
   }
 
 }

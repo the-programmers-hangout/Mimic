@@ -1,5 +1,8 @@
 package uk.co.markg.bertrand;
 
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
 import javax.security.auth.login.LoginException;
 import org.flywaydb.core.Flyway;
 import org.jooq.codegen.GenerationTool;
@@ -11,6 +14,8 @@ import org.jooq.meta.jaxb.Jdbc;
 import org.jooq.meta.jaxb.Target;
 import disparse.discord.jda.Dispatcher;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import uk.co.markg.bertrand.listener.DeleteMessage;
 import uk.co.markg.bertrand.listener.MarkovResponse;
 import uk.co.markg.bertrand.listener.MessageReader;
@@ -72,8 +77,26 @@ public class App {
    * @throws InterruptedException
    */
   private static void launchBot() throws LoginException, InterruptedException {
-    var builder = Dispatcher.init(JDABuilder.createDefault(System.getenv("B_TOKEN")), PREFIX, 10);
+    var builder =
+        Dispatcher.init(JDABuilder.create(System.getenv("B_TOKEN"), getIntents()), PREFIX, 10);
     builder.addEventListeners(new MessageReader(), new MarkovResponse(), new DeleteMessage());
+    builder.setDisabledCacheFlags(getFlags());
     builder.build().awaitReady();
+  }
+
+  private static List<GatewayIntent> getIntents() {
+    List<GatewayIntent> intents = new ArrayList<>();
+    intents.add(GatewayIntent.GUILD_EMOJIS);
+    intents.add(GatewayIntent.GUILD_MESSAGES);
+    intents.add(GatewayIntent.GUILD_MEMBERS);
+    return intents;
+  }
+
+  private static EnumSet<CacheFlag> getFlags() {
+    List<CacheFlag> flags = new ArrayList<>();
+    flags.add(CacheFlag.ACTIVITY);
+    flags.add(CacheFlag.VOICE_STATE);
+    flags.add(CacheFlag.CLIENT_STATUS);
+    return EnumSet.copyOf(flags);
   }
 }
