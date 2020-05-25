@@ -3,6 +3,8 @@ package uk.co.markg.bertrand.listener;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import uk.co.markg.bertrand.database.ChannelRepository;
+import uk.co.markg.bertrand.markov.MarkovSender;
 
 public class MarkovResponse extends ListenerAdapter {
 
@@ -19,10 +21,11 @@ public class MarkovResponse extends ListenerAdapter {
     if (event.isFromType(ChannelType.PRIVATE)) {
       return;
     }
+    if (!ChannelRepository.getRepository().hasWritePermission(event.getChannel().getIdLong())) {
+      return;
+    }
     if (event.getMessage().getMentionedMembers().contains(event.getGuild().getSelfMember())) {
-      event.getChannel().sendMessage(
-          "Deprecated! Use `mimic!self`, `mimic!rand`, or `mimic!all`. Make sure you are opted in with `mimic!opt-in`. For more info see `mimic!help`.")
-          .queue();
+      MarkovSender.sendMentionDeprecation(event.getChannel());
     }
   }
 
