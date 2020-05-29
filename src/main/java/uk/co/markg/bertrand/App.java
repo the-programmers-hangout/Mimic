@@ -16,7 +16,7 @@ import disparse.discord.jda.Dispatcher;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
-import uk.co.markg.bertrand.listener.DeleteMessage;
+import uk.co.markg.bertrand.listener.ModifyMessage;
 import uk.co.markg.bertrand.listener.MarkovResponse;
 import uk.co.markg.bertrand.listener.MemberLeave;
 import uk.co.markg.bertrand.listener.MessageReader;
@@ -80,7 +80,7 @@ public class App {
   private static void launchBot() throws LoginException, InterruptedException {
     var builder =
         Dispatcher.init(JDABuilder.create(System.getenv("B_TOKEN"), getIntents()), PREFIX, 10);
-    builder.addEventListeners(new MessageReader(), new MarkovResponse(), new DeleteMessage(),
+    builder.addEventListeners(new MessageReader(), new MarkovResponse(), new ModifyMessage(),
         new MemberLeave());
     builder.setDisabledCacheFlags(getFlags());
     builder.build().awaitReady();

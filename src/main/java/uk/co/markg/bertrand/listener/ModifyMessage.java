@@ -5,12 +5,12 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import uk.co.markg.bertrand.database.ChannelRepository;
 import uk.co.markg.bertrand.database.MessageRepository;
 
-public class DeleteMessage extends ListenerAdapter {
+public class ModifyMessage extends ListenerAdapter {
 
   private ChannelRepository channelRepo;
   private MessageRepository messageRepo;
 
-  public DeleteMessage() {
+  public ModifyMessage() {
     this.channelRepo = ChannelRepository.getRepository();
     this.messageRepo = MessageRepository.getRepository();
   }
@@ -21,5 +21,4 @@ public class DeleteMessage extends ListenerAdapter {
       messageRepo.deleteById(event.getMessageIdLong());
     }
   }
-
 }
