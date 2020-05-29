@@ -27,8 +27,8 @@ public class MarkovSender {
   }
 
   public static void optedIn(MessageChannel channel) {
-    channel
-        .sendMessage(buildSuccessEmbed("You have been opted-in. I'll start saving your messages!"))
+    channel.sendMessage(buildSuccessEmbed(
+        "You have been opted-in. I'll start saving your messages. It might take me a few minutes!"))
         .queue();
   }
 
