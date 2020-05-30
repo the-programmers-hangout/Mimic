@@ -6,6 +6,10 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import uk.co.markg.bertrand.database.ChannelRepository;
 import uk.co.markg.bertrand.database.MessageRepository;
 
+/**
+ * Really this should be two classes but without using reflection, adding new Listener classes to
+ * the JDABuilder becomes kinda nasty
+ */
 public class ModifyMessage extends ListenerAdapter {
 
   private ChannelRepository channelRepo;
