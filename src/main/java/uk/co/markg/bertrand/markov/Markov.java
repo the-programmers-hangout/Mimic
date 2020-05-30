@@ -46,12 +46,7 @@ public class Markov {
     int sentences = ThreadLocalRandom.current().nextInt(5) + 1;
     StringBuilder sb = new StringBuilder();
     for (int i = 0; i < sentences; i++) {
-      String s = generate();
-      logger.debug("Generated: {}", s);
-      if (s.matches("(.*[^.!?`+>\\-=_+:@~;'#\\[\\]{}\\(\\)\\/\\|\\\\]$)")) {
-        s = s + SENTENCE_ENDS.get(ThreadLocalRandom.current().nextInt(SENTENCE_ENDS.size()));
-      }
-      sb.append(s).append(" ");
+      sb.append(generate()).append(" ");
     }
     return sb.toString();
   }
@@ -85,7 +80,12 @@ public class Markov {
       }
       sentence.add(word);
     }
-    return String.join(" ", sentence);
+    String s = String.join(" ", sentence);
+    logger.debug("Generated: {}", s);
+    if (s.matches("(.*[^.!?`+>\\-=_+:@~;'#\\[\\]{}\\(\\)\\/\\|\\\\]$)")) {
+      s = s + SENTENCE_ENDS.get(ThreadLocalRandom.current().nextInt(SENTENCE_ENDS.size()));
+    }
+    return s;
   }
 
   /**
