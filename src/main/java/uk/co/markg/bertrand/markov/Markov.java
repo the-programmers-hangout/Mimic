@@ -13,7 +13,7 @@ import uk.co.markg.bertrand.database.MessageRepository;
 public class Markov {
 
   private static final Logger logger = LogManager.getLogger(Markov.class);
-
+  private static final List<String> SENTENCE_ENDS = List.of(".", "!", "?", "!!", "??", "!?", "...");
   private static final String END_WORD = "END_WORD";
   private Map<String, Map<String, Double>> wordFrequencyMap;
   private List<String> startWords;
@@ -46,7 +46,12 @@ public class Markov {
     int sentences = ThreadLocalRandom.current().nextInt(5) + 1;
     StringBuilder sb = new StringBuilder();
     for (int i = 0; i < sentences; i++) {
-      sb.append(generate()).append(" ");
+      String s = generate();
+      logger.debug("Generated: {}", s);
+      if (s.matches("(.*[^.!?`+>\\-=_+:@~;'#\\[\\]{}\\(\\)\\/\\|\\\\]$)")) {
+        s = s + SENTENCE_ENDS.get(ThreadLocalRandom.current().nextInt(SENTENCE_ENDS.size()));
+      }
+      sb.append(s).append(" ");
     }
     return sb.toString();
   }
