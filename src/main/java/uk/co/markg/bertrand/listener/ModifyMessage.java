@@ -29,7 +29,8 @@ public class ModifyMessage extends ListenerAdapter {
 
   @Override
   public void onGuildMessageUpdate(GuildMessageUpdateEvent event) {
-    if (channelRepo.hasReadPermission(event.getChannel().getIdLong())) {
+    if (channelRepo.hasReadPermission(event.getChannel().getIdLong())
+        && MessageReader.messageIsValid(event.getMessage())) {
       messageRepo.edit(event.getMessageIdLong(), event.getMessage());
     }
   }
