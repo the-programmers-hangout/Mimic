@@ -27,6 +27,10 @@ public class UserRepository {
     dsl = JooqConnection.getJooqContext();
   }
 
+  public int getCount() {
+    return dsl.selectCount().from(USERS).fetchOne(0, int.class);
+  }
+  
   /**
    * Returns a list of all users in the database
    * 
