@@ -17,9 +17,10 @@ import uk.co.markg.bertrand.database.UserRepository;
 
 public class MarkvStats {
 
-  private static final List<String> BLACKLIST_WORDS = List.of("the", "i", "and", "a", "it", "is",
-      "to", "be", "you", "I", "that", "in", "for", "of", "but", "if", "can", "with", "have", "not",
-      "on", "or", "as", "that's", "just", "like", "this", "do", "so", "we", "at", "its", "an");
+  private static final List<String> BLACKLIST_WORDS =
+      List.of("the", "i", "and", "a", "it", "is", "to", "be", "you", "that", "in", "for", "of",
+          "but", "if", "can", "with", "have", "not", "on", "or", "as", "that's", "just", "like",
+          "this", "do", "so", "we", "at", "its", "an", "it's", "im", "i'm", "are", "was");
 
   @CommandHandler(commandName = "stats", description = "Displays statistics for the bot")
   public static void execute(MessageReceivedEvent event, UserRepository userRepo,
@@ -86,7 +87,7 @@ public class MarkvStats {
     Collections.reverse(words);
     for (Iterator<Entry<String, Integer>> iter = words.listIterator(); iter.hasNext();) {
       var entry = iter.next();
-      if (BLACKLIST_WORDS.contains(entry.getKey())) {
+      if (BLACKLIST_WORDS.contains(entry.getKey().toLowerCase())) {
         iter.remove();
       }
     }
