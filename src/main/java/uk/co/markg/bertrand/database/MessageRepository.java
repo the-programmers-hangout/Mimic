@@ -61,6 +61,11 @@ public class MessageRepository {
     return dsl.select(MESSAGES.CONTENT).from(MESSAGES).where(MESSAGES.USERID.in(userids))
         .fetchInto(String.class);
   }
+  
+  
+  public int getCount() {
+    return dsl.selectCount().from(MESSAGES).fetchOne(0, int.class);
+  }
 
   /**
    * Batch inserts a list of {@link uk.co.markg.bertrand.db.tables.records.MessagesRecord
