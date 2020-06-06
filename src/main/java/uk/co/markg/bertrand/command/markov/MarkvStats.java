@@ -40,6 +40,12 @@ public class MarkvStats {
     eb.addField("**Total Unique Words**", "```" + wordMap.size() + "```", true);
     eb.addField("**Most Common Words**",
         "```" + String.join(", ", getMostUsedWords(wordMap, 30)) + "```", false);
+        
+        
+    eb.addField("**Your Messages**", "```5```", true);
+    eb.addField("**Your Total Tokens**", "```5```", true);
+    eb.addField("**Your Unique Words**", "```5```", true);
+    eb.addField("**Your Most Common Words**", "```5```", false);
 
     event.getChannel().sendMessage(eb.build()).queue();
   }
