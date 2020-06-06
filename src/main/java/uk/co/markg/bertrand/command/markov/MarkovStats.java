@@ -15,7 +15,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import uk.co.markg.bertrand.database.MessageRepository;
 import uk.co.markg.bertrand.database.UserRepository;
 
-public class MarkvStats {
+public class MarkovStats {
 
   private static final List<String> BLACKLIST_WORDS =
       List.of("the", "i", "and", "a", "it", "is", "to", "be", "you", "that", "in", "for", "of",
@@ -41,6 +41,7 @@ public class MarkvStats {
     eb.addField("**Total Unique Words**", "```" + wordMap.size() + "```", true);
     eb.addField("**Most Common Words**",
         "```" + String.join(", ", getMostUsedWords(wordMap, 30)) + "```", false);
+    eb.addBlankField(false);
 
     long userid = event.getAuthor().getIdLong();
     if (userRepo.isUserOptedIn(userid)) {
