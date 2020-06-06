@@ -24,7 +24,7 @@ public class MarkvStats {
   @CommandHandler(commandName = "stats", description = "Displays statistics for the bot")
   public static void execute(MessageReceivedEvent event, UserRepository userRepo,
       MessageRepository messageRepo) {
-
+    event.getChannel().sendTyping().queue();
     var messages = messageRepo.getByUsers(userRepo.getAllMarkovCandidateIds());
     var wordMap = calculateWordFrequency(messages);
     int tokens = getTokenCount(messages);
