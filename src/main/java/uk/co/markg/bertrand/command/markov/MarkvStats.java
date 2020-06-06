@@ -19,6 +19,7 @@ public class MarkvStats {
       MessageRepository messageRepo) {
 
     var messages = messageRepo.getByUsers(userRepo.getAllMarkovCandidateIds());
+    var wordMap = calculateWordFrequency(messages);
     int tokens = getTokenCount(messages);
 
     EmbedBuilder eb = new EmbedBuilder();
@@ -29,7 +30,7 @@ public class MarkvStats {
     eb.addField("**Total Messages**", "```" + messageRepo.getCount() + "```", true);
     eb.addField("**Total Tokens**", "```" + tokens + "```", true);
     eb.addBlankField(true);
-    eb.addField("**Total Unique Words**", "```5```", true);
+    eb.addField("**Total Unique Words**", "```" + wordMap.size() + "```", true);
     eb.addField("**Most Common Words**", "```abc, def, ghi, jkl, mno, pqr, stu, vwx, yz```", false);
 
     event.getChannel().sendMessage(eb.build()).queue();
@@ -42,6 +43,21 @@ public class MarkvStats {
       count += tokens.length;
     }
     return count;
+  }
+
+  private static Map<String, Integer> calculateWordFrequency(List<String> messages) {
+    var map = new HashMap<String, Integer>();
+    for (String message : messages) {
+      var tokens = message.split("\\s+\\v?");
+      for (String token : tokens) {
+        if (map.containsKey(token)) {
+          map.replace(token, map.get(token) + 1);
+        } else {
+          map.put(token, 1);
+        }
+      }
+    }
+    return map;
   }
 
 }
