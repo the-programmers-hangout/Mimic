@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import uk.co.markg.bertrand.database.MessageRepository;
 import uk.co.markg.bertrand.database.UserRepository;
+import uk.co.markg.bertrand.markov.MarkovSender;
 
 public class MarkovStats {
 
@@ -25,10 +26,32 @@ public class MarkovStats {
   @CommandHandler(commandName = "stats", description = "Displays statistics for the bot")
   public static void execute(MessageReceivedEvent event, UserRepository userRepo,
       MessageRepository messageRepo) {
+    long userid = event.getAuthor().getIdLong();
+    if (!userRepo.isUserOptedIn(userid)) {
+      MarkovSender.notOptedIn(event.getChannel());
+      return;
+    }
+    event.getChannel().sendTyping().queue();
+    EmbedBuilder eb = new EmbedBuilder();
+    eb.setTitle("Statistics");
+    eb.setColor(Color.decode("#eb7701"));
+    var userMessages = messageRepo.getByUsers(List.of(userid));
+    var userWordMap = calculateWordFrequency(userMessages);
+    int userTokens = getTokenCount(userMessages);
+    eb.addField("**Your Messages**", "```" + messageRepo.getCountByUserId(userid) + "```", true);
+    eb.addField("**Your Total Tokens**", "```" + userTokens + "```", true);
+    eb.addField("**Your Unique Words**", "```" + userWordMap.size() + "```", true);
+    eb.addField("**Your Most Common Words**",
+        "```" + String.join(", ", getMostUsedWords(userWordMap, 30)) + "```", false);
+    event.getChannel().sendMessage(eb.build()).queue();
+  }
+
+  @CommandHandler(commandName = "allstats", description = "Displays statistics for the bot")
+  public static void executeAll(MessageReceivedEvent event, UserRepository userRepo,
+      MessageRepository messageRepo) {
     event.getChannel().sendTyping().queue();
     var messages = messageRepo.getByUsers(userRepo.getAllMarkovCandidateIds());
     var wordMap = calculateWordFrequency(messages);
-    int tokens = getTokenCount(messages);
 
     EmbedBuilder eb = new EmbedBuilder();
     eb.setTitle("Statistics");
@@ -36,25 +59,11 @@ public class MarkovStats {
     eb.addField("**Total Users**", "```" + userRepo.getCount() + "```", true);
     eb.addBlankField(true);
     eb.addField("**Total Messages**", "```" + messageRepo.getCount() + "```", true);
-    eb.addField("**Total Tokens**", "```" + tokens + "```", true);
+    eb.addField("**Total Tokens**", "```" + getTokenCount(messages) + "```", true);
     eb.addBlankField(true);
     eb.addField("**Total Unique Words**", "```" + wordMap.size() + "```", true);
     eb.addField("**Most Common Words**",
         "```" + String.join(", ", getMostUsedWords(wordMap, 30)) + "```", false);
-    eb.addBlankField(false);
-
-    long userid = event.getAuthor().getIdLong();
-    if (userRepo.isUserOptedIn(userid)) {
-      var userMessages = messageRepo.getByUsers(List.of(userid));
-      var userWordMap = calculateWordFrequency(userMessages);
-      int userTokens = getTokenCount(userMessages);
-      eb.addField("**Your Messages**", "```" + messageRepo.getCountByUserId(userid) + "```", true);
-      eb.addField("**Your Total Tokens**", "```" + userTokens + "```", true);
-      eb.addField("**Your Unique Words**", "```" + userWordMap.size() + "```", true);
-      eb.addField("**Your Most Common Words**",
-          "```" + String.join(", ", getMostUsedWords(userWordMap, 30)) + "```", false);
-    }
-
     event.getChannel().sendMessage(eb.build()).queue();
   }
 
