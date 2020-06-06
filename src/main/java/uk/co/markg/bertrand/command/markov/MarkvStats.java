@@ -1,9 +1,14 @@
 package uk.co.markg.bertrand.command.markov;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
 import disparse.parser.reflection.CommandHandler;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -12,7 +17,9 @@ import uk.co.markg.bertrand.database.UserRepository;
 
 public class MarkvStats {
 
-
+  private static final List<String> BLACKLIST_WORDS = List.of("the", "i", "and", "a", "it", "is",
+      "to", "be", "you", "I", "that", "in", "for", "of", "but", "if", "can", "with", "have", "not",
+      "on", "or", "as", "that's", "just", "like", "this", "do", "so", "we", "at", "its", "an");
 
   @CommandHandler(commandName = "stats", description = "Displays statistics for the bot")
   public static void execute(MessageReceivedEvent event, UserRepository userRepo,
@@ -31,7 +38,8 @@ public class MarkvStats {
     eb.addField("**Total Tokens**", "```" + tokens + "```", true);
     eb.addBlankField(true);
     eb.addField("**Total Unique Words**", "```" + wordMap.size() + "```", true);
-    eb.addField("**Most Common Words**", "```abc, def, ghi, jkl, mno, pqr, stu, vwx, yz```", false);
+    eb.addField("**Most Common Words**",
+        "```" + String.join(", ", getMostUsedWords(wordMap, 30)) + "```", false);
 
     event.getChannel().sendMessage(eb.build()).queue();
   }
@@ -58,6 +66,20 @@ public class MarkvStats {
       }
     }
     return map;
+  }
+
+  private static List<String> getMostUsedWords(Map<String, Integer> wordMap, int numOfWords) {
+    List<Entry<String, Integer>> words = new ArrayList<>(wordMap.entrySet());
+    words.sort(Entry.comparingByValue());
+    Collections.reverse(words);
+    for (Iterator<Entry<String, Integer>> iter = words.listIterator(); iter.hasNext();) {
+      var entry = iter.next();
+      if (BLACKLIST_WORDS.contains(entry.getKey())) {
+        iter.remove();
+      }
+    }
+    var result = words.stream().limit(numOfWords).map(Entry::getKey).collect(Collectors.toList());
+    return result;
   }
 
 }
