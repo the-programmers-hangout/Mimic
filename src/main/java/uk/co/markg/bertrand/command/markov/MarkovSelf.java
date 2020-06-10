@@ -24,6 +24,7 @@ public class MarkovSelf {
     if (!userRepo.isMarkovCandidate(userid)) {
       MarkovSender.notMarkovCandidate(event.getChannel());
     }
+    event.getChannel().sendTyping().queue();
     MarkovSender.sendMessageWithDelay(event, Markov.load(userid).generateRandom());
   }
 }
