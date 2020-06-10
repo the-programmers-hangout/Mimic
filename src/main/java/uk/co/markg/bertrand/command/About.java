@@ -11,7 +11,7 @@ public class About {
   public static void execute(MessageReceivedEvent event) {
     EmbedBuilder eb = new EmbedBuilder();
     eb.setTitle("Mimic Bot");
-    eb.setDescription("Mimic is a bot that generates markov chains based on user messages. "
+    eb.setDescription("Mimic is a bot that generates messages using markov chains based on user messages. "
         + "Opting in will tell mimic to read the last 50,000 messages per configured channel and save your messages. "
         + "It will then read any new valid messages sent in those channels.");
     eb.setThumbnail(event.getJDA().getSelfUser().getAvatarUrl());
