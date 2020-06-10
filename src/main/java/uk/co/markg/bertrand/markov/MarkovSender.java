@@ -1,6 +1,7 @@
 package uk.co.markg.bertrand.markov;
 
 import java.awt.Color;
+import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.Message;
@@ -16,6 +17,13 @@ public class MarkovSender {
     Message msg =
         new MessageBuilder().append(text).stripMentions(event.getJDA(), MentionType.USER).build();
     event.getChannel().sendMessage(msg).queue(message -> message.suppressEmbeds(true).queue());
+  }
+
+  public static void sendMessageWithDelay(MessageReceivedEvent event, String text) {
+    Message message =
+        new MessageBuilder().append(text).stripMentions(event.getJDA(), MentionType.USER).build();
+    event.getChannel().sendMessage(message).queueAfter(3, TimeUnit.SECONDS,
+        msg -> msg.suppressEmbeds(true).queue());
   }
 
   public static void notOptedIn(MessageChannel channel) {

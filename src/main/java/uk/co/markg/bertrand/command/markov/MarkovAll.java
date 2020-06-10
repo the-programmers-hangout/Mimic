@@ -25,12 +25,18 @@ public class MarkovAll {
       return;
     }
     event.getChannel().sendTyping().queue();
-    if (markov == null || cacheExpired()) {
-      System.out.println("Loading markov");
-      markov = getMarkovChain();
-      loadTime = System.currentTimeMillis();
+    if (markov == null) {
+      updateMarkovChain();
     }
-    MarkovSender.sendMessage(event, markov.generateRandom());
+    MarkovSender.sendMessageWithDelay(event, markov.generateRandom());
+    if (cacheExpired()) {
+      updateMarkovChain();
+    }
+  }
+
+  private static void updateMarkovChain() {
+    markov = getMarkovChain();
+    loadTime = System.currentTimeMillis();
   }
 
   private static boolean cacheExpired() {
