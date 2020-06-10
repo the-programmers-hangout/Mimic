@@ -34,7 +34,7 @@ public class MarkovRand {
       long targetUser = users.get(ThreadLocalRandom.current().nextInt(users.size()));
       sb.append(Markov.load(targetUser).generate()).append(" ");
     }
-    MarkovSender.sendMessage(event, sb.toString());
+    MarkovSender.sendMessageWithDelay(event, sb.toString());
   }
 
 }
