@@ -17,6 +17,7 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import uk.co.markg.bertrand.listener.ModifyMessage;
+import uk.co.markg.bertrand.command.markov.MarkovAll;
 import uk.co.markg.bertrand.listener.MarkovResponse;
 import uk.co.markg.bertrand.listener.MemberLeave;
 import uk.co.markg.bertrand.listener.MessageReader;

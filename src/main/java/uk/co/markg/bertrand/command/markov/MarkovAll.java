@@ -9,6 +9,9 @@ import uk.co.markg.bertrand.markov.MarkovSender;
 
 public class MarkovAll {
 
+  private static Markov markov;
+  private static long loadTime;
+
   @CommandHandler(commandName = "all",
       description = "Generate a random number of sentences from all opted in user messages!")
   public static void execute(MessageReceivedEvent event, ChannelRepository channelRepo,
@@ -22,7 +25,20 @@ public class MarkovAll {
       return;
     }
     event.getChannel().sendTyping().queue();
-    var users = userRepo.getAllMarkovCandidateIds();
-    MarkovSender.sendMessage(event, Markov.load(users).generateRandom());
+    if (markov == null || cacheExpired()) {
+      System.out.println("Loading markov");
+      markov = getMarkovChain();
+      loadTime = System.currentTimeMillis();
+    }
+    MarkovSender.sendMessage(event, markov.generateRandom());
+  }
+
+  private static boolean cacheExpired() {
+    return System.currentTimeMillis() - loadTime > 7_200_000;
+  }
+
+  public static Markov getMarkovChain() {
+    var repo = UserRepository.getRepository();
+    return Markov.load(repo.getAllMarkovCandidateIds());
   }
 }
