@@ -17,7 +17,7 @@
     <maven.compiler.release>11</maven.compiler.release>
     
     <junit.version>5.6.0</junit.version>
-    <disparse.version>master-08e51a1-1</disparse.version>
+    <disparse.version>master-17a540e-1</disparse.version>
     <jda.version>4.1.1_116</jda.version>
     <log4j.version>2.13.1</log4j.version>
     <postgres.driver.version>42.2.11</postgres.driver.version>
@@ -60,6 +60,11 @@
     <dependency>
       <groupId>com.github.BoscoJared.disparse</groupId>
       <artifactId>disparse-jda</artifactId>
+      <version>${disparse.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.github.BoscoJared.disparse</groupId>
+      <artifactId>disparse-core</artifactId>
       <version>${disparse.version}</version>
     </dependency>
     <dependency>
