@@ -8,6 +8,7 @@ import uk.co.markg.bertrand.markov.Markov;
 import uk.co.markg.bertrand.markov.MarkovSender;
 
 public class MarkovAll {
+  private static final int TWO_HOURS_MILLIS = 7_200_000;
 
   private static Markov markov;
   private static long loadTime;
@@ -40,7 +41,7 @@ public class MarkovAll {
   }
 
   private static boolean cacheExpired() {
-    return System.currentTimeMillis() - loadTime > 7_200_000;
+    return System.currentTimeMillis() - loadTime > TWO_HOURS_MILLIS;
   }
 
   public static Markov getMarkovChain() {
