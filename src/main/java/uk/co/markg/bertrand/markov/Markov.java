@@ -2,10 +2,12 @@ package uk.co.markg.bertrand.markov;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.Predicate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.co.markg.bertrand.database.MessageRepository;
@@ -15,14 +17,15 @@ public class Markov {
   private static final Logger logger = LogManager.getLogger(Markov.class);
   private static final List<String> SENTENCE_ENDS = List.of(".", "!", "?", "!!", "??", "!?", "...");
   private static final String END_WORD = "END_WORD";
+  private static final List<String> VALID_END_WORD_STOPS = List.of("?", "!", ".");
   private Map<String, Map<String, Double>> wordFrequencyMap;
-  private List<String> startWords;
-  private List<String> endWords;
+  private Set<String> startWords;
+  private Set<String> endWords;
 
   private Markov(List<String> inputs) {
     wordFrequencyMap = new HashMap<>();
-    startWords = new ArrayList<>();
-    endWords = new ArrayList<>();
+    startWords = new HashSet<>();
+    endWords = new HashSet<>();
     parseInput(inputs);
     calculateProbabilities();
   }
@@ -51,6 +54,14 @@ public class Markov {
     return sb.toString();
   }
 
+  private String getStartWord(int startNo) {
+    Iterator<String> itr = startWords.iterator();
+    for (int i = 0; i < startNo; i++) {
+      itr.next();
+    }
+    return itr.next();
+  }
+
   /**
    * Generates a sentence from the markov chain
    * 
@@ -58,7 +69,7 @@ public class Markov {
    */
   public String generate() {
     int startNo = ThreadLocalRandom.current().nextInt(startWords.size());
-    String word = startWords.get(startNo);
+    String word = getStartWord(startNo);
     List<String> sentence = new ArrayList<>();
     sentence.add(word);
     boolean endWordHit = false;
@@ -111,15 +122,14 @@ public class Markov {
           "Input '" + input + "'is too short. Must be greater than 3 tokens.");
     }
     for (int i = 0; i < tokens.length; i++) {
-      String word = tokens[i].trim();
+      String word = tokens[i];
       if (word.isEmpty()) {
         continue;
       }
-      word = escapeUserMention(word);
-      if (i == 0 || isValidStartWord(word)) {
+      if (i == 0) {
         startWords.add(word);
       }
-      if (isEndWord(word) && !endWords.contains(word)) {
+      if (isEndWord(word)) {
         endWords.add(word);
         insertWordFrequency(word, END_WORD);
         continue;
@@ -128,32 +138,16 @@ public class Markov {
         insertWordFrequency(word, END_WORD);
         break;
       }
-      String nextWord = tokens[i + 1].trim();
+      String nextWord = tokens[i + 1];
       if (nextWord.isEmpty()) {
         continue;
       }
-      nextWord = escapeUserMention(nextWord);
       if (wordFrequencyMap.containsKey(word)) {
         updateWordFrequency(word, nextWord);
       } else {
         insertWordFrequency(word, nextWord);
       }
     }
-  }
-
-  private boolean isValidStartWord(String word) {
-    return word.charAt(0) == word.toUpperCase().charAt(0) && !startWords.contains(word);
-  }
-
-  /**
-   * Escapes user mentions to avoid accidental pings
-   * 
-   * @param token the token to escape
-   * @return the escaped token
-   */
-  private String escapeUserMention(String token) {
-    return token;
-    // return token.matches("\\S*(<@!?[0-9]+>)\\S*") ? token.replace('@', '$') : token;
   }
 
   /**
@@ -163,11 +157,12 @@ public class Markov {
    * @return true if the word can be matched as an end word
    */
   private boolean isEndWord(String word) {
-    List<Predicate<String>> predicates = new ArrayList<>();
-    predicates.add(w -> w.endsWith("."));
-    predicates.add(w -> w.endsWith("!"));
-    predicates.add(w -> w.endsWith("?"));
-    return predicates.stream().anyMatch(predicate -> predicate.test(word));
+    for (String stop : VALID_END_WORD_STOPS) {
+      if (word.endsWith(stop)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
