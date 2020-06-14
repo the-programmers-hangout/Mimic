@@ -1,5 +1,6 @@
 package uk.co.markg.bertrand;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
@@ -13,6 +14,7 @@ import org.jooq.meta.jaxb.Generator;
 import org.jooq.meta.jaxb.Jdbc;
 import org.jooq.meta.jaxb.Target;
 import disparse.discord.jda.Dispatcher;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
@@ -78,8 +80,12 @@ public class App {
    * @throws InterruptedException
    */
   private static void launchBot() throws LoginException, InterruptedException {
-    var builder =
-        Dispatcher.init(JDABuilder.create(System.getenv("B_TOKEN"), getIntents()), PREFIX, 10);
+    Dispatcher.Builder dispatcherBuilder = new Dispatcher.Builder(App.class).prefix(PREFIX)
+        .pageLimit(10).withHelpBaseEmbed(() -> new EmbedBuilder().setColor(Color.decode("#eb7701")))
+        .description("DESCRIPTION");
+
+    var builder = Dispatcher.init(JDABuilder.create(System.getenv("B_TOKEN"), getIntents()),
+        dispatcherBuilder.build());
     builder.addEventListeners(new MessageReader(), new MarkovResponse(), new ModifyMessage(),
         new MemberLeave());
     builder.setDisabledCacheFlags(getFlags());
