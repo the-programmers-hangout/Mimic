@@ -1,0 +1,1 @@
+CREATE INDEX content_message_index ON messages (content);
