@@ -2,7 +2,10 @@ package uk.co.markg.bertrand.command;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import disparse.discord.jda.DiscordRequest;
 import disparse.parser.reflection.CommandHandler;
+import disparse.parser.reflection.Populate;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import uk.co.markg.bertrand.database.ChannelRepository;
 
@@ -12,25 +15,27 @@ public class RemoveChannels {
   private ChannelRepository channelRepo;
   private List<String> args;
 
-  public RemoveChannels(MessageReceivedEvent event, ChannelRepository channelRepo,
-      List<String> args) {
-    this.event = event;
+  /**
+   * Command execution method held by Disparse
+   *
+   * @param request       The discord request dispatched to this command
+   * @param channelRepo   The channel repository used to communicate with the database
+   */
+  @Populate
+  public RemoveChannels(DiscordRequest request, ChannelRepository channelRepo) {
+    this.event = request.getEvent();
     this.channelRepo = channelRepo;
-    this.args = args;
+    this.args = request.getArgs();
   }
 
   /**
    * Command execution method held by Disparse
-   * 
-   * @param event The message event from discord that triggered the command
-   * @param repo  The channel repository used to communicate with the database
    */
   @CommandHandler(commandName = "channels.remove",
       description = "Remove channels from the database. All related messages are also removed.",
       roles = "staff")
-  public static void executeRemove(MessageReceivedEvent event, ChannelRepository repo,
-      List<String> args) {
-    new RemoveChannels(event, repo, args).execute();
+  public void executeRemove() {
+    this.execute();
   }
 
   private void execute() {
@@ -40,7 +45,7 @@ public class RemoveChannels {
 
   /**
    * Removes existing channels from the database and any messages saved from those channels
-   * 
+   *
    * @return A string indicating success or failure. Failure message includes a list of channels
    *         that could not be removed from the database
    */
