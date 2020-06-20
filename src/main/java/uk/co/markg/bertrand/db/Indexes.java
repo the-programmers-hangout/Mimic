@@ -21,6 +21,7 @@ public class Indexes {
     // INDEX definitions
     // -------------------------------------------------------------------------
 
+    public static final Index CONTENT_MESSAGE_INDEX = Indexes0.CONTENT_MESSAGE_INDEX;
     public static final Index USER_MESSAGE_INDEX = Indexes0.USER_MESSAGE_INDEX;
 
     // -------------------------------------------------------------------------
@@ -28,6 +29,7 @@ public class Indexes {
     // -------------------------------------------------------------------------
 
     private static class Indexes0 {
+        public static Index CONTENT_MESSAGE_INDEX = Internal.createIndex("content_message_index", Messages.MESSAGES, new OrderField[] { Messages.MESSAGES.CONTENT }, false);
         public static Index USER_MESSAGE_INDEX = Internal.createIndex("user_message_index", Messages.MESSAGES, new OrderField[] { Messages.MESSAGES.USERID }, false);
     }
 }

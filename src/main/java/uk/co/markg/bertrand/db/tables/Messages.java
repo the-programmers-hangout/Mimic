@@ -33,7 +33,7 @@ import uk.co.markg.bertrand.db.tables.records.MessagesRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Messages extends TableImpl<MessagesRecord> {
 
-    private static final long serialVersionUID = -2058538460;
+    private static final long serialVersionUID = -1921153734;
 
     /**
      * The reference instance of <code>messages</code>
@@ -108,7 +108,7 @@ public class Messages extends TableImpl<MessagesRecord> {
 
     @Override
     public List<Index> getIndexes() {
-        return Arrays.<Index>asList(Indexes.USER_MESSAGE_INDEX);
+        return Arrays.<Index>asList(Indexes.CONTENT_MESSAGE_INDEX, Indexes.USER_MESSAGE_INDEX);
     }
 
     @Override
