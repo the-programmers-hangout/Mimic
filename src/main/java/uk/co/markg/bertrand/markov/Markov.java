@@ -128,8 +128,7 @@ public class Markov {
       }
       if (i == 0) {
         startWords.add(word);
-      }
-      if (isEndWord(word)) {
+      } else if (isEndWord(word)) {
         endWords.add(word);
         insertWordFrequency(word, END_WORD);
         continue;
