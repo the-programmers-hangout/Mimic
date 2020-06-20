@@ -15,9 +15,9 @@
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
     <maven.compiler.release>11</maven.compiler.release>
-    
+
     <junit.version>5.6.0</junit.version>
-    <disparse.version>master-82662a9-1</disparse.version>
+    <disparse.version>0.1.5</disparse.version>
     <jda.version>4.1.1_116</jda.version>
     <log4j.version>2.13.1</log4j.version>
     <postgres.driver.version>42.2.11</postgres.driver.version>
@@ -25,7 +25,7 @@
     <flyway.version>6.3.1</flyway.version>
     <hikari.version>3.4.2</hikari.version>
   </properties>
-  
+
   <repositories>
     <repository>
       <id>jcenter</id>
