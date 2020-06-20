@@ -1,6 +1,8 @@
 package uk.co.markg.bertrand.command.markov;
 
 import java.util.concurrent.ThreadLocalRandom;
+
+import disparse.discord.jda.DiscordRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import disparse.parser.reflection.CommandHandler;
@@ -15,8 +17,9 @@ public class MarkovRand {
 
   @CommandHandler(commandName = "rand",
       description = "Generate a random number of sentences from random user's messages!")
-  public static void execute(MessageReceivedEvent event, ChannelRepository channelRepo,
-      UserRepository userRepo) {
+  public static void execute(DiscordRequest request, ChannelRepository channelRepo,
+                             UserRepository userRepo) {
+    MessageReceivedEvent event = request.getEvent();
     if (!channelRepo.hasWritePermission(event.getChannel().getIdLong())) {
       return;
     }
