@@ -72,8 +72,8 @@ public class MessageRepository {
 
   public int getUniqueWordCount() {
     Field<?> field = DSL.field("regexp_split_to_table(content, E'\\\\s+\\\\v?')");
-    Table<?> wordTable = dsl.select(field).from(MESSAGES).asTable();
-    return dsl.selectDistinct(DSL.count()).from(wordTable).fetchOne(0, int.class);
+    Table<?> wordTable = dsl.selectDistinct(field).from(MESSAGES).asTable();
+    return dsl.select(DSL.count()).from(wordTable).fetchOne(0, int.class);
   }
 
   public int getCountByUserId(long userid) {
