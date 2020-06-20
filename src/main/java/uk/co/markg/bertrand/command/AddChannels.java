@@ -2,6 +2,9 @@ package uk.co.markg.bertrand.command;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import disparse.discord.jda.DiscordRequest;
+import disparse.parser.reflection.Populate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import disparse.parser.reflection.CommandHandler;
@@ -34,38 +37,31 @@ public class AddChannels {
 
   /**
    * Constructs a new channel command
-   * 
-   * @param event       The discord message event that triggered the command
+   *
+   * @param request     The discord request dispatched to this command
    * @param req         The parsed flags passed with the command
-   * @param channelRepo The channel repository
-   * @param userRepo    The user repository
-   * @param args        The arguments passed with the command. Should be a list of channel ids
-   */
-  public AddChannels(MessageReceivedEvent event, ChannelRequest req, ChannelRepository channelRepo,
-      UserRepository userRepo, List<String> args) {
-    this.event = event;
-    this.req = req;
-    this.channelRepo = channelRepo;
-    this.userRepo = userRepo;
-    this.args = args;
-  }
-
-  /**
-   * Method held by Disparse to begin command execution
-   * 
-   * @param event       The message event from discord that triggered the command
-   * @param req         The command request flags
    * @param channelRepo The {@link uk.co.markg.bertrand.database.ChannelRepository
    *                    ChannelRepository} instance
    * @param userRepo    The {@link uk.co.markg.bertrand.database.UserRepository UserRepository}
    *                    instance
-   * @param args        A list of parsed command arguments. Should be a list of channel ids
+   */
+  @Populate
+  public AddChannels(DiscordRequest request, ChannelRequest req, ChannelRepository channelRepo,
+                     UserRepository userRepo) {
+    this.event = request.getEvent();
+    this.req = req;
+    this.channelRepo = channelRepo;
+    this.userRepo = userRepo;
+    this.args = request.getArgs();
+  }
+
+  /**
+   * Method held by Disparse to begin command execution
    */
   @CommandHandler(commandName = "channels.add",
       description = "Add channels. Defaults to read access only.", roles = "staff")
-  public static void executeAdd(MessageReceivedEvent event, ChannelRequest req,
-      ChannelRepository channelRepo, UserRepository userRepo, List<String> args) {
-    new AddChannels(event, req, channelRepo, userRepo, args).execute();
+  public void executeAdd() {
+    this.execute();
   }
 
   /**
@@ -80,7 +76,7 @@ public class AddChannels {
   /**
    * Takes all channelids passed in and adds them to the database. Collects user message history of
    * all users for each channel
-   * 
+   *
    * @return The response message to send back to the channel
    */
   private String addChannels() {
@@ -104,7 +100,7 @@ public class AddChannels {
   /**
    * Collect channel history for the specificed {@link net.dv8tion.jda.api.entities.TextChannel
    * TextChannel} for all users in the database
-   * 
+   *
    * @param channel The target channel
    */
   private void retrieveChannelHistory(TextChannel channel) {
