@@ -1,5 +1,6 @@
 package uk.co.markg.bertrand.command.markov;
 
+import disparse.discord.jda.DiscordRequest;
 import disparse.parser.reflection.CommandHandler;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import uk.co.markg.bertrand.database.ChannelRepository;
@@ -15,8 +16,9 @@ public class MarkovAll {
 
   @CommandHandler(commandName = "all",
       description = "Generate a random number of sentences from all opted in user messages!")
-  public static void execute(MessageReceivedEvent event, ChannelRepository channelRepo,
-      UserRepository userRepo) {
+  public static void execute(DiscordRequest request, ChannelRepository channelRepo,
+                             UserRepository userRepo) {
+    MessageReceivedEvent event = request.getEvent();
     if (!channelRepo.hasWritePermission(event.getChannel().getIdLong())) {
       return;
     }
