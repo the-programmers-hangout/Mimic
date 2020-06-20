@@ -61,7 +61,7 @@ public class MarkovStats {
     eb.addField("**Total Messages**", "```" + messageRepo.getCount() + "```", true);
     eb.addField("**Total Tokens**", "```" + getTokenCount(messages) + "```", true);
     eb.addBlankField(true);
-    eb.addField("**Total Unique Words**", "```" + wordMap.size() + "```", true);
+    eb.addField("**Total Unique Words**", "```" + messageRepo.getUniqueWordCount() + "```", true);
     eb.addField("**Most Common Words**",
         "```" + String.join(", ", getMostUsedWords(wordMap, 30)) + "```", false);
     event.getChannel().sendMessage(eb.build()).queue();

@@ -3,6 +3,9 @@ package uk.co.markg.bertrand.database;
 import static uk.co.markg.bertrand.db.tables.Messages.MESSAGES;
 import java.util.List;
 import org.jooq.DSLContext;
+import org.jooq.Field;
+import org.jooq.Table;
+import org.jooq.impl.DSL;
 import disparse.parser.reflection.Injectable;
 import net.dv8tion.jda.api.entities.Message;
 import uk.co.markg.bertrand.db.tables.pojos.Messages;
@@ -65,6 +68,12 @@ public class MessageRepository {
 
   public int getCount() {
     return dsl.selectCount().from(MESSAGES).fetchOne(0, int.class);
+  }
+
+  public int getUniqueWordCount() {
+    Field<?> field = DSL.field("regexp_split_to_table(content, E'\\\\s+\\\\v?')");
+    Table<?> wordTable = dsl.select(field).from(MESSAGES).asTable();
+    return dsl.selectDistinct(DSL.count()).from(wordTable).fetchOne(0, int.class);
   }
 
   public int getCountByUserId(long userid) {
