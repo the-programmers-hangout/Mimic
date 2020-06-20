@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import disparse.discord.jda.DiscordRequest;
+import disparse.parser.reflection.Populate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import disparse.parser.reflection.CommandHandler;
@@ -33,23 +36,26 @@ public class OptIn {
   private OptIn() {
   }
 
-  public OptIn(MessageReceivedEvent event, UserRepository userRepo, ChannelRepository channelRepo) {
-    this.event = event;
+  /**
+   * Command execution method held by Disparse
+   *
+   * @param request     The discord request dispatched to this command
+   * @param userRepo    The user repository used to communicate with the database
+   * @param channelRepo The channel repository used to communicate with the database
+   */
+  @Populate
+  public OptIn(DiscordRequest request, UserRepository userRepo, ChannelRepository channelRepo) {
+    this.event = request.getEvent();
     this.userRepo = userRepo;
     this.channelRepo = channelRepo;
   }
 
   /**
    * Command execution method held by Disparse
-   * 
-   * @param event       The message event from discord that triggered the command
-   * @param userRepo    The user repository used to communicate with the database
-   * @param channelRepo The channel repository used to communicate with the database
    */
   @CommandHandler(commandName = "opt-in", description = "Opt-in for your messages to be read.")
-  public static void execute(MessageReceivedEvent event, UserRepository userRepo,
-      ChannelRepository channelRepo) {
-    new OptIn(event, userRepo, channelRepo).execute();
+  public void optInCommand() {
+    this.execute();
   }
 
   /**
@@ -68,7 +74,7 @@ public class OptIn {
   /**
    * Opts in a user by saving their id to the database and saving their history from all added
    * channels to the database.
-   * 
+   *
    * @param userid the discord userid of the user
    */
   private void optInUser(long userid) {
@@ -86,7 +92,7 @@ public class OptIn {
   /**
    * Triggers saving of user history for a channel. This method is called externally to the class so
    * it can instanciate itself with the no-args constructor.
-   * 
+   *
    * @param textChannel the target channel to read messages from
    * @param user        the target user to save history for
    */
@@ -96,7 +102,7 @@ public class OptIn {
 
   /**
    * Collects, filters, and saves user history for a specific user in a specific channel.
-   * 
+   *
    * @param textChannel the target text channel
    * @param userid      the target user
    */
@@ -119,7 +125,7 @@ public class OptIn {
    * Transforms the list of discord {@link net.dv8tion.jda.api.entities.Message Message}s into a
    * list of {@link uk.co.markg.bertrand.db.tables.records.MessagesRecord MessagesRecord} so that
    * they can be batch inserted into the database
-   * 
+   *
    * @param userid               the target user
    * @param validHistoryMessages A list of valid history messages
    * @return the list of MessagesRecord
@@ -133,7 +139,7 @@ public class OptIn {
   /**
    * Builds a {@link uk.co.markg.bertrand.db.tables.records.MessagesRecord MessagesRecord} from the
    * userid and {@link net.dv8tion.jda.api.entities.Message Message} content
-   * 
+   *
    * @param message the discord message content
    * @param userid  the sender of the message
    * @return the message as a {@link uk.co.markg.bertrand.db.tables.records.MessagesRecord}
@@ -146,7 +152,7 @@ public class OptIn {
   /**
    * Filter messages by validaty predicates in {@link uk.co.markg.bertrand.listener.MessageReader
    * MessageReader}
-   * 
+   *
    * @return The function to apply to a collection of messages
    */
   private Function<? super List<Message>, ? extends List<Message>> filterMessages() {
@@ -157,7 +163,7 @@ public class OptIn {
   /**
    * Collects up to the last {@link OptIn#HISTORY_LIMIT} messages in the specified channel and
    * filters them for the specified user.
-   * 
+   *
    * @param channel the target channel
    * @param userid  the target user
    * @return a {@link java.util.concurrent.CompletableFuture CompletableFuture} list of messages
