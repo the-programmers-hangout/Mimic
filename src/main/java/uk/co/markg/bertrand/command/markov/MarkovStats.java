@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
+
+import disparse.discord.jda.DiscordRequest;
+import disparse.discord.jda.DiscordResponse;
 import disparse.parser.reflection.CommandHandler;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -24,12 +27,13 @@ public class MarkovStats {
           "this", "do", "so", "we", "at", "its", "an", "it's", "im", "i'm", "are", "was");
 
   @CommandHandler(commandName = "stats", description = "Displays statistics for the bot")
-  public static void execute(MessageReceivedEvent event, UserRepository userRepo,
-      MessageRepository messageRepo) {
+  public static DiscordResponse execute(DiscordRequest request, UserRepository userRepo,
+                             MessageRepository messageRepo) {
+    MessageReceivedEvent event = request.getEvent();
     long userid = event.getAuthor().getIdLong();
     if (!userRepo.isUserOptedIn(userid)) {
       MarkovSender.notOptedIn(event.getChannel());
-      return;
+      return DiscordResponse.noop();
     }
     event.getChannel().sendTyping().queue();
     EmbedBuilder eb = new EmbedBuilder();
@@ -43,13 +47,13 @@ public class MarkovStats {
     eb.addField("**Your Unique Words**", "```" + userWordMap.size() + "```", true);
     eb.addField("**Your Most Common Words**",
         "```" + String.join(", ", getMostUsedWords(userWordMap, 30)) + "```", false);
-    event.getChannel().sendMessage(eb.build()).queue();
+    return DiscordResponse.of(eb);
   }
 
   @CommandHandler(commandName = "allstats", description = "Displays statistics for the bot")
-  public static void executeAll(MessageReceivedEvent event, UserRepository userRepo,
-      MessageRepository messageRepo) {
-    event.getChannel().sendTyping().queue();
+  public static DiscordResponse executeAll(DiscordRequest request, UserRepository userRepo,
+                                           MessageRepository messageRepo) {
+    request.getEvent().getChannel().sendTyping().queue();
     var messages = messageRepo.getByUsers(userRepo.getAllMarkovCandidateIds());
     var wordMap = calculateWordFrequency(messages);
 
@@ -64,7 +68,7 @@ public class MarkovStats {
     eb.addField("**Total Unique Words**", "```" + messageRepo.getUniqueWordCount() + "```", true);
     eb.addField("**Most Common Words**",
         "```" + String.join(", ", getMostUsedWords(wordMap, 30)) + "```", false);
-    event.getChannel().sendMessage(eb.build()).queue();
+    return DiscordResponse.of(eb);
   }
 
   private static int getTokenCount(List<String> messages) {
