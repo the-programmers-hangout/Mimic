@@ -2,7 +2,10 @@ package uk.co.markg.bertrand.command;
 
 import java.awt.Color;
 import java.util.List;
+
+import disparse.discord.jda.DiscordRequest;
 import disparse.parser.reflection.CommandHandler;
+import disparse.parser.reflection.Populate;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -13,21 +16,23 @@ public class ListChannels {
   private MessageReceivedEvent event;
   private ChannelRepository channelRepo;
 
-  public ListChannels(MessageReceivedEvent event, ChannelRepository channelRepo) {
-    this.event = event;
+  /**
+   * @param request The discord request dispatched to this command
+   * @param channelRepo  The channel repository used to communicate with the database
+   */
+  @Populate
+  public ListChannels(DiscordRequest request, ChannelRepository channelRepo) {
+    this.event = request.getEvent();
     this.channelRepo = channelRepo;
   }
 
   /**
    * Command execution method held by Disparse
-   * 
-   * @param event The message event from discord that triggered the command
-   * @param repo  The channel repository used to communicate with the database
    */
   @CommandHandler(commandName = "channels", description = "Lists all channels registered",
       roles = "staff")
-  public static void executeList(MessageReceivedEvent event, ChannelRepository repo) {
-    new ListChannels(event, repo).execute();
+  public void executeList() {
+    this.execute();
   }
 
   /**
@@ -43,7 +48,7 @@ public class ListChannels {
   /**
    * Create a {@link net.dv8tion.jda.api.entities.MessageEmbed MessageEmbed} to display all the
    * channels and their respective permissions.
-   * 
+   *
    * @param channels the list of channels retrieved from the database
    * @return a {@link net.dv8tion.jda.api.entities.MessageEmbed MessageEmbed}
    */
