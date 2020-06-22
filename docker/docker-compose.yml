@@ -1,0 +1,17 @@
+version: '2'
+services:
+  postgres:
+    build: postgres
+    restart: always
+    container_name: mimic_postgres
+    ports:
+    - "5432:5432"
+    volumes:
+      - mimic_postgres:/var/lib/postgres
+    environment:
+      - POSTGRES_USER=${B_USER}
+      - POSTGRES_PASSWORD=${B_PASS}
+
+volumes:
+  mimic_postgres:
+    driver: local
