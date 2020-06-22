@@ -13,7 +13,7 @@ public class MarkovSelf {
   @CommandHandler(commandName = "self",
       description = "Generate a random number of sentences from your own messages!")
   public static void execute(DiscordRequest request, ChannelRepository channelRepo,
-                             UserRepository userRepo) {
+      UserRepository userRepo) {
     MessageReceivedEvent event = request.getEvent();
     if (!channelRepo.hasWritePermission(event.getChannel().getIdLong())) {
       return;
@@ -25,6 +25,7 @@ public class MarkovSelf {
     }
     if (!userRepo.isMarkovCandidate(userid)) {
       MarkovSender.notMarkovCandidate(event.getChannel());
+      return;
     }
     event.getChannel().sendTyping().queue();
     MarkovSender.sendMessageWithDelay(event, Markov.load(userid).generateRandom());
