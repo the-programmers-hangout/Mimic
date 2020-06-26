@@ -22,7 +22,7 @@ public class MarkovSender {
   public static void sendMessageWithDelay(MessageReceivedEvent event, String text) {
     Message message =
         new MessageBuilder().append(text).stripMentions(event.getJDA(), MentionType.USER).build();
-    event.getChannel().sendMessage(message).queueAfter(2, TimeUnit.SECONDS,
+    event.getChannel().sendMessage(message).queueAfter(1, TimeUnit.SECONDS,
         msg -> msg.suppressEmbeds(true).queue());
   }
 
