@@ -19,7 +19,7 @@
     <junit.version>5.6.0</junit.version>
     <disparse.version>0.1.5</disparse.version>
     <jda.version>4.1.1_116</jda.version>
-    <log4j.version>2.13.1</log4j.version>
+    <log4j.version>2.13.3</log4j.version>
     <postgres.driver.version>42.2.11</postgres.driver.version>
     <jooq.version>3.13.2</jooq.version>
     <flyway.version>6.3.1</flyway.version>
