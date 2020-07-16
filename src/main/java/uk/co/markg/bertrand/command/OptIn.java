@@ -53,7 +53,8 @@ public class OptIn {
   /**
    * Command execution method held by Disparse
    */
-  @CommandHandler(commandName = "opt-in", description = "Opt-in for your messages to be read.")
+  @CommandHandler(commandName = "opt-in", description = "Opt-in for your messages to be read.",
+      roles = "Active")
   public void optInCommand() {
     this.execute();
   }
