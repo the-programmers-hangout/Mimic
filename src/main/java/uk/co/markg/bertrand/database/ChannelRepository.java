@@ -90,6 +90,10 @@ public class ChannelRepository {
     return dsl.selectFrom(CHANNELS).fetchInto(Channels.class);
   }
 
+  public List<Channels> getAllReadable() {
+    return dsl.selectFrom(CHANNELS).where(CHANNELS.READ_PERM).fetchInto(Channels.class);
+  }
+
   /**
    * Convenience method to delete a channel
    * 

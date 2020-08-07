@@ -1,6 +1,7 @@
 package uk.co.markg.bertrand.command;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.List;
 
 import disparse.discord.jda.DiscordRequest;
@@ -17,8 +18,8 @@ public class ListChannels {
   private ChannelRepository channelRepo;
 
   /**
-   * @param request The discord request dispatched to this command
-   * @param channelRepo  The channel repository used to communicate with the database
+   * @param request     The discord request dispatched to this command
+   * @param channelRepo The channel repository used to communicate with the database
    */
   @Populate
   public ListChannels(DiscordRequest request, ChannelRepository channelRepo) {
@@ -29,8 +30,7 @@ public class ListChannels {
   /**
    * Command execution method held by Disparse
    */
-  @CommandHandler(commandName = "channels", description = "Lists all channels registered",
-      roles = "staff")
+  @CommandHandler(commandName = "channels", description = "Lists all channels registered")
   public void executeList() {
     this.execute();
   }
@@ -40,7 +40,14 @@ public class ListChannels {
    * to send to discord
    */
   private void execute() {
-    var channels = channelRepo.getAll();
+    var staffRole = event.getGuild().getRolesByName("staff", true);
+    List<Channels> channels = new ArrayList<>();
+    if (staffRole.size() == 1 && event.getGuild().getMemberById(event.getAuthor().getIdLong())
+        .getRoles().contains(staffRole.get(0))) {
+      channels = channelRepo.getAll();
+    } else {
+      channels = channelRepo.getAllReadable();
+    }
     var message = buildListOfChannels(channels);
     event.getChannel().sendMessage(message).queue();
   }
