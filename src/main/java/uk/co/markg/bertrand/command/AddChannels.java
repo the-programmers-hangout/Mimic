@@ -2,7 +2,7 @@ package uk.co.markg.bertrand.command;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.stream.Collectors;
 import disparse.discord.jda.DiscordRequest;
 import disparse.parser.reflection.Populate;
 import org.apache.logging.log4j.LogManager;
@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import uk.co.markg.bertrand.database.ChannelRepository;
 import uk.co.markg.bertrand.database.UserRepository;
+import uk.co.markg.bertrand.db.tables.pojos.Users;
 
 public class AddChannels {
   private static final Logger logger = LogManager.getLogger(AddChannels.class);
@@ -47,7 +48,7 @@ public class AddChannels {
    */
   @Populate
   public AddChannels(DiscordRequest request, ChannelRequest req, ChannelRepository channelRepo,
-                     UserRepository userRepo) {
+      UserRepository userRepo) {
     this.event = request.getEvent();
     this.req = req;
     this.channelRepo = channelRepo;
@@ -104,9 +105,8 @@ public class AddChannels {
    * @param channel The target channel
    */
   private void retrieveChannelHistory(TextChannel channel) {
-    var users = userRepo.getAll();
-    logger.info("Found {} users", users.size());
-    OptIn.initiateSaveUserHistory(channel, users);
-
+    var userids = userRepo.getAll().stream().map(Users::getUserid).collect(Collectors.toList());
+    logger.info("Found {} users", userids.size());
+    new HistoryGrabber(channel, userids).execute();
   }
 }
