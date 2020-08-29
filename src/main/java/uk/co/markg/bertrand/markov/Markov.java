@@ -15,7 +15,7 @@ import uk.co.markg.bertrand.database.MessageRepository;
 public class Markov {
 
   private static final Logger logger = LogManager.getLogger(Markov.class);
-  private static final List<String> SENTENCE_ENDS = List.of(".", "!", "?", "!!", "??", "!?", "...");
+  private static final WeightedCollection SENTENCE_ENDS = getSentenceEnds();
   private static final String END_WORD = "END_WORD";
   private static final List<String> VALID_END_WORD_STOPS = List.of("?", "!", ".");
   private Map<String, Map<String, Double>> wordFrequencyMap;
@@ -28,6 +28,23 @@ public class Markov {
     endWords = new HashSet<>();
     parseInput(inputs);
     calculateProbabilities();
+  }
+
+  /**
+   * Creates a collection of sentence ends with probabilities taken from a subset of user messages.
+   * 
+   * @return the collection of sentence ends
+   */
+  private static WeightedCollection getSentenceEnds() {
+    var collection = new WeightedCollection();
+    collection.add(new WeightedElement(".", 0.4369));
+    collection.add(new WeightedElement("!", 0.1660));
+    collection.add(new WeightedElement("?", 0.2733));
+    collection.add(new WeightedElement("!!", 0.0132));
+    collection.add(new WeightedElement("??", 0.0114));
+    collection.add(new WeightedElement("!?", 0.0027));
+    collection.add(new WeightedElement("...", 0.0965));
+    return collection;
   }
 
   public static Markov load(long userid) {
@@ -94,7 +111,8 @@ public class Markov {
     String s = String.join(" ", sentence);
     logger.debug("Generated: {}", s);
     if (s.matches("(.*[^.!?`+>\\-=_+:@~;'#\\[\\]{}\\(\\)\\/\\|\\\\]$)")) {
-      s = s + SENTENCE_ENDS.get(ThreadLocalRandom.current().nextInt(SENTENCE_ENDS.size()));
+      s = s + SENTENCE_ENDS.getRandom().map(WeightedElement::getElement).orElse("@@@@@@@");
+      // s = s + SENTENCE_ENDS.get(ThreadLocalRandom.current().nextInt(SENTENCE_ENDS.size()));
     }
     return s;
   }
