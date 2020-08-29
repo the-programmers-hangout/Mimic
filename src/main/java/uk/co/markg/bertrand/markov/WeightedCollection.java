@@ -19,6 +19,31 @@ public class WeightedCollection {
     weightedSum += weightedElement.getWeight();
   }
 
+  public void update(String element, double newWeight) {
+    var item = get(element);
+    item.ifPresentOrElse(i -> update(i, newWeight),
+        () -> new IllegalArgumentException("No such element"));
+  }
+
+  public void update(WeightedElement element, double newWeight) {
+    updateElement(element, newWeight);
+  }
+
+  private void updateElement(WeightedElement element, double newWeight) {
+    double diff = newWeight - element.getWeight();
+    element.setWeight(newWeight);
+    weightedSum += diff;
+  }
+
+  public Optional<WeightedElement> get(String element) {
+    for (WeightedElement weightedElement : collection) {
+      if (element.equals(weightedElement.getElement())) {
+        return Optional.of(weightedElement);
+      }
+    }
+    return Optional.empty();
+  }
+
   public Optional<WeightedElement> getRandom() {
     var rand = ThreadLocalRandom.current().nextDouble(weightedSum);
     for (WeightedElement weightedElement : collection) {
@@ -29,5 +54,4 @@ public class WeightedCollection {
     }
     return Optional.empty();
   }
-
 }

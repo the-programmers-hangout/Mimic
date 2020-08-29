@@ -18,16 +18,15 @@ public class Markov {
   private static final WeightedCollection SENTENCE_ENDS = getSentenceEnds();
   private static final String END_WORD = "END_WORD";
   private static final List<String> VALID_END_WORD_STOPS = List.of("?", "!", ".");
-  private Map<String, Map<String, Double>> wordFrequencyMap;
+  private Map<String, WeightedCollection> wordMap;
   private Set<String> startWords;
   private Set<String> endWords;
 
   private Markov(List<String> inputs) {
-    wordFrequencyMap = new HashMap<>();
+    wordMap = new HashMap<String, WeightedCollection>();
     startWords = new HashSet<>();
     endWords = new HashSet<>();
     parseInput(inputs);
-    calculateProbabilities();
   }
 
   /**
@@ -91,17 +90,10 @@ public class Markov {
     sentence.add(word);
     boolean endWordHit = false;
     while (!endWordHit) {
-      var nextEntry = wordFrequencyMap.get(word);
-      double rand = ThreadLocalRandom.current().nextDouble(1);
-      for (var entry : nextEntry.entrySet()) {
-        rand -= entry.getValue();
-        if (rand <= 0) {
-          word = entry.getKey();
-          if (endWords.contains(word)) {
-            endWordHit = true;
-          }
-          break;
-        }
+      var nextEntry = wordMap.get(word);
+      word = nextEntry.getRandom().map(WeightedElement::getElement).orElse("");
+      if (endWords.contains(word)) {
+        endWordHit = true;
       }
       if (word.equals(END_WORD)) {
         break;
@@ -112,7 +104,6 @@ public class Markov {
     logger.debug("Generated: {}", s);
     if (s.matches("(.*[^.!?`+>\\-=_+:@~;'#\\[\\]{}\\(\\)\\/\\|\\\\]$)")) {
       s = s + SENTENCE_ENDS.getRandom().map(WeightedElement::getElement).orElse("@@@@@@@");
-      // s = s + SENTENCE_ENDS.get(ThreadLocalRandom.current().nextInt(SENTENCE_ENDS.size()));
     }
     return s;
   }
@@ -159,7 +150,7 @@ public class Markov {
       if (nextWord.isEmpty()) {
         continue;
       }
-      if (wordFrequencyMap.containsKey(word)) {
+      if (wordMap.containsKey(word)) {
         updateWordFrequency(word, nextWord);
       } else {
         insertWordFrequency(word, nextWord);
@@ -189,9 +180,9 @@ public class Markov {
    * @param followWord the follow word
    */
   private void insertWordFrequency(String word, String followWord) {
-    var followFrequency = new HashMap<String, Double>();
-    followFrequency.put(followWord, 1.0);
-    wordFrequencyMap.put(word, followFrequency);
+    var wc = new WeightedCollection();
+    wc.add(new WeightedElement(followWord, 1));
+    wordMap.put(word, wc);
   }
 
   /**
@@ -201,29 +192,9 @@ public class Markov {
    * @param followWord the follow word
    */
   private void updateWordFrequency(String key, String followWord) {
-    var followFrequency = wordFrequencyMap.get(key);
-    if (followFrequency.containsKey(followWord)) {
-      followFrequency.put(followWord, followFrequency.get(followWord) + 1);
-    } else {
-      followFrequency.put(followWord, 1.0);
-    }
-    wordFrequencyMap.put(key, followFrequency);
+    var followFrequency = wordMap.get(key);
+    followFrequency.get(followWord).ifPresentOrElse(
+        fw -> followFrequency.update(fw, fw.getWeight() + 1),
+        () -> followFrequency.add(new WeightedElement(followWord, 1)));
   }
-
-  /**
-   * Calculate the probabilities for each of the follow words of each word in the map.
-   */
-  private void calculateProbabilities() {
-    for (var entry : wordFrequencyMap.entrySet()) {
-      int sum = 0;
-      for (var followEntry : entry.getValue().entrySet()) {
-        sum += followEntry.getValue();
-      }
-      for (var followEntry : entry.getValue().entrySet()) {
-        double probability = followEntry.getValue() / sum;
-        followEntry.setValue(probability);
-      }
-    }
-  }
-
 }
