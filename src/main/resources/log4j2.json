@@ -1,8 +1,8 @@
 {
     "configuration": {
         "status": "error",
-        "name": "bertrand",
-        "packages": "uk.co.markg.bertrand",
+        "name": "mimic",
+        "packages": "uk.co.markg.mimic",
         "ThresholdFilter": {
             "level": "info"
         },

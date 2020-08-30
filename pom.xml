@@ -5,10 +5,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>uk.co.markg</groupId>
-  <artifactId>bertrand</artifactId>
+  <artifactId>mimic</artifactId>
   <version>1.0</version>
 
-  <name>bertrand</name>
+  <name>mimic</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -163,7 +163,7 @@
             <configuration>
               <transformers>
                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                  <mainClass>uk.co.markg.bertrand.App</mainClass>
+                  <mainClass>uk.co.markg.mimic.App</mainClass>
                 </transformer>
               </transformers>
             </configuration>

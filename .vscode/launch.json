@@ -8,15 +8,15 @@
             "type": "java",
             "name": "Bertrand Standard",
             "request": "launch",
-            "mainClass": "uk.co.markg.bertrand.App",
-            "projectName": "bertrand"
+            "mainClass": "uk.co.markg.mimic.App",
+            "projectName": "mimic"
         },
         {
             "type": "java",
             "name": "Bertrand Generate",
             "request": "launch",
-            "mainClass": "uk.co.markg.bertrand.App",
-            "projectName": "bertrand",
+            "mainClass": "uk.co.markg.mimic.App",
+            "projectName": "mimic",
             "args": "--generate"
         }
     ]

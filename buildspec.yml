@@ -12,6 +12,6 @@ phases:
       - mvn package
 artifacts:
   files:
-    - target/bertrand-1.0.jar
+    - target/mimic-1.0.jar
     - appspec.yml
   discard-paths: yes
