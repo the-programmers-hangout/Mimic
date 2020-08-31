@@ -10,6 +10,7 @@ import uk.co.markg.mimic.db.tables.pojos.Users;
 
 public class UserRepository {
 
+  private static final int MARKOV_CANDIDATE_MESSAGE_MINIMUM = 10;
   private DSLContext dsl;
 
   /**
@@ -30,7 +31,7 @@ public class UserRepository {
   public int getCount() {
     return dsl.selectCount().from(USERS).fetchOne(0, int.class);
   }
-  
+
   /**
    * Returns a list of all users in the database
    * 
@@ -47,8 +48,8 @@ public class UserRepository {
    * @return the list of users
    */
   public List<Users> getAllMarkovCandidates() {
-    return dsl.select(MESSAGES.USERID).from(MESSAGES).groupBy(MESSAGES.USERID).having(count().ge(5))
-        .fetchInto(Users.class);
+    return dsl.select(MESSAGES.USERID).from(MESSAGES).groupBy(MESSAGES.USERID)
+        .having(count().ge(MARKOV_CANDIDATE_MESSAGE_MINIMUM)).fetchInto(Users.class);
   }
 
   /**
@@ -58,8 +59,8 @@ public class UserRepository {
    * @return the list of users
    */
   public List<Long> getAllMarkovCandidateIds() {
-    return dsl.select(MESSAGES.USERID).from(MESSAGES).groupBy(MESSAGES.USERID).having(count().ge(5))
-        .fetchInto(Long.class);
+    return dsl.select(MESSAGES.USERID).from(MESSAGES).groupBy(MESSAGES.USERID)
+        .having(count().ge(MARKOV_CANDIDATE_MESSAGE_MINIMUM)).fetchInto(Long.class);
   }
 
   /**
@@ -81,7 +82,7 @@ public class UserRepository {
   public boolean isUserOptedIn(long userid) {
     return dsl.selectFrom(USERS).where(USERS.USERID.eq(userid)).fetchOne(0, int.class) != 0;
   }
-  
+
   public boolean isMarkovCandidate(long userid) {
     return getAllMarkovCandidateIds().contains(userid);
   }
