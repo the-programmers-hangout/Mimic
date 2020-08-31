@@ -1,5 +1,9 @@
 package uk.co.markg.mimic.markov;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -8,6 +12,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.io.Output;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import uk.co.markg.mimic.database.MessageRepository;
@@ -18,6 +25,8 @@ public class Markov {
   private static final WeightedCollection SENTENCE_ENDS = getSentenceEnds();
   private static final String END_WORD = "END_WORD";
   private static final List<String> VALID_END_WORD_STOPS = List.of("?", "!", ".");
+  private static final Kryo kryo = initKryo();
+
   private Map<String, WeightedCollection> wordMap;
   private Set<String> startWords;
   private Set<String> endWords;
@@ -27,6 +36,20 @@ public class Markov {
     startWords = new HashSet<>();
     endWords = new HashSet<>();
     parseInput(inputs);
+  }
+
+  private static Kryo initKryo() {
+    Kryo kryo = new Kryo();
+    kryo.register(Markov.class);
+    kryo.register(HashSet.class);
+    kryo.register(HashMap.class);
+    kryo.register(WeightedCollection.class);
+    kryo.register(WeightedElement.class);
+    kryo.register(ArrayList.class);
+    return kryo;
+  }
+
+  private Markov() {
   }
 
   /**
@@ -54,6 +77,20 @@ public class Markov {
     logger.info("Loaded chain for {}", userids);
     var inputs = MessageRepository.getRepository().getByUsers(userids);
     return new Markov(inputs);
+  }
+
+  public static Markov load(File f) throws IOException {
+    logger.info("Loaded from file");
+    Input input = new Input(new FileInputStream(f.getName()));
+    Markov markov = kryo.readObject(input, Markov.class);
+    input.close();
+    return markov;
+  }
+
+  public void save(File file) throws IOException {
+    Output output = new Output(new FileOutputStream(file.getName()));
+    kryo.writeObject(output, this);
+    output.close();
   }
 
   /**

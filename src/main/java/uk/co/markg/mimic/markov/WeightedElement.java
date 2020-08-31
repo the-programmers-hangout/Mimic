@@ -3,7 +3,15 @@ package uk.co.markg.mimic.markov;
 public class WeightedElement {
 
   private final String element;
+
   private double weight;
+
+  /**
+   * Required for serialisation.
+   */
+  private WeightedElement() {
+    element = "";
+  }
 
   public WeightedElement(String element, double weight) {
     this.element = element;

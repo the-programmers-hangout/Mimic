@@ -14,6 +14,11 @@ public class WeightedCollection {
     collection = new ArrayList<WeightedElement>();
   }
 
+  public WeightedCollection(List<WeightedElement> collection, double weightedSum) {
+    this.collection = collection;
+    this.weightedSum = weightedSum;
+  }
+
   public void add(WeightedElement weightedElement) {
     collection.add(weightedElement);
     weightedSum += weightedElement.getWeight();

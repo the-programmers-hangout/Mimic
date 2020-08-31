@@ -24,6 +24,7 @@
     <jooq.version>3.13.2</jooq.version>
     <flyway.version>6.3.1</flyway.version>
     <hikari.version>3.4.2</hikari.version>
+    <kryo.version>5.0.0-RC9</kryo.version>
   </properties>
 
   <repositories>
@@ -117,6 +118,11 @@
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
       <version>${postgres.driver.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.esotericsoftware</groupId>
+      <artifactId>kryo</artifactId>
+      <version>${kryo.version}</version>
     </dependency>
   </dependencies>
 
