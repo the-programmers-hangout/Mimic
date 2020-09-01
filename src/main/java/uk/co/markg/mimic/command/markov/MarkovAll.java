@@ -8,6 +8,7 @@ import disparse.discord.jda.DiscordRequest;
 import disparse.parser.reflection.CommandHandler;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import uk.co.markg.mimic.database.ChannelRepository;
+import uk.co.markg.mimic.database.UsageRepository;
 import uk.co.markg.mimic.database.UserRepository;
 import uk.co.markg.mimic.markov.Markov;
 import uk.co.markg.mimic.markov.MarkovSender;
@@ -32,6 +33,7 @@ public class MarkovAll {
       MarkovSender.notOptedIn(event.getChannel());
       return;
     }
+    UsageRepository.getRepository().save(MarkovAll.class, event);
     event.getChannel().sendTyping().queue();
     long guildid = event.getGuild().getIdLong();
     File file = new File(guildid + ".markov");
