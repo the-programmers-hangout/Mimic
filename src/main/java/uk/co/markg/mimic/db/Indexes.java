@@ -7,6 +7,7 @@ package uk.co.markg.mimic.db;
 import org.jooq.Index;
 import org.jooq.OrderField;
 import org.jooq.impl.Internal;
+
 import uk.co.markg.mimic.db.tables.Messages;
 
 

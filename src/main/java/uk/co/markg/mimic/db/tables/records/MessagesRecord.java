@@ -9,6 +9,7 @@ import org.jooq.Record1;
 import org.jooq.Record4;
 import org.jooq.Row4;
 import org.jooq.impl.UpdatableRecordImpl;
+
 import uk.co.markg.mimic.db.tables.Messages;
 
 
@@ -18,7 +19,7 @@ import uk.co.markg.mimic.db.tables.Messages;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class MessagesRecord extends UpdatableRecordImpl<MessagesRecord> implements Record4<Long, Long, String, Long> {
 
-    private static final long serialVersionUID = -961379550;
+    private static final long serialVersionUID = 1761305392;
 
     /**
      * Setter for <code>messages.messageid</code>.

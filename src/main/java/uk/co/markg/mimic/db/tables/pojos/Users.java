@@ -13,7 +13,7 @@ import java.io.Serializable;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Users implements Serializable {
 
-    private static final long serialVersionUID = -2002956536;
+    private static final long serialVersionUID = -736648173;
 
     private Long userid;
 

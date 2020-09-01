@@ -8,10 +8,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.jooq.Catalog;
+import org.jooq.Sequence;
 import org.jooq.Table;
 import org.jooq.impl.SchemaImpl;
+
 import uk.co.markg.mimic.db.tables.Channels;
 import uk.co.markg.mimic.db.tables.Messages;
+import uk.co.markg.mimic.db.tables.Usage;
 import uk.co.markg.mimic.db.tables.Users;
 
 
@@ -21,7 +24,7 @@ import uk.co.markg.mimic.db.tables.Users;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefaultSchema extends SchemaImpl {
 
-    private static final long serialVersionUID = -400102062;
+    private static final long serialVersionUID = 106440394;
 
     /**
      * The reference instance of <code>DEFAULT_SCHEMA</code>
@@ -37,6 +40,11 @@ public class DefaultSchema extends SchemaImpl {
      * The table <code>messages</code>.
      */
     public final Messages MESSAGES = Messages.MESSAGES;
+
+    /**
+     * The table <code>usage</code>.
+     */
+    public final Usage USAGE = Usage.USAGE;
 
     /**
      * The table <code>users</code>.
@@ -57,10 +65,17 @@ public class DefaultSchema extends SchemaImpl {
     }
 
     @Override
+    public final List<Sequence<?>> getSequences() {
+        return Arrays.<Sequence<?>>asList(
+            Sequences.USAGE_ID_SEQ);
+    }
+
+    @Override
     public final List<Table<?>> getTables() {
         return Arrays.<Table<?>>asList(
             Channels.CHANNELS,
             Messages.MESSAGES,
+            Usage.USAGE,
             Users.USERS);
     }
 }

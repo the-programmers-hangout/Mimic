@@ -9,6 +9,7 @@ import org.jooq.Record1;
 import org.jooq.Record3;
 import org.jooq.Row3;
 import org.jooq.impl.UpdatableRecordImpl;
+
 import uk.co.markg.mimic.db.tables.Channels;
 
 
@@ -18,7 +19,7 @@ import uk.co.markg.mimic.db.tables.Channels;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class ChannelsRecord extends UpdatableRecordImpl<ChannelsRecord> implements Record3<Long, Boolean, Boolean> {
 
-    private static final long serialVersionUID = 452465405;
+    private static final long serialVersionUID = 240773967;
 
     /**
      * Setter for <code>channels.channelid</code>.

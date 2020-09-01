@@ -19,6 +19,7 @@ import org.jooq.TableOptions;
 import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.TableImpl;
+
 import uk.co.markg.mimic.db.DefaultSchema;
 import uk.co.markg.mimic.db.Keys;
 import uk.co.markg.mimic.db.tables.records.UsersRecord;
@@ -30,7 +31,7 @@ import uk.co.markg.mimic.db.tables.records.UsersRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Users extends TableImpl<UsersRecord> {
 
-    private static final long serialVersionUID = 1391700926;
+    private static final long serialVersionUID = -22183974;
 
     /**
      * The reference instance of <code>users</code>

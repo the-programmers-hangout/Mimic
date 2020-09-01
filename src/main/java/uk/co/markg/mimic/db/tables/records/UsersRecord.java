@@ -8,6 +8,7 @@ import org.jooq.Field;
 import org.jooq.Record1;
 import org.jooq.Row1;
 import org.jooq.impl.UpdatableRecordImpl;
+
 import uk.co.markg.mimic.db.tables.Users;
 
 
@@ -17,7 +18,7 @@ import uk.co.markg.mimic.db.tables.Users;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class UsersRecord extends UpdatableRecordImpl<UsersRecord> implements Record1<Long> {
 
-    private static final long serialVersionUID = -1151084952;
+    private static final long serialVersionUID = 1158722974;
 
     /**
      * Setter for <code>users.userid</code>.

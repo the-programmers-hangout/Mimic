@@ -20,6 +20,7 @@ import org.jooq.TableOptions;
 import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.TableImpl;
+
 import uk.co.markg.mimic.db.DefaultSchema;
 import uk.co.markg.mimic.db.Indexes;
 import uk.co.markg.mimic.db.Keys;
@@ -32,7 +33,7 @@ import uk.co.markg.mimic.db.tables.records.MessagesRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Messages extends TableImpl<MessagesRecord> {
 
-    private static final long serialVersionUID = -1921153734;
+    private static final long serialVersionUID = 1874136507;
 
     /**
      * The reference instance of <code>messages</code>

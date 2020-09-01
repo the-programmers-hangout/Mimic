@@ -5,14 +5,18 @@ package uk.co.markg.mimic.db;
 
 
 import org.jooq.ForeignKey;
+import org.jooq.Identity;
 import org.jooq.TableField;
 import org.jooq.UniqueKey;
 import org.jooq.impl.Internal;
+
 import uk.co.markg.mimic.db.tables.Channels;
 import uk.co.markg.mimic.db.tables.Messages;
+import uk.co.markg.mimic.db.tables.Usage;
 import uk.co.markg.mimic.db.tables.Users;
 import uk.co.markg.mimic.db.tables.records.ChannelsRecord;
 import uk.co.markg.mimic.db.tables.records.MessagesRecord;
+import uk.co.markg.mimic.db.tables.records.UsageRecord;
 import uk.co.markg.mimic.db.tables.records.UsersRecord;
 
 
@@ -27,6 +31,7 @@ public class Keys {
     // IDENTITY definitions
     // -------------------------------------------------------------------------
 
+    public static final Identity<UsageRecord, Integer> IDENTITY_USAGE = Identities0.IDENTITY_USAGE;
 
     // -------------------------------------------------------------------------
     // UNIQUE and PRIMARY KEY definitions
@@ -34,6 +39,7 @@ public class Keys {
 
     public static final UniqueKey<ChannelsRecord> CHANNELS_PKEY = UniqueKeys0.CHANNELS_PKEY;
     public static final UniqueKey<MessagesRecord> MESSAGES_PKEY = UniqueKeys0.MESSAGES_PKEY;
+    public static final UniqueKey<UsageRecord> USAGE_PKEY = UniqueKeys0.USAGE_PKEY;
     public static final UniqueKey<UsersRecord> USERS_PKEY = UniqueKeys0.USERS_PKEY;
 
     // -------------------------------------------------------------------------
@@ -47,9 +53,14 @@ public class Keys {
     // [#1459] distribute members to avoid static initialisers > 64kb
     // -------------------------------------------------------------------------
 
+    private static class Identities0 {
+        public static Identity<UsageRecord, Integer> IDENTITY_USAGE = Internal.createIdentity(Usage.USAGE, Usage.USAGE.ID);
+    }
+
     private static class UniqueKeys0 {
         public static final UniqueKey<ChannelsRecord> CHANNELS_PKEY = Internal.createUniqueKey(Channels.CHANNELS, "channels_pkey", new TableField[] { Channels.CHANNELS.CHANNELID }, true);
         public static final UniqueKey<MessagesRecord> MESSAGES_PKEY = Internal.createUniqueKey(Messages.MESSAGES, "messages_pkey", new TableField[] { Messages.MESSAGES.MESSAGEID }, true);
+        public static final UniqueKey<UsageRecord> USAGE_PKEY = Internal.createUniqueKey(Usage.USAGE, "usage_pkey", new TableField[] { Usage.USAGE.ID }, true);
         public static final UniqueKey<UsersRecord> USERS_PKEY = Internal.createUniqueKey(Users.USERS, "users_pkey", new TableField[] { Users.USERS.USERID }, true);
     }
 

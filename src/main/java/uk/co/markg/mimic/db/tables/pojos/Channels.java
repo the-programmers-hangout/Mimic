@@ -13,7 +13,7 @@ import java.io.Serializable;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Channels implements Serializable {
 
-    private static final long serialVersionUID = 57146353;
+    private static final long serialVersionUID = 1795352764;
 
     private Long    channelid;
     private Boolean readPerm;

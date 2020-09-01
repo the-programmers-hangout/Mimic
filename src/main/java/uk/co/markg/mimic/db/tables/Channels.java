@@ -19,6 +19,7 @@ import org.jooq.TableOptions;
 import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.TableImpl;
+
 import uk.co.markg.mimic.db.DefaultSchema;
 import uk.co.markg.mimic.db.Keys;
 import uk.co.markg.mimic.db.tables.records.ChannelsRecord;
@@ -30,7 +31,7 @@ import uk.co.markg.mimic.db.tables.records.ChannelsRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Channels extends TableImpl<ChannelsRecord> {
 
-    private static final long serialVersionUID = -1777087028;
+    private static final long serialVersionUID = 729212652;
 
     /**
      * The reference instance of <code>channels</code>
