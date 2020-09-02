@@ -11,7 +11,7 @@ import org.jooq.Field;
 import org.jooq.ForeignKey;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row1;
+import org.jooq.Row2;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -31,7 +31,7 @@ import uk.co.markg.mimic.db.tables.records.UsersRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Users extends TableImpl<UsersRecord> {
 
-    private static final long serialVersionUID = -22183974;
+    private static final long serialVersionUID = -1050596191;
 
     /**
      * The reference instance of <code>users</code>
@@ -50,6 +50,11 @@ public class Users extends TableImpl<UsersRecord> {
      * The column <code>users.userid</code>.
      */
     public final TableField<UsersRecord, Long> USERID = createField(DSL.name("userid"), org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
+
+    /**
+     * The column <code>users.serverid</code>.
+     */
+    public final TableField<UsersRecord, Long> SERVERID = createField(DSL.name("serverid"), org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
 
     /**
      * Create a <code>users</code> table reference
@@ -126,11 +131,11 @@ public class Users extends TableImpl<UsersRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row1 type methods
+    // Row2 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row1<Long> fieldsRow() {
-        return (Row1) super.fieldsRow();
+    public Row2<Long, Long> fieldsRow() {
+        return (Row2) super.fieldsRow();
     }
 }

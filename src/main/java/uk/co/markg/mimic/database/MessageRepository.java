@@ -31,8 +31,8 @@ public class MessageRepository {
   }
 
   /**
-   * Create a {@link uk.co.markg.mimic.db.tables.pojos.Messages Messages} instance from a userid
-   * and a discord message and saves it to the database
+   * Create a {@link uk.co.markg.mimic.db.tables.pojos.Messages Messages} instance from a userid and
+   * a discord message and saves it to the database
    * 
    * @param userid  the userid of the message author
    * @param message the discord message object
@@ -40,7 +40,7 @@ public class MessageRepository {
    */
   public int save(long userid, Message message) {
     var msg = new Messages(message.getIdLong(), userid, message.getContentRaw(),
-        message.getChannel().getIdLong());
+        message.getChannel().getIdLong(), message.getGuild().getIdLong());
     return save(msg);
   }
 

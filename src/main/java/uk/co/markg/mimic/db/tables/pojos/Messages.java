@@ -13,12 +13,13 @@ import java.io.Serializable;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Messages implements Serializable {
 
-    private static final long serialVersionUID = -1947664462;
+    private static final long serialVersionUID = 1067005720;
 
     private Long   messageid;
     private Long   userid;
     private String content;
     private Long   channelid;
+    private Long   serverid;
 
     public Messages() {}
 
@@ -27,18 +28,21 @@ public class Messages implements Serializable {
         this.userid = value.userid;
         this.content = value.content;
         this.channelid = value.channelid;
+        this.serverid = value.serverid;
     }
 
     public Messages(
         Long   messageid,
         Long   userid,
         String content,
-        Long   channelid
+        Long   channelid,
+        Long   serverid
     ) {
         this.messageid = messageid;
         this.userid = userid;
         this.content = content;
         this.channelid = channelid;
+        this.serverid = serverid;
     }
 
     public Long getMessageid() {
@@ -73,6 +77,14 @@ public class Messages implements Serializable {
         this.channelid = channelid;
     }
 
+    public Long getServerid() {
+        return this.serverid;
+    }
+
+    public void setServerid(Long serverid) {
+        this.serverid = serverid;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Messages (");
@@ -81,6 +93,7 @@ public class Messages implements Serializable {
         sb.append(", ").append(userid);
         sb.append(", ").append(content);
         sb.append(", ").append(channelid);
+        sb.append(", ").append(serverid);
 
         sb.append(")");
         return sb.toString();

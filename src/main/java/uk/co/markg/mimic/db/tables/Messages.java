@@ -12,7 +12,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row4;
+import org.jooq.Row5;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -33,7 +33,7 @@ import uk.co.markg.mimic.db.tables.records.MessagesRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Messages extends TableImpl<MessagesRecord> {
 
-    private static final long serialVersionUID = 1874136507;
+    private static final long serialVersionUID = 1685374154;
 
     /**
      * The reference instance of <code>messages</code>
@@ -67,6 +67,11 @@ public class Messages extends TableImpl<MessagesRecord> {
      * The column <code>messages.channelid</code>.
      */
     public final TableField<MessagesRecord, Long> CHANNELID = createField(DSL.name("channelid"), org.jooq.impl.SQLDataType.BIGINT.nullable(false).defaultValue(org.jooq.impl.DSL.field("0", org.jooq.impl.SQLDataType.BIGINT)), this, "");
+
+    /**
+     * The column <code>messages.serverid</code>.
+     */
+    public final TableField<MessagesRecord, Long> SERVERID = createField(DSL.name("serverid"), org.jooq.impl.SQLDataType.BIGINT.nullable(false), this, "");
 
     /**
      * Create a <code>messages</code> table reference
@@ -161,11 +166,11 @@ public class Messages extends TableImpl<MessagesRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row4 type methods
+    // Row5 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row4<Long, Long, String, Long> fieldsRow() {
-        return (Row4) super.fieldsRow();
+    public Row5<Long, Long, String, Long, Long> fieldsRow() {
+        return (Row5) super.fieldsRow();
     }
 }

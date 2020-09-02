@@ -34,8 +34,8 @@ public class ChannelRepository {
    * @param write     whether the bot has write access to the channel
    * @return the number of inserted rows
    */
-  public int save(String channelid, Boolean read, Boolean write) {
-    return save(new Channels(Long.parseLong(channelid), read, write));
+  public int save(String channelid, Boolean read, Boolean write, Long serverid) {
+    return save(new Channels(Long.parseLong(channelid), read, write, serverid));
   }
 
   /**

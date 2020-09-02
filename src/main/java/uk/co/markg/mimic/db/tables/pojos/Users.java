@@ -13,20 +13,24 @@ import java.io.Serializable;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Users implements Serializable {
 
-    private static final long serialVersionUID = -736648173;
+    private static final long serialVersionUID = 1179612963;
 
     private Long userid;
+    private Long serverid;
 
     public Users() {}
 
     public Users(Users value) {
         this.userid = value.userid;
+        this.serverid = value.serverid;
     }
 
     public Users(
-        Long userid
+        Long userid,
+        Long serverid
     ) {
         this.userid = userid;
+        this.serverid = serverid;
     }
 
     public Long getUserid() {
@@ -37,11 +41,20 @@ public class Users implements Serializable {
         this.userid = userid;
     }
 
+    public Long getServerid() {
+        return this.serverid;
+    }
+
+    public void setServerid(Long serverid) {
+        this.serverid = serverid;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Users (");
 
         sb.append(userid);
+        sb.append(", ").append(serverid);
 
         sb.append(")");
         return sb.toString();

@@ -85,7 +85,7 @@ public class AddChannels {
     for (String channelid : args) {
       var textChannel = event.getJDA().getTextChannelById(channelid);
       if (textChannel != null) {
-        channelRepo.save(channelid, req.read, req.write);
+        channelRepo.save(channelid, req.read, req.write, event.getGuild().getIdLong());
         if (req.read) {
           logger.info("Reading from channel {}", channelid);
           retrieveChannelHistory(textChannel);

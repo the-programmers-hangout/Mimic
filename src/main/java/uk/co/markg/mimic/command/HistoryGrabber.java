@@ -74,6 +74,6 @@ public class HistoryGrabber {
    */
   private MessagesRecord buildMessage(Message message) {
     return new MessagesRecord(message.getIdLong(), message.getAuthor().getIdLong(),
-        message.getContentRaw(), message.getChannel().getIdLong());
+        message.getContentRaw(), message.getChannel().getIdLong(), message.getGuild().getIdLong());
   }
 }

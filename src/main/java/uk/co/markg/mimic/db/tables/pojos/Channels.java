@@ -13,11 +13,12 @@ import java.io.Serializable;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Channels implements Serializable {
 
-    private static final long serialVersionUID = 1795352764;
+    private static final long serialVersionUID = 805265014;
 
     private Long    channelid;
     private Boolean readPerm;
     private Boolean writePerm;
+    private Long    serverid;
 
     public Channels() {}
 
@@ -25,16 +26,19 @@ public class Channels implements Serializable {
         this.channelid = value.channelid;
         this.readPerm = value.readPerm;
         this.writePerm = value.writePerm;
+        this.serverid = value.serverid;
     }
 
     public Channels(
         Long    channelid,
         Boolean readPerm,
-        Boolean writePerm
+        Boolean writePerm,
+        Long    serverid
     ) {
         this.channelid = channelid;
         this.readPerm = readPerm;
         this.writePerm = writePerm;
+        this.serverid = serverid;
     }
 
     public Long getChannelid() {
@@ -61,6 +65,14 @@ public class Channels implements Serializable {
         this.writePerm = writePerm;
     }
 
+    public Long getServerid() {
+        return this.serverid;
+    }
+
+    public void setServerid(Long serverid) {
+        this.serverid = serverid;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Channels (");
@@ -68,6 +80,7 @@ public class Channels implements Serializable {
         sb.append(channelid);
         sb.append(", ").append(readPerm);
         sb.append(", ").append(writePerm);
+        sb.append(", ").append(serverid);
 
         sb.append(")");
         return sb.toString();
