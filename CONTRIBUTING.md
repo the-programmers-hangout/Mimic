@@ -6,6 +6,22 @@ Before beginning, please make sure you have read and understood the [Code of Con
 
 All work should be decided on before you begin working. Either through DMs on Discord (Toby Larone#1985) or through Issues in this repository. Please don't expect that unorganised, undiscussed, or random PRs will be accepted.
 
+## Setup
+
+* Requires Postgres, Maven, Java 11+
+* Create database with `CREATE DATABASE my_database`
+* Create the following environment vars. (Replace placeholder values with your own)
+```
+B_HOST=jdbc:postgresql://localhost:5432/my_database
+B_USER=my_user
+B_PASS=my_password
+B_TOKEN=my_discord_token
+```
+* Run bot via main.
+* If making changes to the database, add a new migration file. Run the bot normally (so flyway runs the migrations), then run the bot again and pass `--generate` to the main method so that Jooq generates the relevant database changes.
+
+Note: for more info on commands and command parsing see [Disparse](https://github.com/BoscoJared/disparse)
+
 ## Committing changes
 
 Try to keep commits small in size. Many small commits are much nicer than few large commits.
