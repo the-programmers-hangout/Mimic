@@ -1,6 +1,7 @@
 package uk.co.markg.mimic.command.markov;
 
 import java.awt.Color;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -9,10 +10,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
-
 import disparse.discord.jda.DiscordRequest;
 import disparse.discord.jda.DiscordResponse;
+import disparse.parser.dispatch.CooldownScope;
 import disparse.parser.reflection.CommandHandler;
+import disparse.parser.reflection.Cooldown;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import uk.co.markg.mimic.database.MessageRepository;
@@ -26,9 +28,11 @@ public class MarkovStats {
           "but", "if", "can", "with", "have", "not", "on", "or", "as", "that's", "just", "like",
           "this", "do", "so", "we", "at", "its", "an", "it's", "im", "i'm", "are", "was");
 
+  @Cooldown(amount = 5, unit = ChronoUnit.SECONDS, scope = CooldownScope.USER,
+      sendCooldownMessage = false)
   @CommandHandler(commandName = "stats", description = "Displays statistics for the bot")
   public static DiscordResponse execute(DiscordRequest request, UserRepository userRepo,
-                             MessageRepository messageRepo) {
+      MessageRepository messageRepo) {
     MessageReceivedEvent event = request.getEvent();
     long userid = event.getAuthor().getIdLong();
     if (!userRepo.isUserOptedIn(userid)) {
@@ -50,9 +54,11 @@ public class MarkovStats {
     return DiscordResponse.of(eb);
   }
 
+  @Cooldown(amount = 1, unit = ChronoUnit.MINUTES, scope = CooldownScope.CHANNEL,
+      sendCooldownMessage = false)
   @CommandHandler(commandName = "allstats", description = "Displays statistics for the bot")
   public static DiscordResponse executeAll(DiscordRequest request, UserRepository userRepo,
-                                           MessageRepository messageRepo) {
+      MessageRepository messageRepo) {
     request.getEvent().getChannel().sendTyping().queue();
     var messages = messageRepo.getByUsers(userRepo.getAllMarkovCandidateIds());
     var wordMap = calculateWordFrequency(messages);

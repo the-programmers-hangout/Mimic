@@ -2,24 +2,29 @@ package uk.co.markg.mimic.command.markov;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import disparse.discord.jda.DiscordRequest;
+import disparse.parser.dispatch.CooldownScope;
 import disparse.parser.reflection.CommandHandler;
+import disparse.parser.reflection.Cooldown;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import uk.co.markg.mimic.database.ChannelRepository;
 import uk.co.markg.mimic.database.UsageRepository;
 import uk.co.markg.mimic.database.UserRepository;
 import uk.co.markg.mimic.markov.Markov;
 import uk.co.markg.mimic.markov.MarkovSender;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 public class MarkovAll {
   private static final Logger logger = LogManager.getLogger(MarkovAll.class);
   private static final int TWO_HOURS_MILLIS = 7_200_000;
   private static Map<Long, Long> cacheTimes = new HashMap<>();
 
+  @Cooldown(amount = 5, unit = ChronoUnit.SECONDS, scope = CooldownScope.USER,
+      sendCooldownMessage = false)
   @CommandHandler(commandName = "all",
       description = "Generate a random number of sentences from all opted in user messages!")
   public void execute(DiscordRequest request, ChannelRepository channelRepo,

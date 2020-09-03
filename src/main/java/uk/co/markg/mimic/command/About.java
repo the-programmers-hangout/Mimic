@@ -1,13 +1,18 @@
 package uk.co.markg.mimic.command;
 
+import java.awt.Color;
+import java.time.temporal.ChronoUnit;
 import disparse.discord.jda.DiscordRequest;
 import disparse.discord.jda.DiscordResponse;
+import disparse.parser.dispatch.CooldownScope;
 import disparse.parser.reflection.CommandHandler;
+import disparse.parser.reflection.Cooldown;
 import net.dv8tion.jda.api.EmbedBuilder;
-import java.awt.Color;
 
 public class About {
 
+  @Cooldown(amount = 1, unit = ChronoUnit.MINUTES, scope = CooldownScope.USER,
+      sendCooldownMessage = false)
   @CommandHandler(commandName = "about", description = "Displays info about the bot")
   public static DiscordResponse execute(DiscordRequest request) {
     EmbedBuilder eb = new EmbedBuilder();

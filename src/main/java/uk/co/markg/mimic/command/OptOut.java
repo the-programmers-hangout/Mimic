@@ -1,7 +1,10 @@
 package uk.co.markg.mimic.command;
 
+import java.time.temporal.ChronoUnit;
 import disparse.discord.jda.DiscordRequest;
+import disparse.parser.dispatch.CooldownScope;
 import disparse.parser.reflection.CommandHandler;
+import disparse.parser.reflection.Cooldown;
 import disparse.parser.reflection.Populate;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import uk.co.markg.mimic.database.UserRepository;
@@ -27,6 +30,8 @@ public class OptOut {
   /**
    * Command execution method held by Disparse
    */
+  @Cooldown(amount = 10, unit = ChronoUnit.SECONDS, scope = CooldownScope.USER,
+      sendCooldownMessage = true)
   @CommandHandler(commandName = "opt-out", description = "Opt-out for all messages to be removed.")
   public void optOutCommand() {
     this.execute();

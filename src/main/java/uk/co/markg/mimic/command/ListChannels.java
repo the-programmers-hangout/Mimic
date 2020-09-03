@@ -1,11 +1,13 @@
 package uk.co.markg.mimic.command;
 
 import java.awt.Color;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-
 import disparse.discord.jda.DiscordRequest;
+import disparse.parser.dispatch.CooldownScope;
 import disparse.parser.reflection.CommandHandler;
+import disparse.parser.reflection.Cooldown;
 import disparse.parser.reflection.Populate;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -30,6 +32,8 @@ public class ListChannels {
   /**
    * Command execution method held by Disparse
    */
+  @Cooldown(amount = 5, unit = ChronoUnit.SECONDS, scope = CooldownScope.USER,
+      sendCooldownMessage = false)
   @CommandHandler(commandName = "channels", description = "Lists all channels registered")
   public void executeList() {
     this.execute();

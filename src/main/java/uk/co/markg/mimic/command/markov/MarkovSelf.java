@@ -1,7 +1,10 @@
 package uk.co.markg.mimic.command.markov;
 
+import java.time.temporal.ChronoUnit;
 import disparse.discord.jda.DiscordRequest;
+import disparse.parser.dispatch.CooldownScope;
 import disparse.parser.reflection.CommandHandler;
+import disparse.parser.reflection.Cooldown;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import uk.co.markg.mimic.database.ChannelRepository;
 import uk.co.markg.mimic.database.UsageRepository;
@@ -11,6 +14,8 @@ import uk.co.markg.mimic.markov.MarkovSender;
 
 public class MarkovSelf {
 
+  @Cooldown(amount = 5, unit = ChronoUnit.SECONDS, scope = CooldownScope.USER,
+      sendCooldownMessage = false)
   @CommandHandler(commandName = "self",
       description = "Generate a random number of sentences from your own messages!")
   public static void execute(DiscordRequest request, ChannelRepository channelRepo,
