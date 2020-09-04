@@ -55,11 +55,11 @@ public class ListChannels {
    * to send to discord
    */
   private void execute() {
-    sendChannelList(channelRepo.getAllReadable());
+    sendChannelList(channelRepo.getAllReadable(event.getGuild().getIdLong()));
   }
 
   private void executeFull() {
-    sendChannelList(channelRepo.getAll());
+    sendChannelList(channelRepo.getAll(event.getGuild().getIdLong()));
   }
 
   private void sendChannelList(List<Channels> channels) {

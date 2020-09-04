@@ -86,12 +86,12 @@ public class ChannelRepository {
    * 
    * @return list of all channels
    */
-  public List<Channels> getAll() {
-    return dsl.selectFrom(CHANNELS).fetchInto(Channels.class);
+  public List<Channels> getAll(long serverid) {
+    return dsl.selectFrom(CHANNELS).where(CHANNELS.SERVERID.eq(serverid)).fetchInto(Channels.class);
   }
 
-  public List<Channels> getAllReadable() {
-    return dsl.selectFrom(CHANNELS).where(CHANNELS.READ_PERM).fetchInto(Channels.class);
+  public List<Channels> getAllReadable(long serverid) {
+    return dsl.selectFrom(CHANNELS).where(CHANNELS.READ_PERM).and(CHANNELS.SERVERID.eq(serverid)).fetchInto(Channels.class);
   }
 
   /**

@@ -74,9 +74,9 @@ public class OptIn {
    * @param userid the discord userid of the user
    */
   private void optInUser(long userid) {
-    userRepo.save(userid);
+    userRepo.save(userid, event.getGuild().getIdLong());
     MarkovSender.optedIn(event.getChannel());
-    var channels = channelRepo.getAll();
+    var channels = channelRepo.getAll(event.getGuild().getIdLong());
     for (Channels channel : channels) {
       var textChannel = event.getJDA().getTextChannelById(channel.getChannelid());
       if (textChannel != null && channel.getReadPerm()) {

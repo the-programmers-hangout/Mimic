@@ -66,11 +66,12 @@ public class UserRepository {
   /**
    * Save a user to the database
    * 
-   * @param userid the userid to save
+   * @param userid   the userid to save
+   * @param serverid the serverid to save
    * @return the number of rows inserted
    */
-  public int save(long userid) {
-    return dsl.insertInto(USERS).values(userid).execute();
+  public int save(long userid, long serverid) {
+    return dsl.insertInto(USERS).values(userid, serverid).execute();
   }
 
   /**
