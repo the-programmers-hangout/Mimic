@@ -19,9 +19,9 @@ public class MemberLeave extends ListenerAdapter {
   @Override
   public void onGuildMemberRemove(GuildMemberRemoveEvent event) {
     long userid = event.getUser().getIdLong();
-    if (userRepo.isUserOptedIn(userid)) {
+    if (userRepo.isUserOptedIn(userid, event.getGuild().getIdLong())) {
       logger.info("User {} left the server.", userid);
-      userRepo.delete(userid);
+      userRepo.delete(userid, event.getGuild().getIdLong());
     }
   }
 

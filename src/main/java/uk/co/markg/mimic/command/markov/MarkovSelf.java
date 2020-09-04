@@ -25,11 +25,11 @@ public class MarkovSelf {
       return;
     }
     long userid = event.getAuthor().getIdLong();
-    if (!userRepo.isUserOptedIn(userid)) {
+    if (!userRepo.isUserOptedIn(userid, event.getGuild().getIdLong())) {
       MarkovSender.notOptedIn(event.getChannel());
       return;
     }
-    if (!userRepo.isMarkovCandidate(userid)) {
+    if (!userRepo.isMarkovCandidate(userid, event.getGuild().getIdLong())) {
       MarkovSender.notMarkovCandidate(event.getChannel());
       return;
     }

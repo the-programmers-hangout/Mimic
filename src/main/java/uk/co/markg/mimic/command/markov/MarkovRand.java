@@ -29,13 +29,13 @@ public class MarkovRand {
       return;
     }
     long userid = event.getAuthor().getIdLong();
-    if (!userRepo.isUserOptedIn(userid)) {
+    if (!userRepo.isUserOptedIn(userid, event.getGuild().getIdLong())) {
       MarkovSender.notOptedIn(event.getChannel());
       return;
     }
     UsageRepository.getRepository().save(MarkovRand.class, event);
     event.getChannel().sendTyping().queue();
-    var users = userRepo.getAllMarkovCandidateIds();
+    var users = userRepo.getAllMarkovCandidateIds(event.getGuild().getIdLong());
     var sb = new StringBuilder();
     int noOfSentences = ThreadLocalRandom.current().nextInt(5) + 1;
     for (int i = 0; i < noOfSentences; i++) {

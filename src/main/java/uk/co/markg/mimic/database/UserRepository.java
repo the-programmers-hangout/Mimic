@@ -47,9 +47,10 @@ public class UserRepository {
    * 
    * @return the list of users
    */
-  public List<Users> getAllMarkovCandidates() {
-    return dsl.select(MESSAGES.USERID).from(MESSAGES).groupBy(MESSAGES.USERID)
-        .having(count().ge(MARKOV_CANDIDATE_MESSAGE_MINIMUM)).fetchInto(Users.class);
+  public List<Users> getAllMarkovCandidates(long serverid) {
+    return dsl.select(MESSAGES.USERID).from(MESSAGES).where(MESSAGES.SERVERID.eq(serverid))
+        .groupBy(MESSAGES.USERID).having(count().ge(MARKOV_CANDIDATE_MESSAGE_MINIMUM))
+        .fetchInto(Users.class);
   }
 
   /**
@@ -58,9 +59,10 @@ public class UserRepository {
    * 
    * @return the list of users
    */
-  public List<Long> getAllMarkovCandidateIds() {
-    return dsl.select(MESSAGES.USERID).from(MESSAGES).groupBy(MESSAGES.USERID)
-        .having(count().ge(MARKOV_CANDIDATE_MESSAGE_MINIMUM)).fetchInto(Long.class);
+  public List<Long> getAllMarkovCandidateIds(long serverid) {
+    return dsl.select(MESSAGES.USERID).from(MESSAGES).where(MESSAGES.SERVERID.eq(serverid))
+        .groupBy(MESSAGES.USERID).having(count().ge(MARKOV_CANDIDATE_MESSAGE_MINIMUM))
+        .fetchInto(Long.class);
   }
 
   /**
@@ -80,12 +82,13 @@ public class UserRepository {
    * @param userid the userid to find
    * @return true if the user exists
    */
-  public boolean isUserOptedIn(long userid) {
-    return dsl.selectFrom(USERS).where(USERS.USERID.eq(userid)).fetchOne(0, int.class) != 0;
+  public boolean isUserOptedIn(long userid, long serverid) {
+    return dsl.selectFrom(USERS).where(USERS.USERID.eq(userid)).and(USERS.SERVERID.eq(serverid))
+        .fetchOne(0, int.class) != 0;
   }
 
-  public boolean isMarkovCandidate(long userid) {
-    return getAllMarkovCandidateIds().contains(userid);
+  public boolean isMarkovCandidate(long userid, long serverid) {
+    return getAllMarkovCandidateIds(serverid).contains(userid);
   }
 
   /**
@@ -94,7 +97,8 @@ public class UserRepository {
    * @param userid the user id to remove
    * @return the number of rows deleted from the user table
    */
-  public int delete(long userid) {
-    return dsl.deleteFrom(USERS).where(USERS.USERID.eq(userid)).execute();
+  public int delete(long userid, long serverid) {
+    return dsl.deleteFrom(USERS).where(USERS.USERID.eq(userid)).and(USERS.SERVERID.eq(serverid))
+        .execute();
   }
 }

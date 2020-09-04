@@ -34,7 +34,7 @@ public class MarkovAll {
       return;
     }
     long userid = event.getAuthor().getIdLong();
-    if (!userRepo.isUserOptedIn(userid)) {
+    if (!userRepo.isUserOptedIn(userid, event.getGuild().getIdLong())) {
       MarkovSender.notOptedIn(event.getChannel());
       return;
     }
@@ -70,10 +70,10 @@ public class MarkovAll {
     }
   }
 
-  private Markov updateMarkovChain(long guildid) {
-    logger.info("Updated cache for {}", guildid);
-    cacheTimes.put(guildid, System.currentTimeMillis());
-    return getMarkovChain();
+  private Markov updateMarkovChain(long serverid) {
+    logger.info("Updated cache for {}", serverid);
+    cacheTimes.put(serverid, System.currentTimeMillis());
+    return getMarkovChain(serverid);
   }
 
   private boolean cacheExpired(long guildid) {
@@ -81,8 +81,8 @@ public class MarkovAll {
     return System.currentTimeMillis() - cacheTime > TWO_HOURS_MILLIS;
   }
 
-  public Markov getMarkovChain() {
+  public Markov getMarkovChain(long serverid) {
     var repo = UserRepository.getRepository();
-    return Markov.load(repo.getAllMarkovCandidateIds());
+    return Markov.load(repo.getAllMarkovCandidateIds(serverid));
   }
 }

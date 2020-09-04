@@ -67,7 +67,7 @@ public class MessageReader extends ListenerAdapter {
    * @return true if all constraints are satisfied
    */
   private boolean isMessageConstraintsMet(MessageReceivedEvent e) {
-    return userRepo.isUserOptedIn(e.getAuthor().getIdLong())
+    return userRepo.isUserOptedIn(e.getAuthor().getIdLong(), e.getGuild().getIdLong())
         && messageIsValid(e.getMessage().getContentRaw())
         && channelRepo.hasReadPermission(e.getChannel().getIdLong());
   }

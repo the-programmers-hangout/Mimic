@@ -60,7 +60,7 @@ public class OptIn {
    */
   private void execute() {
     long userid = event.getAuthor().getIdLong();
-    if (userRepo.isUserOptedIn(userid)) {
+    if (userRepo.isUserOptedIn(userid, event.getGuild().getIdLong())) {
       MarkovSender.alreadyOptedIn(event.getChannel());
     } else {
       optInUser(userid);

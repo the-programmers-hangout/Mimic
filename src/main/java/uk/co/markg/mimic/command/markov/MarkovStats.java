@@ -35,7 +35,7 @@ public class MarkovStats {
       MessageRepository messageRepo) {
     MessageReceivedEvent event = request.getEvent();
     long userid = event.getAuthor().getIdLong();
-    if (!userRepo.isUserOptedIn(userid)) {
+    if (!userRepo.isUserOptedIn(userid, event.getGuild().getIdLong())) {
       MarkovSender.notOptedIn(event.getChannel());
       return DiscordResponse.noop();
     }
@@ -60,7 +60,8 @@ public class MarkovStats {
   public static DiscordResponse executeAll(DiscordRequest request, UserRepository userRepo,
       MessageRepository messageRepo) {
     request.getEvent().getChannel().sendTyping().queue();
-    var messages = messageRepo.getByUsers(userRepo.getAllMarkovCandidateIds());
+    var messages = messageRepo
+        .getByUsers(userRepo.getAllMarkovCandidateIds(request.getEvent().getGuild().getIdLong()));
     var wordMap = calculateWordFrequency(messages);
 
     EmbedBuilder eb = new EmbedBuilder();

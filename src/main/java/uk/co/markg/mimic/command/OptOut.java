@@ -43,7 +43,7 @@ public class OptOut {
    */
   private void execute() {
     long userid = event.getAuthor().getIdLong();
-    if (userRepo.isUserOptedIn(userid)) {
+    if (userRepo.isUserOptedIn(userid, event.getGuild().getIdLong())) {
       optOutUser(userid);
     } else {
       MarkovSender.alreadyOptedOut(event.getChannel());
@@ -56,7 +56,7 @@ public class OptOut {
    * @param userid the user to delete
    */
   private void optOutUser(long userid) {
-    userRepo.delete(userid);
+    userRepo.delete(userid, event.getGuild().getIdLong());
     MarkovSender.optedOut(event.getChannel());
   }
 }
