@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
+import org.jooq.Index;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Row2;
@@ -16,12 +17,11 @@ import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
 import org.jooq.TableOptions;
-import org.jooq.UniqueKey;
 import org.jooq.impl.DSL;
 import org.jooq.impl.TableImpl;
 
 import uk.co.markg.mimic.db.DefaultSchema;
-import uk.co.markg.mimic.db.Keys;
+import uk.co.markg.mimic.db.Indexes;
 import uk.co.markg.mimic.db.tables.records.UsersRecord;
 
 
@@ -31,7 +31,7 @@ import uk.co.markg.mimic.db.tables.records.UsersRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Users extends TableImpl<UsersRecord> {
 
-    private static final long serialVersionUID = -1050596191;
+    private static final long serialVersionUID = 1885368516;
 
     /**
      * The reference instance of <code>users</code>
@@ -95,13 +95,8 @@ public class Users extends TableImpl<UsersRecord> {
     }
 
     @Override
-    public UniqueKey<UsersRecord> getPrimaryKey() {
-        return Keys.USERS_PKEY;
-    }
-
-    @Override
-    public List<UniqueKey<UsersRecord>> getKeys() {
-        return Arrays.<UniqueKey<UsersRecord>>asList(Keys.USERS_PKEY);
+    public List<Index> getIndexes() {
+        return Arrays.<Index>asList(Indexes.USERS_PKEY);
     }
 
     @Override

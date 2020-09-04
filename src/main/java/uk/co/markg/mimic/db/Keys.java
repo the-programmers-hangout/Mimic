@@ -13,11 +13,9 @@ import org.jooq.impl.Internal;
 import uk.co.markg.mimic.db.tables.Channels;
 import uk.co.markg.mimic.db.tables.Messages;
 import uk.co.markg.mimic.db.tables.Usage;
-import uk.co.markg.mimic.db.tables.Users;
 import uk.co.markg.mimic.db.tables.records.ChannelsRecord;
 import uk.co.markg.mimic.db.tables.records.MessagesRecord;
 import uk.co.markg.mimic.db.tables.records.UsageRecord;
-import uk.co.markg.mimic.db.tables.records.UsersRecord;
 
 
 /**
@@ -40,13 +38,11 @@ public class Keys {
     public static final UniqueKey<ChannelsRecord> CHANNELS_PKEY = UniqueKeys0.CHANNELS_PKEY;
     public static final UniqueKey<MessagesRecord> MESSAGES_PKEY = UniqueKeys0.MESSAGES_PKEY;
     public static final UniqueKey<UsageRecord> USAGE_PKEY = UniqueKeys0.USAGE_PKEY;
-    public static final UniqueKey<UsersRecord> USERS_PKEY = UniqueKeys0.USERS_PKEY;
 
     // -------------------------------------------------------------------------
     // FOREIGN KEY definitions
     // -------------------------------------------------------------------------
 
-    public static final ForeignKey<MessagesRecord, UsersRecord> MESSAGES__USER_FKEY = ForeignKeys0.MESSAGES__USER_FKEY;
     public static final ForeignKey<MessagesRecord, ChannelsRecord> MESSAGES__CHANNEL_FKEY = ForeignKeys0.MESSAGES__CHANNEL_FKEY;
 
     // -------------------------------------------------------------------------
@@ -61,11 +57,9 @@ public class Keys {
         public static final UniqueKey<ChannelsRecord> CHANNELS_PKEY = Internal.createUniqueKey(Channels.CHANNELS, "channels_pkey", new TableField[] { Channels.CHANNELS.CHANNELID }, true);
         public static final UniqueKey<MessagesRecord> MESSAGES_PKEY = Internal.createUniqueKey(Messages.MESSAGES, "messages_pkey", new TableField[] { Messages.MESSAGES.MESSAGEID }, true);
         public static final UniqueKey<UsageRecord> USAGE_PKEY = Internal.createUniqueKey(Usage.USAGE, "usage_pkey", new TableField[] { Usage.USAGE.ID }, true);
-        public static final UniqueKey<UsersRecord> USERS_PKEY = Internal.createUniqueKey(Users.USERS, "users_pkey", new TableField[] { Users.USERS.USERID }, true);
     }
 
     private static class ForeignKeys0 {
-        public static final ForeignKey<MessagesRecord, UsersRecord> MESSAGES__USER_FKEY = Internal.createForeignKey(Keys.USERS_PKEY, Messages.MESSAGES, "user_fkey", new TableField[] { Messages.MESSAGES.USERID }, true);
         public static final ForeignKey<MessagesRecord, ChannelsRecord> MESSAGES__CHANNEL_FKEY = Internal.createForeignKey(Keys.CHANNELS_PKEY, Messages.MESSAGES, "channel_fkey", new TableField[] { Messages.MESSAGES.CHANNELID }, true);
     }
 }

@@ -33,7 +33,7 @@ import uk.co.markg.mimic.db.tables.records.MessagesRecord;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Messages extends TableImpl<MessagesRecord> {
 
-    private static final long serialVersionUID = 1685374154;
+    private static final long serialVersionUID = -1837772344;
 
     /**
      * The reference instance of <code>messages</code>
@@ -128,11 +128,7 @@ public class Messages extends TableImpl<MessagesRecord> {
 
     @Override
     public List<ForeignKey<MessagesRecord, ?>> getReferences() {
-        return Arrays.<ForeignKey<MessagesRecord, ?>>asList(Keys.MESSAGES__USER_FKEY, Keys.MESSAGES__CHANNEL_FKEY);
-    }
-
-    public Users users() {
-        return new Users(this, Keys.MESSAGES__USER_FKEY);
+        return Arrays.<ForeignKey<MessagesRecord, ?>>asList(Keys.MESSAGES__CHANNEL_FKEY);
     }
 
     public Channels channels() {

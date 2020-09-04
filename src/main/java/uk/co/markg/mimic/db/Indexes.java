@@ -9,6 +9,7 @@ import org.jooq.OrderField;
 import org.jooq.impl.Internal;
 
 import uk.co.markg.mimic.db.tables.Messages;
+import uk.co.markg.mimic.db.tables.Users;
 
 
 /**
@@ -23,6 +24,7 @@ public class Indexes {
 
     public static final Index CONTENT_MESSAGE_INDEX = Indexes0.CONTENT_MESSAGE_INDEX;
     public static final Index USER_MESSAGE_INDEX = Indexes0.USER_MESSAGE_INDEX;
+    public static final Index USERS_PKEY = Indexes0.USERS_PKEY;
 
     // -------------------------------------------------------------------------
     // [#1459] distribute members to avoid static initialisers > 64kb
@@ -31,5 +33,6 @@ public class Indexes {
     private static class Indexes0 {
         public static Index CONTENT_MESSAGE_INDEX = Internal.createIndex("content_message_index", Messages.MESSAGES, new OrderField[] { Messages.MESSAGES.CONTENT }, false);
         public static Index USER_MESSAGE_INDEX = Internal.createIndex("user_message_index", Messages.MESSAGES, new OrderField[] { Messages.MESSAGES.USERID }, false);
+        public static Index USERS_PKEY = Internal.createIndex("users_pkey", Users.USERS, new OrderField[] { Users.USERS.USERID, Users.USERS.SERVERID }, true);
     }
 }
