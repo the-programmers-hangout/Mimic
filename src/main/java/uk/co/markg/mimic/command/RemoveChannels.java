@@ -2,7 +2,7 @@ package uk.co.markg.mimic.command;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import disparse.discord.AbstractPermission;
 import disparse.discord.jda.DiscordRequest;
 import disparse.parser.reflection.CommandHandler;
 import disparse.parser.reflection.Populate;
@@ -18,8 +18,8 @@ public class RemoveChannels {
   /**
    * Command execution method held by Disparse
    *
-   * @param request       The discord request dispatched to this command
-   * @param channelRepo   The channel repository used to communicate with the database
+   * @param request     The discord request dispatched to this command
+   * @param channelRepo The channel repository used to communicate with the database
    */
   @Populate
   public RemoveChannels(DiscordRequest request, ChannelRepository channelRepo) {
@@ -33,7 +33,7 @@ public class RemoveChannels {
    */
   @CommandHandler(commandName = "channels.remove",
       description = "Remove channels from the database. All related messages are also removed.",
-      roles = "staff")
+      perms = AbstractPermission.BAN_MEMBERS)
   public void executeRemove() {
     this.execute();
   }

@@ -3,13 +3,14 @@ package uk.co.markg.mimic.command;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import disparse.discord.jda.DiscordRequest;
-import disparse.parser.reflection.Populate;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import disparse.discord.AbstractPermission;
+import disparse.discord.jda.DiscordRequest;
 import disparse.parser.reflection.CommandHandler;
 import disparse.parser.reflection.Flag;
 import disparse.parser.reflection.ParsedEntity;
+import disparse.parser.reflection.Populate;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import uk.co.markg.mimic.database.ChannelRepository;
@@ -41,8 +42,8 @@ public class AddChannels {
    *
    * @param request     The discord request dispatched to this command
    * @param req         The parsed flags passed with the command
-   * @param channelRepo The {@link uk.co.markg.mimic.database.ChannelRepository
-   *                    ChannelRepository} instance
+   * @param channelRepo The {@link uk.co.markg.mimic.database.ChannelRepository ChannelRepository}
+   *                    instance
    * @param userRepo    The {@link uk.co.markg.mimic.database.UserRepository UserRepository}
    *                    instance
    */
@@ -60,7 +61,8 @@ public class AddChannels {
    * Method held by Disparse to begin command execution
    */
   @CommandHandler(commandName = "channels.add",
-      description = "Add channels. Defaults to read access only.", roles = "staff")
+      description = "Add channels. Defaults to read access only.",
+      perms = AbstractPermission.BAN_MEMBERS)
   public void executeAdd() {
     this.execute();
   }
