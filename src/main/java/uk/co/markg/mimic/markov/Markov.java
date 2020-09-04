@@ -32,7 +32,7 @@ public class Markov {
   private Set<String> endWords;
 
   private Markov(List<String> inputs) {
-    wordMap = new HashMap<String, WeightedCollection>();
+    wordMap = new HashMap<>();
     startWords = new HashSet<>();
     endWords = new HashSet<>();
     parseInput(inputs);

@@ -89,6 +89,6 @@ public class MessageReader extends ListenerAdapter {
    * @return true if the message is valid
    */
   public static boolean messageIsValid(String message) {
-    return !getMessagePredicates().stream().anyMatch(predicate -> predicate.test(message));
+    return getMessagePredicates().stream().noneMatch(predicate -> predicate.test(message));
   }
 }

@@ -27,13 +27,13 @@ public class HistoryGrabber {
 
   public void execute() {
     logger.info("run");
-    getUserHistory(messages -> saveMessages(messages));
+    getUserHistory(this::saveMessages);
   }
 
   private void getUserHistory(Consumer<List<Message>> callback) {
     List<Message> messages = new ArrayList<>(HISTORY_LIMIT);
     AtomicInteger historyLimit = new AtomicInteger(HISTORY_LIMIT);
-    channel.getIterableHistory().cache(false).forEachAsync((message) -> {
+    channel.getIterableHistory().cache(false).forEachAsync(message -> {
       if (userids.contains(message.getAuthor().getIdLong())
           && MessageReader.messageIsValid(message)) {
         messages.add(message);
@@ -61,7 +61,7 @@ public class HistoryGrabber {
    * @return
    */
   private List<MessagesRecord> buildMessageList(List<Message> validHistoryMessages) {
-    return validHistoryMessages.stream().map(msg -> buildMessage(msg)).collect(Collectors.toList());
+    return validHistoryMessages.stream().map(this::buildMessage).collect(Collectors.toList());
   }
 
   /**

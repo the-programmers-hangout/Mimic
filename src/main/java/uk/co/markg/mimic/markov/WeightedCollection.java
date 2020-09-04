@@ -11,7 +11,7 @@ public class WeightedCollection {
   private double weightedSum;
 
   public WeightedCollection() {
-    collection = new ArrayList<WeightedElement>();
+    collection = new ArrayList<>();
   }
 
   public WeightedCollection(List<WeightedElement> collection, double weightedSum) {

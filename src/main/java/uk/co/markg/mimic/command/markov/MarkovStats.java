@@ -113,8 +113,7 @@ public class MarkovStats {
         iter.remove();
       }
     }
-    var result = words.stream().limit(numOfWords).map(Entry::getKey).collect(Collectors.toList());
-    return result;
+    return words.stream().limit(numOfWords).map(Entry::getKey).collect(Collectors.toList());
   }
 
 }
