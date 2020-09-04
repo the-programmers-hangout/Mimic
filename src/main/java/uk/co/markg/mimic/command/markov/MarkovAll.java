@@ -83,6 +83,6 @@ public class MarkovAll {
 
   public Markov getMarkovChain(long serverid) {
     var repo = UserRepository.getRepository();
-    return Markov.load(repo.getAllMarkovCandidateIds(serverid));
+    return Markov.load(repo.getAllMarkovCandidateIds(serverid), serverid);
   }
 }

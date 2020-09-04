@@ -43,7 +43,7 @@ public class MarkovStats {
     EmbedBuilder eb = new EmbedBuilder();
     eb.setTitle("Statistics");
     eb.setColor(Color.decode("#eb7701"));
-    var userMessages = messageRepo.getByUsers(List.of(userid));
+    var userMessages = messageRepo.getByUsers(List.of(userid), event.getGuild().getIdLong());
     var userWordMap = calculateWordFrequency(userMessages);
     int userTokens = getTokenCount(userMessages);
     eb.addField("**Your Messages**", "```" + messageRepo.getCountByUserId(userid) + "```", true);
@@ -59,9 +59,10 @@ public class MarkovStats {
   @CommandHandler(commandName = "allstats", description = "Display statistics for all users")
   public static DiscordResponse executeAll(DiscordRequest request, UserRepository userRepo,
       MessageRepository messageRepo) {
-    request.getEvent().getChannel().sendTyping().queue();
-    var messages = messageRepo
-        .getByUsers(userRepo.getAllMarkovCandidateIds(request.getEvent().getGuild().getIdLong()));
+    var event = request.getEvent();
+    event.getChannel().sendTyping().queue();
+    long serverid = event.getGuild().getIdLong();
+    var messages = messageRepo.getByUsers(userRepo.getAllMarkovCandidateIds(serverid), serverid);
     var wordMap = calculateWordFrequency(messages);
 
     EmbedBuilder eb = new EmbedBuilder();

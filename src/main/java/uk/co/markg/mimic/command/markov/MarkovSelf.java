@@ -35,6 +35,7 @@ public class MarkovSelf {
     }
     UsageRepository.getRepository().save(MarkovSelf.class, event);
     event.getChannel().sendTyping().queue();
-    MarkovSender.sendMessageWithDelay(event, Markov.load(userid).generateRandom());
+    MarkovSender.sendMessageWithDelay(event,
+        Markov.load(userid, event.getGuild().getIdLong()).generateRandom());
   }
 }

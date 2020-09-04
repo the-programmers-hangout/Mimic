@@ -60,9 +60,9 @@ public class MessageRepository {
    * @param userids the userids to get the messages for
    * @return the list of messages
    */
-  public List<String> getByUsers(List<Long> userids) {
+  public List<String> getByUsers(List<Long> userids, long serverid) {
     return dsl.select(MESSAGES.CONTENT).from(MESSAGES).where(MESSAGES.USERID.in(userids))
-        .fetchInto(String.class);
+        .and(MESSAGES.SERVERID.in(serverid)).fetchInto(String.class);
   }
 
 

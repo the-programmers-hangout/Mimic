@@ -40,7 +40,7 @@ public class MarkovRand {
     int noOfSentences = ThreadLocalRandom.current().nextInt(5) + 1;
     for (int i = 0; i < noOfSentences; i++) {
       long targetUser = users.get(ThreadLocalRandom.current().nextInt(users.size()));
-      sb.append(Markov.load(targetUser).generate()).append(" ");
+      sb.append(Markov.load(targetUser, event.getGuild().getIdLong()).generate()).append(" ");
     }
     MarkovSender.sendMessageWithDelay(event, sb.toString());
   }

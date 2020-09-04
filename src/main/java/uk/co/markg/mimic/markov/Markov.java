@@ -69,13 +69,13 @@ public class Markov {
     return collection;
   }
 
-  public static Markov load(long userid) {
-    return load(List.of(userid));
+  public static Markov load(long userid, long serverid) {
+    return load(List.of(userid), serverid);
   }
 
-  public static Markov load(List<Long> userids) {
+  public static Markov load(List<Long> userids, long serverid) {
     logger.info("Loaded chain for {}", userids);
-    var inputs = MessageRepository.getRepository().getByUsers(userids);
+    var inputs = MessageRepository.getRepository().getByUsers(userids, serverid);
     return new Markov(inputs);
   }
 
