@@ -30,7 +30,7 @@ public class MarkovStats {
 
   @Cooldown(amount = 5, unit = ChronoUnit.SECONDS, scope = CooldownScope.USER,
       sendCooldownMessage = false)
-  @CommandHandler(commandName = "stats", description = "Displays statistics for the bot")
+  @CommandHandler(commandName = "stats", description = "Display statistics of your messages")
   public static DiscordResponse execute(DiscordRequest request, UserRepository userRepo,
       MessageRepository messageRepo) {
     MessageReceivedEvent event = request.getEvent();
@@ -56,7 +56,7 @@ public class MarkovStats {
 
   @Cooldown(amount = 1, unit = ChronoUnit.MINUTES, scope = CooldownScope.CHANNEL,
       sendCooldownMessage = false)
-  @CommandHandler(commandName = "allstats", description = "Displays statistics for the bot")
+  @CommandHandler(commandName = "allstats", description = "Display statistics for all users")
   public static DiscordResponse executeAll(DiscordRequest request, UserRepository userRepo,
       MessageRepository messageRepo) {
     request.getEvent().getChannel().sendTyping().queue();
