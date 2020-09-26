@@ -31,7 +31,9 @@ public class MarkovSender {
   }
 
   public static void notMarkovCandidate(MessageChannel channel) {
-    channel.sendMessage(buildErrorEmbed("I don't know enough about you yet!")).queue();
+    channel.sendMessage(buildErrorEmbed(
+        "I don't know enough about you yet! Chat more in the channels I can read! Find out more by using `mimic!channels`"))
+        .queue();
   }
 
   public static void optedIn(MessageChannel channel) {
