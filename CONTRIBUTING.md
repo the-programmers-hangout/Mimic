@@ -44,4 +44,4 @@ All code must be rebased against current master and able to be fast-forward merg
 
 ## Contact
 
-Preferably you can contact me through Discord (Toby Larone#1985 - You can find me on [JVMRally](https://discord.gg/MuZKQWM) or [The Programmer's Hangout](https://discord.gg/programming)), or [email me](mark@markg.co.uk)
+Preferably you can contact me through Discord (Toby Larone#1985 - You can find me on [JVMRally](https://discord.gg/MuZKQWM) or [The Programmer's Hangout](https://discord.gg/programming)), or [email me](mailto:mark@markg.co.uk?subject=[Github]%20Mimic%20bot)
