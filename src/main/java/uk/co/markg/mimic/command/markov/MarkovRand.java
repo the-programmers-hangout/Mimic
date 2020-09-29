@@ -42,7 +42,7 @@ public class MarkovRand {
       long targetUser = users.get(ThreadLocalRandom.current().nextInt(users.size()));
       sb.append(Markov.load(targetUser, event.getGuild().getIdLong()).generate()).append(" ");
     }
-    MarkovSender.sendMessageWithDelay(event, sb.toString());
+    MarkovSender.sendMessage(event, sb.toString());
   }
 
 }

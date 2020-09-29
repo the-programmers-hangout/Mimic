@@ -14,7 +14,7 @@ import uk.co.markg.mimic.markov.MarkovSender;
 
 public class MarkovSelf {
 
-  @Cooldown(amount = 5, unit = ChronoUnit.SECONDS, scope = CooldownScope.USER,
+  @Cooldown(amount = 0, unit = ChronoUnit.SECONDS, scope = CooldownScope.USER,
       sendCooldownMessage = false)
   @CommandHandler(commandName = "self",
       description = "Generate a random number of sentences from your own messages!")
@@ -35,7 +35,7 @@ public class MarkovSelf {
     }
     UsageRepository.getRepository().save(MarkovSelf.class, event);
     event.getChannel().sendTyping().queue();
-    MarkovSender.sendMessageWithDelay(event,
+    MarkovSender.sendMessage(event,
         Markov.load(userid, event.getGuild().getIdLong()).generateRandom());
   }
 }

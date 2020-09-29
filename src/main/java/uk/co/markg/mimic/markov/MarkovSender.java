@@ -1,10 +1,8 @@
 package uk.co.markg.mimic.markov;
 
 import java.awt.Color;
-import java.util.concurrent.TimeUnit;
+import java.util.EnumSet;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Message.MentionType;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -12,18 +10,12 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class MarkovSender {
 
+  private static final EnumSet<MentionType> ALLOWED_MENTIONS =
+      EnumSet.of(MentionType.CHANNEL, MentionType.EMOTE);
 
   public static void sendMessage(MessageReceivedEvent event, String text) {
-    Message msg =
-        new MessageBuilder().append(text).stripMentions(event.getJDA(), MentionType.USER).build();
-    event.getChannel().sendMessage(msg).queue(message -> message.suppressEmbeds(true).queue());
-  }
-
-  public static void sendMessageWithDelay(MessageReceivedEvent event, String text) {
-    Message message =
-        new MessageBuilder().append(text).stripMentions(event.getJDA(), MentionType.USER).build();
-    event.getChannel().sendMessage(message).queueAfter(1, TimeUnit.SECONDS,
-        msg -> msg.suppressEmbeds(true).queue());
+    event.getChannel().sendMessage(text).allowedMentions(ALLOWED_MENTIONS)
+        .queue(message -> message.suppressEmbeds(true).queue());
   }
 
   public static void notOptedIn(MessageChannel channel) {
