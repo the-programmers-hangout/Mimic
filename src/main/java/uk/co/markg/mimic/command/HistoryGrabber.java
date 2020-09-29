@@ -16,7 +16,7 @@ import org.apache.logging.log4j.Logger;
 public class HistoryGrabber {
 
   private static final Logger logger = LogManager.getLogger(HistoryGrabber.class);
-  private static final int HISTORY_LIMIT = 50_000;
+  private static final int HISTORY_LIMIT = 20_000;
   private TextChannel channel;
   private List<Long> userids;
 
