@@ -37,3 +37,11 @@ rand | Generate a random number of sentences from random user's messages! | `mim
 self | Generate a random number of sentences from your own messages! | `mimic!self` 
 stats | Display statistics of your messages | `mimic!stats`
 
+### Privacy
+
+Mimic is explicitly opt-in. 
+* Messages from users that are not opted-in will not be stored.
+* Message edits from opted-in users will be reflected in the database.
+* Messages that are deleted by opted-in users will be deleted from the database.
+* Opting out will remove all user messages and user details from the database.
+* Users that are opted-in and leave a server will have their details and messages deleted.
