@@ -16,14 +16,14 @@
     <maven.compiler.target>11</maven.compiler.target>
     <maven.compiler.release>11</maven.compiler.release>
 
-    <junit.version>5.6.0</junit.version>
-    <disparse.version>0.1.5</disparse.version>
-    <jda.version>4.1.1_116</jda.version>
+    <junit.version>5.7.0</junit.version>
+    <disparse.version>0.1.7</disparse.version>
+    <jda.version>4.2.0_206</jda.version>
     <log4j.version>2.13.3</log4j.version>
-    <postgres.driver.version>42.2.11</postgres.driver.version>
-    <jooq.version>3.13.2</jooq.version>
-    <flyway.version>6.3.1</flyway.version>
-    <hikari.version>3.4.2</hikari.version>
+    <postgres.driver.version>42.2.16</postgres.driver.version>
+    <jooq.version>3.13.4</jooq.version>
+    <flyway.version>6.5.7</flyway.version>
+    <hikari.version>3.4.5</hikari.version>
     <kryo.version>5.0.0-RC9</kryo.version>
   </properties>
 
