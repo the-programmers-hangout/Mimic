@@ -88,7 +88,7 @@ public class App {
         dispatcherBuilder.build());
     builder.addEventListeners(new MessageReader(), new MarkovResponse(), new ModifyMessage(),
         new MemberLeave());
-    builder.setDisabledCacheFlags(getFlags());
+    builder.disableCache(getFlags());
     builder.build().awaitReady();
   }
 
