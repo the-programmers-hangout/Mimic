@@ -107,7 +107,11 @@ public class Markov {
     return sb.toString();
   }
 
-  private String getStartWord(int startNo) {
+  private String getStartWord(String start) {
+    if (!start.isEmpty() && wordMap.containsKey(start)) {
+      return start;
+    }
+    int startNo = ThreadLocalRandom.current().nextInt(startWords.size());
     Iterator<String> itr = startWords.iterator();
     for (int i = 0; i < startNo; i++) {
       itr.next();
@@ -115,14 +119,8 @@ public class Markov {
     return itr.next();
   }
 
-  /**
-   * Generates a sentence from the markov chain
-   * 
-   * @return a complete sentence
-   */
-  public String generate() {
-    int startNo = ThreadLocalRandom.current().nextInt(startWords.size());
-    String word = getStartWord(startNo);
+  public String generate(String start) {
+    String word = getStartWord(start);
     List<String> sentence = new ArrayList<>();
     sentence.add(word);
     boolean endWordHit = false;
@@ -142,7 +140,19 @@ public class Markov {
     if (s.matches("(.*[^.!?`+>\\-=_+:@~;'#\\[\\]{}\\(\\)\\/\\|\\\\]$)")) {
       s = s + SENTENCE_ENDS.getRandom().map(WeightedElement::getElement).orElse("@@@@@@@");
     }
+    if (!start.isEmpty() && !s.startsWith(start)) {
+      s = start + " " + s;
+    }
     return s;
+  }
+
+  /**
+   * Generates a sentence from the markov chain
+   * 
+   * @return a complete sentence
+   */
+  public String generate() {
+    return generate("");
   }
 
   /**
