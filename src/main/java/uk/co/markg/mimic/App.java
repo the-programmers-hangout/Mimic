@@ -18,6 +18,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import uk.co.markg.mimic.listener.GuildListener;
 import uk.co.markg.mimic.listener.MarkovResponse;
 import uk.co.markg.mimic.listener.MemberLeave;
 import uk.co.markg.mimic.listener.MessageReader;
@@ -87,7 +88,7 @@ public class App {
     var builder = Dispatcher.init(JDABuilder.create(System.getenv("B_TOKEN"), getIntents()),
         dispatcherBuilder.build());
     builder.addEventListeners(new MessageReader(), new MarkovResponse(), new ModifyMessage(),
-        new MemberLeave());
+        new MemberLeave(), new GuildListener());
     builder.disableCache(getFlags());
     builder.build().awaitReady();
   }
