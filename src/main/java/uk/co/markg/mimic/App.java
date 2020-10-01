@@ -83,7 +83,7 @@ public class App {
   private static void launchBot() throws LoginException, InterruptedException {
     Dispatcher.Builder dispatcherBuilder = new Dispatcher.Builder(App.class).prefix(PREFIX)
         .pageLimit(10).withHelpBaseEmbed(() -> new EmbedBuilder().setColor(Color.decode("#eb7701")))
-        .description("DESCRIPTION");
+        .description("Mimic: A bot that talks like you!");
 
     var builder = Dispatcher.init(JDABuilder.create(System.getenv("B_TOKEN"), getIntents()),
         dispatcherBuilder.build());
