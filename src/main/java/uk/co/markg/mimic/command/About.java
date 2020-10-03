@@ -19,7 +19,7 @@ public class About {
     eb.setTitle("Mimic Bot");
     eb.setDescription(
         "Mimic is a bot that generates messages using markov chains based on user messages. "
-            + "Opting in will tell mimic to read the last 50,000 messages per configured channel and save your messages. "
+            + "Opting in will tell mimic to read the last 20,000 messages per configured channel and save your messages. "
             + "It will then read any new valid messages sent in those channels.");
     eb.setThumbnail(request.getEvent().getJDA().getSelfUser().getAvatarUrl());
     eb.addField("Source", "https://github.com/Toby-Larone/mimic", false);
