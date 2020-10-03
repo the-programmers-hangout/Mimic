@@ -35,6 +35,7 @@ opt-in | Opt-in for your messages to be read | `mimic!opt-in`
 opt-out | Opt-out for all messages to be removed | `mimic!opt-out`
 rand | Generate a random number of sentences from random user's messages! | `mimic!rand`
 self | Generate a random number of sentences from your own messages! | `mimic!self` 
+start | Provide the start of a sentence and let mimic finish it! | `mimic!start I like to`
 stats | Display statistics of your messages | `mimic!stats`
 
 ### Privacy

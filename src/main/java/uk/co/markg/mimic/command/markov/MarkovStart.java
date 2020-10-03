@@ -18,7 +18,7 @@ public class MarkovStart {
   @Cooldown(amount = 5, unit = ChronoUnit.SECONDS, scope = CooldownScope.USER,
       sendCooldownMessage = false)
   @CommandHandler(commandName = "start",
-      description = "Generate a random number of sentences from your own messages!")
+      description = "Provide the start of a sentence and let mimic finish it!")
   public static void execute(DiscordRequest request, ChannelRepository channelRepo,
       UserRepository userRepo) {
     MessageReceivedEvent event = request.getEvent();
