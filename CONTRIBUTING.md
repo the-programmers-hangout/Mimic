@@ -8,6 +8,7 @@ All work should be decided on before you begin working. Either through DMs on Di
 
 ## Setup
 
+* Create a discord bot, you'll need to allow the "Server Member Intent" from the bot configuration page.
 * Requires Postgres, Maven, Java 11+
 * Create database with `CREATE DATABASE my_database`
 * Create the following environment vars. (Replace placeholder values with your own)
