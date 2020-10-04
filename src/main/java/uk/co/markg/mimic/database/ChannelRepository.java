@@ -26,8 +26,8 @@ public class ChannelRepository {
   }
 
   /**
-   * Constructs a {@link uk.co.markg.mimic.db.tables.pojos.Channels Channels} Object to save to
-   * the database.
+   * Constructs a {@link uk.co.markg.mimic.db.tables.pojos.Channels Channels} Object to save to the
+   * database.
    * 
    * @param channelid the discord channel id
    * @param read      whether the bot has read access to the channel
@@ -82,6 +82,18 @@ public class ChannelRepository {
   }
 
   /**
+   * Sets bot's read and write permissions to an existing channel in the database.
+   * 
+   * @param channelid the target channel
+   * @param read      whether the bot should have read access to the channel
+   * @param write     whether the bot should have write access to the channel
+   */
+  public void updatePermissions(long channelid, boolean read, boolean write) {
+    dsl.update(CHANNELS).set((CHANNELS.READ_PERM), read).set((CHANNELS.WRITE_PERM), write)
+        .where(CHANNELS.CHANNELID.eq(channelid)).execute();
+  }
+
+  /**
    * Retrieves all channels in the database
    * 
    * @return list of all channels
@@ -91,7 +103,8 @@ public class ChannelRepository {
   }
 
   public List<Channels> getAllReadable(long serverid) {
-    return dsl.selectFrom(CHANNELS).where(CHANNELS.READ_PERM).and(CHANNELS.SERVERID.eq(serverid)).fetchInto(Channels.class);
+    return dsl.selectFrom(CHANNELS).where(CHANNELS.READ_PERM).and(CHANNELS.SERVERID.eq(serverid))
+        .fetchInto(Channels.class);
   }
 
   /**
