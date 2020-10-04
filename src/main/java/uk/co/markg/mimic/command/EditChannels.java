@@ -10,6 +10,7 @@ import disparse.parser.reflection.Populate;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import uk.co.markg.mimic.command.AddChannels.ChannelRequest;
 import uk.co.markg.mimic.database.ChannelRepository;
+import uk.co.markg.mimic.database.MessageRepository;
 import uk.co.markg.mimic.database.UserRepository;
 import uk.co.markg.mimic.db.tables.pojos.Users;
 
@@ -19,6 +20,7 @@ public class EditChannels {
   private ChannelRequest req;
   private ChannelRepository channelRepo;
   private UserRepository userRepo;
+  private MessageRepository messageRepo;
   private List<String> args;
 
   /**
@@ -27,11 +29,12 @@ public class EditChannels {
    */
   @Populate
   public EditChannels(DiscordRequest request, ChannelRequest req, ChannelRepository channelRepo,
-      UserRepository userRepo) {
+      UserRepository userRepo, MessageRepository messageRepo) {
     this.event = request.getEvent();
     this.req = req;
     this.channelRepo = channelRepo;
     this.userRepo = userRepo;
+    this.messageRepo = messageRepo;
     this.args = request.getArgs();
   }
 
@@ -63,15 +66,16 @@ public class EditChannels {
       boolean channelExists = channelRepo.isChannelAdded(channelidLong);
 
       if (textChannel != null && channelExists) {
+        var currentRead = channelRepo.hasReadPermission(channelidLong);
         channelRepo.updatePermissions(channelidLong, req.read, req.write);
 
-        if (channelRepo.hasReadPermission(channelidLong)) {
-          var userids =
-              userRepo.getAll().stream().map(Users::getUserid).collect(Collectors.toList());
+        if (channelRepo.hasReadPermission(channelidLong) && !currentRead) {
+          var serverid = textChannel.getGuild().getIdLong();
+          var userids = userRepo.getAllUserids(serverid);
           new HistoryGrabber(textChannel, userids).execute();
-        } else {
-          channelRepo.delete(channelid);
         }
+        if (!channelRepo.hasReadPermission(channelidLong) && currentRead)
+          messageRepo.deleteByChannelId(channelidLong);
       } else {
         badChannels.add(channelid);
       }

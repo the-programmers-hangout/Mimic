@@ -107,7 +107,8 @@ public class AddChannels {
    * @param channel The target channel
    */
   private void retrieveChannelHistory(TextChannel channel) {
-    var userids = userRepo.getAll().stream().map(Users::getUserid).collect(Collectors.toList());
+    var serverid = channel.getGuild().getIdLong();
+    var userids = userRepo.getAllUserids(serverid);
     logger.info("Found {} users", userids.size());
     new HistoryGrabber(channel, userids).execute();
   }

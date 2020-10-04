@@ -101,6 +101,10 @@ public class MessageRepository {
     return dsl.deleteFrom(MESSAGES).where(MESSAGES.MESSAGEID.eq(messageid)).execute();
   }
 
+  public int deleteByChannelId(long channelid) {
+    return dsl.deleteFrom(MESSAGES).where(MESSAGES.CHANNELID.eq(channelid)).execute();
+  }
+
   public int edit(long messageid, Message newMessage) {
     return dsl.update(MESSAGES).set(MESSAGES.CONTENT, newMessage.getContentRaw())
         .where(MESSAGES.MESSAGEID.eq(messageid)).execute();

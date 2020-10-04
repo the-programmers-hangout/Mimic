@@ -4,6 +4,7 @@ import static org.jooq.impl.DSL.count;
 import static uk.co.markg.mimic.db.tables.Messages.MESSAGES;
 import static uk.co.markg.mimic.db.tables.Users.USERS;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.jooq.DSLContext;
 import disparse.parser.reflection.Injectable;
 import uk.co.markg.mimic.db.tables.pojos.Users;
@@ -37,8 +38,12 @@ public class UserRepository {
    * 
    * @return the list of users
    */
-  public List<Users> getAll() {
-    return dsl.selectFrom(USERS).fetchInto(Users.class);
+  public List<Users> getAll(long serverid) {
+    return dsl.selectFrom(USERS).where(USERS.SERVERID.eq(serverid)).fetchInto(Users.class);
+  }
+
+  public List<Long> getAllUserids(long serverid) {
+    return getAll(serverid).stream().map(Users::getUserid).collect(Collectors.toList());
   }
 
   /**
