@@ -29,7 +29,7 @@ public class AddChannels {
   @ParsedEntity
   static class ChannelRequest {
     @Flag(shortName = 'r', longName = "read",
-        description = "Whether the bot should read from the channel. Defaults to true")
+        description = "Whether the bot should read from the channel. Defaults to false")
     Boolean read = Boolean.FALSE;
 
     @Flag(shortName = 'w', longName = "write",
@@ -61,7 +61,7 @@ public class AddChannels {
    * Method held by Disparse to begin command execution
    */
   @CommandHandler(commandName = "channels.add",
-      description = "Add channels. Defaults to read access only.",
+      description = "Add channels. Allows configurable read and write permissions.",
       perms = AbstractPermission.BAN_MEMBERS)
   public void executeAdd() {
     this.execute();
