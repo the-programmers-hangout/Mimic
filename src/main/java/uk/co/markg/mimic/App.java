@@ -19,7 +19,6 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import uk.co.markg.mimic.listener.GuildListener;
-import uk.co.markg.mimic.listener.MarkovResponse;
 import uk.co.markg.mimic.listener.MemberLeave;
 import uk.co.markg.mimic.listener.MessageReader;
 import uk.co.markg.mimic.listener.ModifyMessage;

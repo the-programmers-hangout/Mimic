@@ -47,10 +47,6 @@ public class MarkovSender {
   }
 
   private static MessageEmbed buildErrorEmbed(String error) {
-    EmbedBuilder eb = new EmbedBuilder();
-    eb.setTitle("Uh oh!");
-    eb.setDescription(error);
-    eb.setColor(Color.decode("#eb7701"));
     return buildEmbed("Uh oh!", error);
   }
 
