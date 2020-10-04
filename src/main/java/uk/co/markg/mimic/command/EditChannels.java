@@ -2,7 +2,6 @@ package uk.co.markg.mimic.command;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import disparse.discord.AbstractPermission;
 import disparse.discord.jda.DiscordRequest;
 import disparse.parser.reflection.CommandHandler;
@@ -12,7 +11,6 @@ import uk.co.markg.mimic.command.AddChannels.ChannelRequest;
 import uk.co.markg.mimic.database.ChannelRepository;
 import uk.co.markg.mimic.database.MessageRepository;
 import uk.co.markg.mimic.database.UserRepository;
-import uk.co.markg.mimic.db.tables.pojos.Users;
 
 public class EditChannels {
 
@@ -25,7 +23,15 @@ public class EditChannels {
 
   /**
    * Command execution method held by Disparse
-   *
+   * 
+   * @param request     The discord request dispatched to this command
+   * @param req         The parsed flags passed with the command
+   * @param channelRepo The {@link uk.co.markg.mimic.database.ChannelRepository ChannelRepository}
+   *                    instance
+   * @param userRepo    The {@link uk.co.markg.mimic.database.UserRepository UserRepository}
+   *                    instance
+   * @param messageRepo The {@link uk.co.markg.mimic.database.MessageRepository MessageRepository}
+   *                    instance
    */
   @Populate
   public EditChannels(DiscordRequest request, ChannelRequest req, ChannelRepository channelRepo,
@@ -43,20 +49,26 @@ public class EditChannels {
    */
   @CommandHandler(commandName = "channels.edit", description = "Edit channels on database.",
       perms = AbstractPermission.BAN_MEMBERS)
-
   public void executeEdit() {
     this.execute();
   }
 
   /**
-   * Executes the command. Adds any valid channels to the database. Sends a confirmation message to
-   * discord.
+   * Executes the command. Edits any valid channels and updates database. Sends a confirmation
+   * message to discord.
    */
   private void execute() {
     String response = editChannels();
     event.getChannel().sendMessage(response).queue();
   }
 
+  /**
+   * Takes all channelids passed in and overwrites permissions in the database. Collects user
+   * message history of all users for each channel if read permission granted and deletes it if
+   * revoked.
+   *
+   * @return The response message to send back to the channel
+   */
 
   private String editChannels() {
     var badChannels = new ArrayList<String>();

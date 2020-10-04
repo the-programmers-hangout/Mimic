@@ -82,7 +82,7 @@ public class ChannelRepository {
   }
 
   /**
-   * Sets bot's read and write permissions to an existing channel in the database.
+   * Updates the bot's read and write permissions to an existing channel in the database.
    * 
    * @param channelid the target channel
    * @param read      whether the bot should have read access to the channel

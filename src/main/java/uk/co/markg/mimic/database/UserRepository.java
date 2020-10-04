@@ -36,12 +36,19 @@ public class UserRepository {
   /**
    * Returns a list of all users in the database
    * 
+   * @param serverid the id of the target server
    * @return the list of users
    */
   public List<Users> getAll(long serverid) {
     return dsl.selectFrom(USERS).where(USERS.SERVERID.eq(serverid)).fetchInto(Users.class);
   }
 
+  /**
+   * Returns a list of all user ids in the database
+   * 
+   * @param serverid the id of the target server
+   * @return the list of users
+   */
   public List<Long> getAllUserids(long serverid) {
     return getAll(serverid).stream().map(Users::getUserid).collect(Collectors.toList());
   }
