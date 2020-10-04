@@ -87,8 +87,9 @@ public class EditChannels {
           var userids = userRepo.getAllUserids(serverid);
           new HistoryGrabber(textChannel, userids).execute();
         }
-        if (!channelRepo.hasReadPermission(channelidLong) && currentRead)
+        if (!channelRepo.hasReadPermission(channelidLong) && currentRead) {
           messageRepo.deleteByChannelId(channelidLong);
+        }
       } else {
         badChannels.add(channelid);
       }
