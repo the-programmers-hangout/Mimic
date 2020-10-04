@@ -46,12 +46,6 @@ public class MarkovSender {
     channel.sendMessage(buildErrorEmbed("You're already out!")).queue();
   }
 
-  public static void sendMentionDeprecation(MessageChannel channel) {
-    channel.sendMessage(buildErrorEmbed(
-        "Deprecated! Use `mimic!rand`. Make sure you are opted in with `mimic!opt-in`. For more info see `mimic!help`."))
-        .queue();
-  }
-
   private static MessageEmbed buildErrorEmbed(String error) {
     EmbedBuilder eb = new EmbedBuilder();
     eb.setTitle("Uh oh!");

@@ -87,8 +87,8 @@ public class App {
 
     var builder = Dispatcher.init(JDABuilder.create(System.getenv("B_TOKEN"), getIntents()),
         dispatcherBuilder.build());
-    builder.addEventListeners(new MessageReader(), new MarkovResponse(), new ModifyMessage(),
-        new MemberLeave(), new GuildListener());
+    builder.addEventListeners(new MessageReader(), new ModifyMessage(), new MemberLeave(),
+        new GuildListener());
     builder.disableCache(getFlags());
     builder.build().awaitReady();
   }
