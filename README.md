@@ -27,6 +27,7 @@ all | Generate a random number of sentences from all opted in user messages | `m
 allstats | Display statistics for all users | `mimic!allstats`
 channels | Lists all readable channels | `mimic!channels`
 channels.add | Adds a channel. Default to read only access | `mimic!channels add 123456789 -r -w`
+channels.edit | Edits added channel permissions. Collects user message history if read permission granted and deletes it if revoked. | `mimic!channels edit 123456789`
 channels.full | Lists all channels registered | `mimic!channels full`
 channels.remove | Removes a channel from the database. All related messages are also removed. | `mimic!channels remove 123456789`
 help | show all commands or detailed help of one command | `mimic!help` or `mimic!help about`

@@ -47,7 +47,8 @@ public class EditChannels {
   /**
    * Command execution method held by Disparse
    */
-  @CommandHandler(commandName = "channels.edit", description = "Edit channels on database.",
+  @CommandHandler(commandName = "channels.edit",
+      description = "Edits added channel permissions. Collects user message history if read permission granted and deletes it if revoked.",
       perms = AbstractPermission.BAN_MEMBERS)
   public void executeEdit() {
     this.execute();
