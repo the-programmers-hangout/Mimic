@@ -1,12 +1,15 @@
 package uk.co.markg.mimic.command;
 
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import disparse.discord.AbstractPermission;
 import disparse.discord.jda.DiscordRequest;
+import disparse.parser.dispatch.CooldownScope;
 import disparse.parser.reflection.CommandHandler;
+import disparse.parser.reflection.Cooldown;
 import disparse.parser.reflection.Flag;
 import disparse.parser.reflection.ParsedEntity;
 import disparse.parser.reflection.Populate;
@@ -55,6 +58,8 @@ public class AddChannels {
     this.args = request.getArgs();
   }
 
+  @Cooldown(amount = 5, unit = ChronoUnit.SECONDS, scope = CooldownScope.USER,
+      sendCooldownMessage = false)
   /**
    * Method held by Disparse to begin command execution
    */
@@ -84,7 +89,8 @@ public class AddChannels {
     var badChannels = new ArrayList<String>();
     for (String channelid : args) {
       var textChannel = event.getJDA().getTextChannelById(channelid);
-      if (textChannel != null) {
+      var channelidLong = Long.parseLong(channelid);
+      if (textChannel != null && !channelRepo.isChannelAdded(channelidLong)) {
         channelRepo.save(channelid, req.read, req.write, event.getGuild().getIdLong());
         if (req.read) {
           logger.info("Reading from channel {}", channelid);

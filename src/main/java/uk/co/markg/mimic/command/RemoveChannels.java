@@ -1,10 +1,13 @@
 package uk.co.markg.mimic.command;
 
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import disparse.discord.AbstractPermission;
 import disparse.discord.jda.DiscordRequest;
+import disparse.parser.dispatch.CooldownScope;
 import disparse.parser.reflection.CommandHandler;
+import disparse.parser.reflection.Cooldown;
 import disparse.parser.reflection.Populate;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import uk.co.markg.mimic.database.ChannelRepository;
@@ -28,6 +31,8 @@ public class RemoveChannels {
     this.args = request.getArgs();
   }
 
+  @Cooldown(amount = 5, unit = ChronoUnit.SECONDS, scope = CooldownScope.USER,
+      sendCooldownMessage = false)
   /**
    * Command execution method held by Disparse
    */
