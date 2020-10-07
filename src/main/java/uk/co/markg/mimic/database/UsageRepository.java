@@ -36,4 +36,8 @@ public class UsageRepository {
   private int save(Usage usage) {
     return dsl.executeInsert(dsl.newRecord(USAGE, usage));
   }
+
+  public int deleteByServerId(long serverid) {
+    return dsl.deleteFrom(USAGE).where(USAGE.SERVERID.eq(serverid)).execute();
+  }
 }

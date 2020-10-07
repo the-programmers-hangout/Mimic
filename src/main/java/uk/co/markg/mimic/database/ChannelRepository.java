@@ -126,4 +126,14 @@ public class ChannelRepository {
   public int delete(long channelid) {
     return dsl.deleteFrom(CHANNELS).where(CHANNELS.CHANNELID.eq(channelid)).execute();
   }
+
+  /**
+   * Delete all data related to a server
+   * 
+   * @param serverid the target server
+   * @return the number of rows deleted in the server table
+   */
+  public int deleteByServerId(long serverid) {
+    return dsl.deleteFrom(CHANNELS).where(CHANNELS.SERVERID.eq(serverid)).execute();
+  }
 }

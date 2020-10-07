@@ -113,4 +113,8 @@ public class UserRepository {
     return dsl.deleteFrom(USERS).where(USERS.USERID.eq(userid)).and(USERS.SERVERID.eq(serverid))
         .execute();
   }
+
+  public int deleteByServerId(long serverid) {
+    return dsl.deleteFrom(USERS).where(USERS.SERVERID.eq(serverid)).execute();
+  }
 }
