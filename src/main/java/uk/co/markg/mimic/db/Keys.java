@@ -12,9 +12,11 @@ import org.jooq.impl.Internal;
 
 import uk.co.markg.mimic.db.tables.Channels;
 import uk.co.markg.mimic.db.tables.Messages;
+import uk.co.markg.mimic.db.tables.ServerConfig;
 import uk.co.markg.mimic.db.tables.Usage;
 import uk.co.markg.mimic.db.tables.records.ChannelsRecord;
 import uk.co.markg.mimic.db.tables.records.MessagesRecord;
+import uk.co.markg.mimic.db.tables.records.ServerConfigRecord;
 import uk.co.markg.mimic.db.tables.records.UsageRecord;
 
 
@@ -37,6 +39,7 @@ public class Keys {
 
     public static final UniqueKey<ChannelsRecord> CHANNELS_PKEY = UniqueKeys0.CHANNELS_PKEY;
     public static final UniqueKey<MessagesRecord> MESSAGES_PKEY = UniqueKeys0.MESSAGES_PKEY;
+    public static final UniqueKey<ServerConfigRecord> SERVER_CONFIG_PKEY = UniqueKeys0.SERVER_CONFIG_PKEY;
     public static final UniqueKey<UsageRecord> USAGE_PKEY = UniqueKeys0.USAGE_PKEY;
 
     // -------------------------------------------------------------------------
@@ -56,6 +59,7 @@ public class Keys {
     private static class UniqueKeys0 {
         public static final UniqueKey<ChannelsRecord> CHANNELS_PKEY = Internal.createUniqueKey(Channels.CHANNELS, "channels_pkey", new TableField[] { Channels.CHANNELS.CHANNELID }, true);
         public static final UniqueKey<MessagesRecord> MESSAGES_PKEY = Internal.createUniqueKey(Messages.MESSAGES, "messages_pkey", new TableField[] { Messages.MESSAGES.MESSAGEID }, true);
+        public static final UniqueKey<ServerConfigRecord> SERVER_CONFIG_PKEY = Internal.createUniqueKey(ServerConfig.SERVER_CONFIG, "server_config_pkey", new TableField[] { ServerConfig.SERVER_CONFIG.SERVERID }, true);
         public static final UniqueKey<UsageRecord> USAGE_PKEY = Internal.createUniqueKey(Usage.USAGE, "usage_pkey", new TableField[] { Usage.USAGE.ID }, true);
     }
 

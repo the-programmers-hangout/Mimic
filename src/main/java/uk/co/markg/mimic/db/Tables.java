@@ -6,6 +6,7 @@ package uk.co.markg.mimic.db;
 
 import uk.co.markg.mimic.db.tables.Channels;
 import uk.co.markg.mimic.db.tables.Messages;
+import uk.co.markg.mimic.db.tables.ServerConfig;
 import uk.co.markg.mimic.db.tables.Usage;
 import uk.co.markg.mimic.db.tables.Users;
 
@@ -25,6 +26,11 @@ public class Tables {
      * The table <code>messages</code>.
      */
     public static final Messages MESSAGES = Messages.MESSAGES;
+
+    /**
+     * The table <code>server_config</code>.
+     */
+    public static final ServerConfig SERVER_CONFIG = ServerConfig.SERVER_CONFIG;
 
     /**
      * The table <code>usage</code>.

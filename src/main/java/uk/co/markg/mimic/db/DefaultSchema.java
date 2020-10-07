@@ -14,6 +14,7 @@ import org.jooq.impl.SchemaImpl;
 
 import uk.co.markg.mimic.db.tables.Channels;
 import uk.co.markg.mimic.db.tables.Messages;
+import uk.co.markg.mimic.db.tables.ServerConfig;
 import uk.co.markg.mimic.db.tables.Usage;
 import uk.co.markg.mimic.db.tables.Users;
 
@@ -24,7 +25,7 @@ import uk.co.markg.mimic.db.tables.Users;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class DefaultSchema extends SchemaImpl {
 
-    private static final long serialVersionUID = 106440394;
+    private static final long serialVersionUID = 824864507;
 
     /**
      * The reference instance of <code>DEFAULT_SCHEMA</code>
@@ -40,6 +41,11 @@ public class DefaultSchema extends SchemaImpl {
      * The table <code>messages</code>.
      */
     public final Messages MESSAGES = Messages.MESSAGES;
+
+    /**
+     * The table <code>server_config</code>.
+     */
+    public final ServerConfig SERVER_CONFIG = ServerConfig.SERVER_CONFIG;
 
     /**
      * The table <code>usage</code>.
@@ -75,6 +81,7 @@ public class DefaultSchema extends SchemaImpl {
         return Arrays.<Table<?>>asList(
             Channels.CHANNELS,
             Messages.MESSAGES,
+            ServerConfig.SERVER_CONFIG,
             Usage.USAGE,
             Users.USERS);
     }
