@@ -1,4 +1,4 @@
-package uk.co.markg.mimic.command;
+package uk.co.markg.mimic.command.admin;
 
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;

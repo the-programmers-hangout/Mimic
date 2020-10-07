@@ -1,4 +1,4 @@
-package uk.co.markg.mimic.command;
+package uk.co.markg.mimic.command.admin;
 
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -10,7 +10,8 @@ import disparse.parser.reflection.CommandHandler;
 import disparse.parser.reflection.Cooldown;
 import disparse.parser.reflection.Populate;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import uk.co.markg.mimic.command.AddChannels.ChannelRequest;
+import uk.co.markg.mimic.command.HistoryGrabber;
+import uk.co.markg.mimic.command.admin.AddChannels.ChannelRequest;
 import uk.co.markg.mimic.database.ChannelRepository;
 import uk.co.markg.mimic.database.MessageRepository;
 import uk.co.markg.mimic.database.UserRepository;
