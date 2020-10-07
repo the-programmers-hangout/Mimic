@@ -5,22 +5,16 @@ import org.apache.logging.log4j.Logger;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import uk.co.markg.mimic.database.ChannelRepository;
-import uk.co.markg.mimic.database.UsageRepository;
-import uk.co.markg.mimic.database.UserRepository;
+import uk.co.markg.mimic.database.DeleteService;
 
 public class GuildListener extends ListenerAdapter {
 
   private static final Logger logger = LogManager.getLogger(GuildListener.class);
 
-  private ChannelRepository channelRepo;
-  private UsageRepository usageRepo;
-  private UserRepository userRepo;
+  private DeleteService deleteService;
 
   public GuildListener() {
-    this.channelRepo = ChannelRepository.getRepository();
-    this.usageRepo = UsageRepository.getRepository();
-    this.userRepo = UserRepository.getRepository();
+    this.deleteService = new DeleteService();
   }
 
   @Override
@@ -33,9 +27,6 @@ public class GuildListener extends ListenerAdapter {
   public void onGuildLeave(GuildLeaveEvent event) {
     long serverid = event.getGuild().getIdLong();
     logger.info("Bot has left guild: {}, id: {}", event.getGuild().getName(), serverid);
-    channelRepo.deleteByServerId(serverid);
-    usageRepo.deleteByServerId(serverid);
-    userRepo.deleteByServerId(serverid);
-
+    deleteService.deleteServer(serverid);
   }
 }
