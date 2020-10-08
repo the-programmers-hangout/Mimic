@@ -10,6 +10,7 @@ import disparse.discord.jda.DiscordRequest;
 import disparse.parser.dispatch.CooldownScope;
 import disparse.parser.reflection.CommandHandler;
 import disparse.parser.reflection.Cooldown;
+import disparse.parser.reflection.Usage;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import uk.co.markg.mimic.database.ChannelRepository;
 import uk.co.markg.mimic.database.UsageRepository;
@@ -19,11 +20,13 @@ import uk.co.markg.mimic.markov.MarkovSender;
 
 public class MarkovStart {
   private static final Logger logger = LogManager.getLogger(MarkovStart.class);
-  
+
+  @Usage(usage = "\"I'm really\"",
+      description = "Tells mimic to start generating a sentence with \"I'm really\"")
   @Cooldown(amount = 5, unit = ChronoUnit.SECONDS, scope = CooldownScope.USER,
       sendCooldownMessage = false)
   @CommandHandler(commandName = "start",
-      description = "Provide the start of a sentence and let mimic finish it!")
+      description = "Provide the start of a sentence and let mimic finish it! Use quotations around your sentence!")
   public static void execute(DiscordRequest request, ChannelRepository channelRepo,
       UserRepository userRepo) {
     MessageReceivedEvent event = request.getEvent();
@@ -35,13 +38,12 @@ public class MarkovStart {
       MarkovSender.notOptedIn(event.getChannel());
       return;
     }
-
     UsageRepository.getRepository().save(MarkovStart.class, event);
     event.getChannel().sendTyping().queue();
     try {
       Markov markov = Markov.load(new File(event.getGuild().getIdLong() + ".markov"));
       var args = request.getArgs();
-      String lastWord = args.get(args.size() - 1);  
+      String lastWord = args.get(args.size() - 1);
       MarkovSender.sendMessage(event, buildMessageStart(args) + markov.generate(lastWord));
     } catch (IOException e) {
       logger.error(e.getMessage(), e);
