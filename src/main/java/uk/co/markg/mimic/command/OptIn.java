@@ -11,6 +11,7 @@ import disparse.parser.reflection.Cooldown;
 import disparse.parser.reflection.Populate;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import uk.co.markg.mimic.database.ChannelRepository;
+import uk.co.markg.mimic.database.ServerConfigRepository;
 import uk.co.markg.mimic.database.UserRepository;
 import uk.co.markg.mimic.db.tables.pojos.Channels;
 import uk.co.markg.mimic.markov.MarkovSender;
@@ -20,6 +21,7 @@ public class OptIn {
   private MessageReceivedEvent event;
   private UserRepository userRepo;
   private ChannelRepository channelRepo;
+  private ServerConfigRepository serverConfigRepo;
 
   /**
    * Required for static invokation of savehistory. Injecting other dependencies is unnecessary for
@@ -36,22 +38,36 @@ public class OptIn {
    * @param channelRepo The channel repository used to communicate with the database
    */
   @Populate
-  public OptIn(DiscordRequest request, UserRepository userRepo, ChannelRepository channelRepo) {
+  public OptIn(DiscordRequest request, UserRepository userRepo, ChannelRepository channelRepo,
+      ServerConfigRepository serverConfigRepo) {
     this.event = request.getEvent();
     this.userRepo = userRepo;
     this.channelRepo = channelRepo;
+    this.serverConfigRepo = serverConfigRepo;
   }
 
   /**
    * Command execution method held by Disparse
    */
   @Cooldown(amount = 10, unit = ChronoUnit.SECONDS, scope = CooldownScope.USER,
-      sendCooldownMessage = true)
-  @CommandHandler(commandName = "opt-in", description = "Opt-in for your messages to be read.",
-      roles = "Active")
+      sendCooldownMessage = false)
+  @CommandHandler(commandName = "opt-in", description = "Opt-in for your messages to be read.")
   public void optInCommand() {
-    logger.info("Starting opt-in");
-    this.execute();
+    long serverid = event.getGuild().getIdLong();
+    String optInRole = serverConfigRepo.get(serverid).getOptInRole();
+    if (optInRole.isEmpty() || userHasRole(optInRole)) {
+      logger.info("Starting opt-in");
+      this.execute();
+    } else {
+      event.getChannel().sendMessage("You do not have the correct permissions to run: `opt-in`")
+          .queue();
+    }
+  }
+
+  private boolean userHasRole(String optInRole) {
+    var userRole = event.getMember().getRoles().stream()
+        .filter(role -> role.getName().equals(optInRole)).findFirst();
+    return userRole.isPresent();
   }
 
   /**

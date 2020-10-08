@@ -29,7 +29,7 @@ public class Config {
   @ParsedEntity
   static class ConfigRequest {
     @Flag(shortName = 'o', longName = "opt",
-        description = "Set the required role for using the opt-in command", required = true)
+        description = "Set the required role for using the opt-in command")
     String optInRole = "";
   }
 
