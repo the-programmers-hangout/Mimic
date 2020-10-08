@@ -18,12 +18,21 @@ public class ServerConfigRepository {
     dsl = JooqConnection.getJooqContext();
   }
 
-  public int save(ServerConfig serverConfig) {
-    return dsl.executeInsert(dsl.newRecord(SERVER_CONFIG, serverConfig));
+  public int save(ServerConfig config) {
+    if (exists(config.getServerid())) {
+      return dsl.update(SERVER_CONFIG).set(SERVER_CONFIG.OPT_IN_ROLE, config.getOptInRole())
+          .where(SERVER_CONFIG.SERVERID.eq(config.getServerid())).execute();
+    }
+    return dsl.executeInsert(dsl.newRecord(SERVER_CONFIG, config));
   }
 
   public int delete(long serverid) {
     return dsl.deleteFrom(SERVER_CONFIG).where(SERVER_CONFIG.SERVERID.eq(serverid)).execute();
+  }
+
+  public boolean exists(long serverid) {
+    return dsl.selectFrom(SERVER_CONFIG).where(SERVER_CONFIG.SERVERID.eq(serverid)).fetchOne(0,
+        int.class) != 0;
   }
 
 }
