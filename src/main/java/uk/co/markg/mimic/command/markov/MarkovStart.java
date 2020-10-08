@@ -1,7 +1,11 @@
 package uk.co.markg.mimic.command.markov;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import disparse.discord.jda.DiscordRequest;
 import disparse.parser.dispatch.CooldownScope;
 import disparse.parser.reflection.CommandHandler;
@@ -14,7 +18,8 @@ import uk.co.markg.mimic.markov.Markov;
 import uk.co.markg.mimic.markov.MarkovSender;
 
 public class MarkovStart {
-
+  private static final Logger logger = LogManager.getLogger(MarkovStart.class);
+  
   @Cooldown(amount = 5, unit = ChronoUnit.SECONDS, scope = CooldownScope.USER,
       sendCooldownMessage = false)
   @CommandHandler(commandName = "start",
@@ -30,18 +35,17 @@ public class MarkovStart {
       MarkovSender.notOptedIn(event.getChannel());
       return;
     }
-    if (!userRepo.isMarkovCandidate(userid, event.getGuild().getIdLong())) {
-      MarkovSender.notMarkovCandidate(event.getChannel());
-      return;
-    }
 
     UsageRepository.getRepository().save(MarkovStart.class, event);
     event.getChannel().sendTyping().queue();
-    Markov markov = Markov.load(userid, event.getGuild().getIdLong());
-    var args = request.getArgs();
-    String lastWord = args.get(args.size() - 1);
-
-    MarkovSender.sendMessage(event, buildMessageStart(args) + markov.generate(lastWord));
+    try {
+      Markov markov = Markov.load(new File(event.getGuild().getIdLong() + ".markov"));
+      var args = request.getArgs();
+      String lastWord = args.get(args.size() - 1);  
+      MarkovSender.sendMessage(event, buildMessageStart(args) + markov.generate(lastWord));
+    } catch (IOException e) {
+      logger.error(e.getMessage(), e);
+    }
   }
 
   private static String buildMessageStart(List<String> args) {
