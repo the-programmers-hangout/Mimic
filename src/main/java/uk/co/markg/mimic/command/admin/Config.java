@@ -19,8 +19,7 @@ public class Config {
   private ServerConfigRepository serverConfigRepository;
 
   @Populate
-  public Config(DiscordRequest request, ConfigRequest flags,
-      ServerConfigRepository serverConfigRepository) {
+  public Config(DiscordRequest request, ConfigRequest flags, ServerConfigRepository serverConfigRepository) {
     this.request = request;
     this.flags = flags;
     this.serverConfigRepository = serverConfigRepository;
@@ -28,19 +27,18 @@ public class Config {
 
   @ParsedEntity
   static class ConfigRequest {
-    @Flag(shortName = 'o', longName = "opt",
-        description = "Set the required role for using the opt-in command")
+    @Flag(shortName = 'o', longName = "opt", description = "Set the required role for using the opt-in command")
     String optInRole = "";
   }
 
-  @Cooldown(amount = 5, unit = ChronoUnit.SECONDS, scope = CooldownScope.USER,
-      sendCooldownMessage = false)
-  @CommandHandler(commandName = "config", description = "Setup per-server config",
-      perms = AbstractPermission.BAN_MEMBERS)
+  @Cooldown(amount = 5, unit = ChronoUnit.SECONDS, scope = CooldownScope.USER, sendCooldownMessage = false)
+  @CommandHandler(commandName = "config", description = "Setup per-server config", perms = AbstractPermission.BAN_MEMBERS)
   public void execute() {
     long serverid = request.getEvent().getGuild().getIdLong();
     serverConfigRepository.save(new ServerConfig(serverid, flags.optInRole));
-    request.getEvent().getChannel().sendMessage("Opt-in role set to " + flags.optInRole).queue();
+    String response = flags.optInRole.isEmpty() ? "Opt-in role requirement removed!"
+        : "Opt-in role set to " + flags.optInRole;
+    request.getEvent().getChannel().sendMessage(response).queue();
   }
 
 }
