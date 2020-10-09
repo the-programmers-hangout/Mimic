@@ -16,7 +16,9 @@ import org.jooq.meta.jaxb.Target;
 import disparse.discord.jda.Dispatcher;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import uk.co.markg.mimic.listener.GuildListener;
 import uk.co.markg.mimic.listener.MemberLeave;
@@ -90,6 +92,7 @@ public class App {
         new GuildListener());
     builder.disableCache(getFlags());
     builder.build().awaitReady();
+    MessageAction.setDefaultMentions(EnumSet.noneOf(Message.MentionType.class));
   }
 
   private static List<GatewayIntent> getIntents() {
