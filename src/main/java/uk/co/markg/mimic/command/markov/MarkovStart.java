@@ -63,9 +63,20 @@ public class MarkovStart {
   }
 
   private static String buildMessageStart(List<String> args) {
-    args.remove(args.size() - 1);
-    String message = String.join(" ", args);
-    return message + " ";
+    if (args.isEmpty()) {
+      return "";
+    }
+    if (args.size() == 1) {
+      String[] words = args.get(0).split(" ");
+      StringBuilder sb = new StringBuilder();
+      for (int i = 0; i < words.length - 1; i++) {
+        sb.append(words[i]).append(" ");
+      }
+      return sb.toString();
+    } else {
+      args.remove(args.size() - 1);
+      return String.join(" ", args) + " ";
+    }
   }
 
 }
