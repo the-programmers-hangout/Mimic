@@ -42,11 +42,23 @@ public class MarkovStart {
     event.getChannel().sendTyping().queue();
     try {
       Markov markov = Markov.load(new File(event.getGuild().getIdLong() + ".markov"));
-      var args = request.getArgs();
-      String lastWord = args.get(args.size() - 1);
-      MarkovSender.sendMessage(event, buildMessageStart(args) + markov.generate(lastWord));
+      String lastWord = getLastWord(request.getArgs());
+      MarkovSender.sendMessage(event,
+          buildMessageStart(request.getArgs()) + markov.generate(lastWord));
     } catch (IOException e) {
       logger.error(e.getMessage(), e);
+    }
+  }
+
+  private static String getLastWord(List<String> args) {
+    if (args.isEmpty()) {
+      return "";
+    }
+    if (args.size() == 1) {
+      String[] words = args.get(0).split(" ");
+      return words[words.length - 1];
+    } else {
+      return args.get(args.size() - 1);
     }
   }
 
