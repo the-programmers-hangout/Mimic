@@ -24,13 +24,6 @@ public class OptIn {
   private ServerConfigRepository serverConfigRepo;
 
   /**
-   * Required for static invokation of savehistory. Injecting other dependencies is unnecessary for
-   * this case.
-   */
-  private OptIn() {
-  }
-
-  /**
    * Command execution method held by Disparse
    *
    * @param request     The discord request dispatched to this command
@@ -56,7 +49,6 @@ public class OptIn {
     long serverid = event.getGuild().getIdLong();
     String optInRole = serverConfigRepo.get(serverid).getOptInRole();
     if (optInRole.isEmpty() || userHasRole(optInRole)) {
-      logger.info("Starting opt-in");
       this.execute();
     } else {
       event.getChannel().sendMessage("You do not have the correct permissions to run: `opt-in`")
@@ -93,6 +85,7 @@ public class OptIn {
     userRepo.save(userid, event.getGuild().getIdLong());
     MarkovSender.optedIn(event.getChannel());
     var channels = channelRepo.getAll(event.getGuild().getIdLong());
+    logger.info("Starting opt-in for user {} in server {}.", userid, event.getGuild().getIdLong());
     for (Channels channel : channels) {
       var textChannel = event.getJDA().getTextChannelById(channel.getChannelid());
       if (textChannel != null && channel.getReadPerm()) {

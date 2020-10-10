@@ -93,6 +93,8 @@ public class AddChannels {
       var channelidLong = Long.parseLong(channelid);
       if (textChannel != null && !channelRepo.isChannelAdded(channelidLong)) {
         channelRepo.save(channelid, req.read, req.write, event.getGuild().getIdLong());
+        logger.info("Added channel {} in server {} with permissions READ-{} and WRITE-{}.",
+            channelid, event.getGuild().getId(), req.read, req.write);
         if (req.read) {
           logger.info("Reading from channel {}", channelid);
           retrieveChannelHistory(textChannel);

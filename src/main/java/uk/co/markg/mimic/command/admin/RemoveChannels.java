@@ -3,6 +3,8 @@ package uk.co.markg.mimic.command.admin;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import disparse.discord.AbstractPermission;
 import disparse.discord.jda.DiscordRequest;
 import disparse.parser.dispatch.CooldownScope;
@@ -13,6 +15,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import uk.co.markg.mimic.database.ChannelRepository;
 
 public class RemoveChannels {
+  private static final Logger logger = LogManager.getLogger(RemoveChannels.class);
 
   private MessageReceivedEvent event;
   private ChannelRepository channelRepo;
@@ -59,6 +62,8 @@ public class RemoveChannels {
     for (String channelid : args) {
       if (channelRepo.delete(channelid) != 1) {
         badChannels.add(channelid);
+      } else {
+        logger.info("Removed channel {} from server {}.", channelid, event.getGuild().getId());
       }
     }
     return badChannels.isEmpty() ? "All input channels successfully deleted"

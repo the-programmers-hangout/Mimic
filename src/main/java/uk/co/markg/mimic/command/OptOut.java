@@ -1,6 +1,8 @@
 package uk.co.markg.mimic.command;
 
 import java.time.temporal.ChronoUnit;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import disparse.discord.jda.DiscordRequest;
 import disparse.parser.dispatch.CooldownScope;
 import disparse.parser.reflection.CommandHandler;
@@ -11,6 +13,7 @@ import uk.co.markg.mimic.database.UserRepository;
 import uk.co.markg.mimic.markov.MarkovSender;
 
 public class OptOut {
+  private static final Logger logger = LogManager.getLogger(OptOut.class);
 
   private MessageReceivedEvent event;
   private UserRepository userRepo;
@@ -31,7 +34,7 @@ public class OptOut {
    * Command execution method held by Disparse
    */
   @Cooldown(amount = 10, unit = ChronoUnit.SECONDS, scope = CooldownScope.USER,
-      sendCooldownMessage = true)
+      sendCooldownMessage = false)
   @CommandHandler(commandName = "opt-out", description = "Opt-out for all messages to be removed.")
   public void optOutCommand() {
     this.execute();
@@ -58,5 +61,6 @@ public class OptOut {
   private void optOutUser(long userid) {
     userRepo.delete(userid, event.getGuild().getIdLong());
     MarkovSender.optedOut(event.getChannel());
+    logger.info("Opting-out user {} in server {}.", userid, event.getGuild().getIdLong());
   }
 }

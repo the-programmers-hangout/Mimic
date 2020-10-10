@@ -3,6 +3,8 @@ package uk.co.markg.mimic.command.admin;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import disparse.discord.AbstractPermission;
 import disparse.discord.jda.DiscordRequest;
 import disparse.parser.dispatch.CooldownScope;
@@ -17,6 +19,7 @@ import uk.co.markg.mimic.database.MessageRepository;
 import uk.co.markg.mimic.database.UserRepository;
 
 public class EditChannels {
+  private static final Logger logger = LogManager.getLogger(EditChannels.class);
 
   private MessageReceivedEvent event;
   private ChannelRequest req;
@@ -47,7 +50,7 @@ public class EditChannels {
     this.messageRepo = messageRepo;
     this.args = request.getArgs();
   }
-  
+
   @Cooldown(amount = 5, unit = ChronoUnit.SECONDS, scope = CooldownScope.USER,
       sendCooldownMessage = false)
   /**
@@ -82,6 +85,7 @@ public class EditChannels {
     for (String channelid : args) {
       var textChannel = event.getJDA().getTextChannelById(channelid);
       var channelidLong = Long.parseLong(channelid);
+      var serverid = textChannel.getGuild().getIdLong();
       boolean channelExists = channelRepo.isChannelAdded(channelidLong);
 
       if (textChannel != null && channelExists) {
@@ -89,13 +93,14 @@ public class EditChannels {
         channelRepo.updatePermissions(channelidLong, req.read, req.write);
 
         if (channelRepo.hasReadPermission(channelidLong) && !currentRead) {
-          var serverid = textChannel.getGuild().getIdLong();
           var userids = userRepo.getAllUserids(serverid);
           new HistoryGrabber(textChannel, userids).execute();
         }
         if (!channelRepo.hasReadPermission(channelidLong) && currentRead) {
           messageRepo.deleteByChannelId(channelidLong);
         }
+        logger.info("Updated channel {} permissions in server {} to READ-{} and WRITE-{}.",
+            channelid, serverid, req.read, req.write);
       } else {
         badChannels.add(channelid);
       }
