@@ -14,6 +14,11 @@ public class DeleteService {
     this.serverConfigRepo = ServerConfigRepository.getRepository();
   }
 
+  /**
+   * Removes the server from the database.
+   * 
+   * @param serverid The target server
+   */
   public void deleteServer(long serverid) {
     channelRepo.deleteByServerId(serverid);
     usageRepo.deleteByServerId(serverid);

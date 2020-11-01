@@ -20,6 +20,12 @@ public class ModifyMessage extends ListenerAdapter {
     this.messageRepo = MessageRepository.getRepository();
   }
 
+  /**
+   * Removes any deleted discord messages from the database.
+   * 
+   * @param event The {@link net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent
+   *              GuildMessageDeleteEvent} event.
+   */
   @Override
   public void onGuildMessageDelete(GuildMessageDeleteEvent event) {
     if (channelRepo.hasReadPermission(event.getChannel().getIdLong())) {
@@ -27,6 +33,12 @@ public class ModifyMessage extends ListenerAdapter {
     }
   }
 
+  /**
+   * Updates any edited discord messages in the database.
+   * 
+   * @param event The {@link net.dv8tion.jda.api.events.message.guild.GuildMessageUpdateEvent
+   *              GuildMessageDeleteEvent} event.
+   */
   @Override
   public void onGuildMessageUpdate(GuildMessageUpdateEvent event) {
     if (channelRepo.hasReadPermission(event.getChannel().getIdLong())

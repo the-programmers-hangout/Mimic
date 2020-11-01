@@ -21,6 +21,23 @@ import uk.co.markg.mimic.markov.MarkovSender;
 public class MarkovStart {
   private static final Logger logger = LogManager.getLogger(MarkovStart.class);
 
+  /**
+   * Method held by Disparse to begin command execution. Has a cooldown of five seconds per user.
+   * 
+   * Executes the command. Finishes sentence the user provided as an argument. The sentence is
+   * generated from all opted in user {@link net.dv8tion.jda.api.entities.Message Messages}. To
+   * execute, user must be opt-ed in and command must be sent in a channel with write permission
+   * enabled.
+   * 
+   * Saves command usage in the UsageRepository database.
+   * 
+   * @param request     The {@link disparse.discord.jda.DiscordRequest DiscordRequest} dispatched to
+   *                    this command
+   * @param channelRepo The {@link uk.co.markg.mimic.database.ChannelRepository ChannelRepository}
+   *                    instance used to communicate with the database
+   * @param userRepo    The {@link uk.co.markg.mimic.database.UserRepository UserRepository}
+   *                    instance
+   */
   @Usage(usage = "\"I'm really\"",
       description = "Tells mimic to start generating a sentence with \"I'm really\"")
   @Cooldown(amount = 5, unit = ChronoUnit.SECONDS, scope = CooldownScope.USER,
@@ -43,13 +60,19 @@ public class MarkovStart {
     try {
       Markov markov = Markov.load(new File(event.getGuild().getIdLong() + ".markov"));
       String lastWord = getLastWord(request.getArgs());
-      MarkovSender.sendMessage(event,
-          buildMessageStart(request.getArgs()) + markov.generate(lastWord));
+      String sentence = buildMessageStart(request.getArgs()) + markov.generate(lastWord);
+      MarkovSender.sendMessage(event, sentence);
     } catch (IOException e) {
       logger.error(e.getMessage(), e);
     }
   }
 
+  /**
+   * Gets the last word in the sentence provided by the user.
+   * 
+   * @param args The parsed sentence passed as an argument
+   * @return The last word in the argument
+   */
   private static String getLastWord(List<String> args) {
     if (args.isEmpty()) {
       return "";
@@ -62,6 +85,12 @@ public class MarkovStart {
     }
   }
 
+  /**
+   * Constructs the start of the generated MarkovStart sentence.
+   * 
+   * @param args The parsed sentence passed as an argument
+   * @return The start of the MarkovStart sentence
+   */
   private static String buildMessageStart(List<String> args) {
     if (args.isEmpty()) {
       return "";

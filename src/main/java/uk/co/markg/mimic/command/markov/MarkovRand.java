@@ -2,8 +2,6 @@ package uk.co.markg.mimic.command.markov;
 
 import java.time.temporal.ChronoUnit;
 import java.util.concurrent.ThreadLocalRandom;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import disparse.discord.jda.DiscordRequest;
 import disparse.parser.dispatch.CooldownScope;
 import disparse.parser.reflection.CommandHandler;
@@ -16,8 +14,23 @@ import uk.co.markg.mimic.markov.Markov;
 import uk.co.markg.mimic.markov.MarkovSender;
 
 public class MarkovRand {
-  private static final Logger logger = LogManager.getLogger(MarkovRand.class);
 
+  /**
+   * Method held by Disparse to begin command execution. Has a cooldown of five seconds per user.
+   * 
+   * Executes the command. Generates a random number of sentences from random users'
+   * {@link net.dv8tion.jda.api.entities.Message Messages}. To execute, user must be opt-ed in and
+   * command must be sent in a channel with write permission enabled.
+   * 
+   * Saves command usage in the UsageRepository database.
+   * 
+   * @param request     The {@link disparse.discord.jda.DiscordRequest DiscordRequest} dispatched to
+   *                    this command
+   * @param channelRepo The {@link uk.co.markg.mimic.database.ChannelRepository ChannelRepository}
+   *                    instance used to communicate with the database
+   * @param userRepo    The {@link uk.co.markg.mimic.database.UserRepository UserRepository}
+   *                    instance
+   */
   @Cooldown(amount = 5, unit = ChronoUnit.SECONDS, scope = CooldownScope.USER,
       sendCooldownMessage = false)
   @CommandHandler(commandName = "rand",

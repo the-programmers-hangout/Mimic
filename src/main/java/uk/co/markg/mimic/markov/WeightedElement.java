@@ -19,21 +19,27 @@ public class WeightedElement {
   }
 
   /**
-   * @return the element
+   * Gets the name of the {@link uk.co.markg.mimic.markov.WeightedElement WeightedElement}.
+   * 
+   * @return The element name
    */
   public String getElement() {
     return element;
   }
 
   /**
-   * @return the weight
+   * Gets the weight of the {@link uk.co.markg.mimic.markov.WeightedElement WeightedElement}.
+   * 
+   * @return The element's weight
    */
   public double getWeight() {
     return weight;
   }
 
   /**
-   * @param weight the weight to set
+   * Updates the weight of the {@link uk.co.markg.mimic.markov.WeightedElement WeightedElement}.
+   * 
+   * @param weight The weight to set
    */
   public void setWeight(double weight) {
     this.weight = weight;

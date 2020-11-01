@@ -24,8 +24,10 @@ public class RemoveChannels {
   /**
    * Command execution method held by Disparse
    *
-   * @param request     The discord request dispatched to this command
-   * @param channelRepo The channel repository used to communicate with the database
+   * @param request     The {@link disparse.discord.jda.DiscordRequest DiscordRequest} dispatched to
+   *                    this command
+   * @param channelRepo The {@link uk.co.markg.mimic.database.ChannelRepository ChannelRepository}
+   *                    instance used to communicate with the database
    */
   @Populate
   public RemoveChannels(DiscordRequest request, ChannelRepository channelRepo) {
@@ -34,11 +36,11 @@ public class RemoveChannels {
     this.args = request.getArgs();
   }
 
+  /*
+   * Method held by Disparse to begin command execution. Has a cooldown of five seconds per user.
+   */
   @Cooldown(amount = 5, unit = ChronoUnit.SECONDS, scope = CooldownScope.USER,
       sendCooldownMessage = false)
-  /**
-   * Command execution method held by Disparse
-   */
   @CommandHandler(commandName = "channels.remove",
       description = "Remove channels from the database. All related messages are also removed.",
       perms = AbstractPermission.BAN_MEMBERS)
@@ -46,13 +48,18 @@ public class RemoveChannels {
     this.execute();
   }
 
+  /**
+   * Executes the command. Removes any valid channels and updates database. Sends a confirmation
+   * message to discord.
+   */
   private void execute() {
     String response = removeChannels();
     event.getChannel().sendMessage(response).queue();
   }
 
   /**
-   * Removes existing channels from the database and any messages saved from those channels
+   * Removes existing channels from the database and any {@link net.dv8tion.jda.api.entities.Message
+   * Messages} saved from those channels
    *
    * @return A string indicating success or failure. Failure message includes a list of channels
    *         that could not be removed from the database

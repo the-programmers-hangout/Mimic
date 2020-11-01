@@ -26,9 +26,12 @@ public class OptIn {
   /**
    * Command execution method held by Disparse
    *
-   * @param request     The discord request dispatched to this command
-   * @param userRepo    The user repository used to communicate with the database
-   * @param channelRepo The channel repository used to communicate with the database
+   * @param request     The {@link disparse.discord.jda.DiscordRequest DiscordRequest} dispatched to
+   *                    this command
+   * @param userRepo    The {@link uk.co.markg.mimic.database.UserRepository UserRepository}
+   *                    instance used to communicate with the database
+   * @param channelRepo The {@link uk.co.markg.mimic.database.ChannelRepository ChannelRepository}
+   *                    instance used to communicate with the database
    */
   @Populate
   public OptIn(DiscordRequest request, UserRepository userRepo, ChannelRepository channelRepo,
@@ -40,7 +43,8 @@ public class OptIn {
   }
 
   /**
-   * Command execution method held by Disparse
+   * Command execution method held by Disparse. Has a cooldown of ten seconds per user. Opts the
+   * user in for their messages to be read. User must have the required opt-in role if it exists.
    */
   @Cooldown(amount = 10, unit = ChronoUnit.SECONDS, scope = CooldownScope.USER,
       sendCooldownMessage = false)
@@ -56,6 +60,12 @@ public class OptIn {
     }
   }
 
+  /**
+   * Checks if user has the required opt-in role.
+   * 
+   * @param optInRole The role the user has to have to be opted-in.
+   * @return Whether or not the user has the role.
+   */
   private boolean userHasRole(String optInRole) {
     var userRole = event.getMember().getRoles().stream()
         .filter(role -> role.getName().equals(optInRole)).findFirst();
@@ -79,7 +89,7 @@ public class OptIn {
    * Opts in a user by saving their id to the database and saving their history from all added
    * channels to the database.
    *
-   * @param userid the discord userid of the user
+   * @param userid The discord userid of the user
    */
   private void optInUser(long userid) {
     userRepo.save(userid, event.getGuild().getIdLong());

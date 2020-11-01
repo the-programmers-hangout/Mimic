@@ -21,6 +21,16 @@ public class Config {
   private ConfigRequest flags;
   private ServerConfigRepository serverConfigRepository;
 
+  /**
+   * Command execution method held by Disparse
+   * 
+   * @param request                The {@link disparse.discord.jda.DiscordRequest DiscordRequest}
+   *                               dispatched to this command
+   * @param flags                  The parsed {@link disparse.parser.reflection.Flag Flags} passed
+   *                               with the command
+   * @param serverConfigRepository The {@link uk.co.markg.mimic.database.ServerConfigRepository
+   *                               ServerConfigRepository} instance
+   */
   @Populate
   public Config(DiscordRequest request, ConfigRequest flags,
       ServerConfigRepository serverConfigRepository) {
@@ -29,6 +39,10 @@ public class Config {
     this.serverConfigRepository = serverConfigRepository;
   }
 
+  /**
+   * Creates a new {@link disparse.parser.reflection.Flag Flag} for the name of the opt-in role.
+   * Defaults to none.
+   */
   @ParsedEntity
   static class ConfigRequest {
     @Flag(shortName = 'o', longName = "opt",
@@ -36,6 +50,12 @@ public class Config {
     String optInRole = "";
   }
 
+  /**
+   * Method held by Disparse to begin command execution. Has a cooldown of five seconds per user.
+   * 
+   * Executes the command. Sets required opt-in role if needed. Sends a confirmation message to
+   * discord.
+   */
   @Cooldown(amount = 5, unit = ChronoUnit.SECONDS, scope = CooldownScope.USER,
       sendCooldownMessage = false)
   @CommandHandler(commandName = "config", description = "Setup per-server config",

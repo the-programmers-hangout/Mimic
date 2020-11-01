@@ -31,6 +31,11 @@ public class Markov {
   private Set<String> startWords;
   private Set<String> endWords;
 
+  /**
+   * Creates a {@link uk.co.markg.mimic.markov.Markov Markov} instance.
+   * 
+   * @param inputs The list of strings to be parsed
+   */
   private Markov(List<String> inputs) {
     wordMap = new HashMap<>();
     startWords = new HashSet<>();
@@ -38,6 +43,11 @@ public class Markov {
     parseInput(inputs);
   }
 
+  /**
+   * Initialises a custom {@link com.esotericsoftware.kryo.Kryo Kryo} serializer.
+   * 
+   * @return The initialised {@link com.esotericsoftware.kryo.Kryo Kryo} instance
+   */
   private static Kryo initKryo() {
     Kryo kryo = new Kryo();
     kryo.register(Markov.class);
@@ -55,7 +65,7 @@ public class Markov {
   /**
    * Creates a collection of sentence ends with probabilities taken from a subset of user messages.
    * 
-   * @return the collection of sentence ends
+   * @return The collection of sentence ends
    */
   private static WeightedCollection getSentenceEnds() {
     var collection = new WeightedCollection();
@@ -69,16 +79,45 @@ public class Markov {
     return collection;
   }
 
+  /**
+   * Creates a new {@link uk.co.markg.mimic.markov.Markov Markov} instance with the saved user
+   * messages loaded from the {@link uk.co.markg.mimic.database.MessageRepository
+   * MessageRepository}.
+   * 
+   * @param userid   The target user
+   * @param serverid The discord server the user is from
+   * @return The {@link uk.co.markg.mimic.markov.Markov Markov} instance containing the saved user
+   *         messages
+   */
   public static Markov load(long userid, long serverid) {
     return load(List.of(userid), serverid);
   }
 
+
+  /**
+   * Creates a new {@link uk.co.markg.mimic.markov.Markov Markov} instance with the saved user
+   * messages loaded from the {@link uk.co.markg.mimic.database.MessageRepository
+   * MessageRepository}. Allows batch loading.
+   * 
+   * @param userids  The list of users
+   * @param serverid The discord server the users are from
+   * @return The {@link uk.co.markg.mimic.markov.Markov Markov} instance containing the saved users
+   *         messages
+   */
   public static Markov load(List<Long> userids, long serverid) {
     logger.info("Loaded chain for {}", userids);
     var inputs = MessageRepository.getRepository().getByUsers(userids, serverid);
     return new Markov(inputs);
   }
 
+  /**
+   * Creates a new {@link uk.co.markg.mimic.markov.Markov Markov} instance loaded from the file.
+   * 
+   * @param f The file containing the saved messages
+   * @return The {@link uk.co.markg.mimic.markov.Markov Markov} instance containing the saved users
+   *         messages
+   * @throws IOException If the file is not found
+   */
   public static Markov load(File f) throws IOException {
     logger.info("Loaded from file");
     Input input = new Input(new FileInputStream(f.getName()));
@@ -87,6 +126,12 @@ public class Markov {
     return markov;
   }
 
+  /**
+   * Saves the {@link uk.co.markg.mimic.markov.Markov Markov} instance onto a file.
+   * 
+   * @param file The file
+   * @throws IOException
+   */
   public void save(File file) throws IOException {
     Output output = new Output(new FileOutputStream(file.getName()));
     kryo.writeObject(output, this);
@@ -94,9 +139,9 @@ public class Markov {
   }
 
   /**
-   * Convenience method to generate multiple sentences
+   * Convenience method to generate multiple sentences.
    * 
-   * @return the sentences joined together by a space character
+   * @return The sentences joined together by a space character
    */
   public String generateRandom() {
     int sentences = ThreadLocalRandom.current().nextInt(5) + 1;
@@ -107,6 +152,14 @@ public class Markov {
     return sb.toString();
   }
 
+  /**
+   * Gets a word the Markov sentence can start with. If the String given is a valid start word the
+   * method returns the argument. If it isn't the method will return a random start word from the
+   * database.
+   * 
+   * @param start Start word provided from the user
+   * @return The start word provided or chosen
+   */
   private String getStartWord(String start) {
     if (!start.isEmpty() && wordMap.containsKey(start)) {
       return start;
@@ -119,6 +172,12 @@ public class Markov {
     return itr.next();
   }
 
+  /**
+   * Generates a sentence from the markov chain with a given start word.
+   * 
+   * @param start The provided start word
+   * @return The generated markov chain
+   */
   public String generate(String start) {
     String word = getStartWord(start);
     List<String> sentence = new ArrayList<>();
@@ -149,7 +208,7 @@ public class Markov {
   /**
    * Generates a sentence from the markov chain
    * 
-   * @return a complete sentence
+   * @return A complete sentence
    */
   public String generate() {
     return generate("");
@@ -158,7 +217,7 @@ public class Markov {
   /**
    * Convenience method to parse multiple sentences
    * 
-   * @param inputs the list of sentences
+   * @param inputs The list of sentences
    */
   private void parseInput(List<String> inputs) {
     for (String input : inputs) {
@@ -167,9 +226,9 @@ public class Markov {
   }
 
   /**
-   * Parses a sentence into the word frequency map
+   * Parses a sentence into the wordMap
    * 
-   * @param input the sentence to parse
+   * @param input The sentence to parse
    */
   private void parseInput(String input) {
     String[] tokens = input.split("\\s+\\v?");
@@ -208,8 +267,8 @@ public class Markov {
   /**
    * Checks whether a word can be matched as an end word. i.e. the word ends a sentence.
    * 
-   * @param word the word to check
-   * @return true if the word can be matched as an end word
+   * @param word The word to check
+   * @return True if the word can be matched as an end word
    */
   private boolean isEndWord(String word) {
     for (String stop : VALID_END_WORD_STOPS) {
@@ -221,10 +280,10 @@ public class Markov {
   }
 
   /**
-   * Inserts a new word and follow word into the wordFrequencyMap
+   * Inserts a new word and follow word into the wordMap
    * 
-   * @param word       the main word
-   * @param followWord the follow word
+   * @param word       The main word
+   * @param followWord The follow word
    */
   private void insertWordFrequency(String word, String followWord) {
     var wc = new WeightedCollection();
@@ -233,10 +292,10 @@ public class Markov {
   }
 
   /**
-   * Updates the follow word frequency of a word in the wordFrequencyMap
+   * Updates the follow word frequency of a word in the wordMap
    * 
-   * @param key        the main word
-   * @param followWord the follow word
+   * @param key        The main word
+   * @param followWord The follow word
    */
   private void updateWordFrequency(String key, String followWord) {
     var followFrequency = wordMap.get(key);

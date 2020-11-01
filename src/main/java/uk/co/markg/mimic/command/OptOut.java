@@ -21,8 +21,10 @@ public class OptOut {
   /**
    * Command execution method held by Disparse
    *
-   * @param request  The discord request dispatched to this command
-   * @param userRepo The user repository used to communicate with the database
+   * @param request  The {@link disparse.discord.jda.DiscordRequest DiscordRequest} dispatched to
+   *                 this command
+   * @param userRepo The {@link uk.co.markg.mimic.database.UserRepository UserRepository} instance
+   *                 used to communicate with the database
    */
   @Populate
   public OptOut(DiscordRequest request, UserRepository userRepo) {
@@ -31,7 +33,8 @@ public class OptOut {
   }
 
   /**
-   * Command execution method held by Disparse
+   * Command execution method held by Disparse. Has a cooldown of ten seconds per user. Opts the
+   * user out and removes their messages from the database.
    */
   @Cooldown(amount = 10, unit = ChronoUnit.SECONDS, scope = CooldownScope.USER,
       sendCooldownMessage = false)

@@ -16,6 +16,12 @@ public class MemberLeave extends ListenerAdapter {
     this.userRepo = UserRepository.getRepository();
   }
 
+  /**
+   * Removes the user messages from the database.
+   * 
+   * @param event the {@link net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent}
+   *              instance
+   */
   @Override
   public void onGuildMemberRemove(GuildMemberRemoveEvent event) {
     long userid = event.getUser().getIdLong();

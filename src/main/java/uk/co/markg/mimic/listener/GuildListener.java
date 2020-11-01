@@ -17,12 +17,24 @@ public class GuildListener extends ListenerAdapter {
     this.deleteService = new DeleteService();
   }
 
+  /**
+   * Logs the server name and id when bot joins a discord server.
+   * 
+   * @param event The {@link net.dv8tion.jda.api.events.guild.GuildJoinEvent GuildJoinEvent}
+   *              instance.
+   */
   @Override
   public void onGuildJoin(GuildJoinEvent event) {
     logger.info("Bot has joined guild: {}, id: {}", event.getGuild().getName(),
         event.getGuild().getId());
   }
 
+  /**
+   * Logs the server name and id when bot leaves a discord server.
+   * 
+   * @param event The {@link net.dv8tion.jda.api.events.guild.GuildJoinEvent GuildJoinEvent}
+   *              instance.
+   */
   @Override
   public void onGuildLeave(GuildLeaveEvent event) {
     long serverid = event.getGuild().getIdLong();

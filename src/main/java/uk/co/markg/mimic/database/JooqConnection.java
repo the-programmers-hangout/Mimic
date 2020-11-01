@@ -21,7 +21,7 @@ public class JooqConnection {
    * Initialises the Jooq {@link org.jooq.DSLContext DSLContext} if it has not been initialised and
    * returns it
    * 
-   * @return the dsl context
+   * @return The dsl context
    */
   @Injectable
   public static DSLContext getJooqContext() {

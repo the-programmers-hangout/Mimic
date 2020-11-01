@@ -28,6 +28,20 @@ public class MarkovStats {
           "but", "if", "can", "with", "have", "not", "on", "or", "as", "that's", "just", "like",
           "this", "do", "so", "we", "at", "its", "an", "it's", "im", "i'm", "are", "was");
 
+  /**
+   * Method held by Disparse to begin command execution. Has a cooldown of five seconds per user.
+   * 
+   * Executes the command. Displays the user's statistics for message count, total tokens, unique
+   * words and a list of the most commonly used words. To execute, user must be opt-ed in.
+   * 
+   * @param request     The {@link disparse.discord.jda.DiscordRequest DiscordRequest} dispatched to
+   *                    this command
+   * @param userRepo    The {@link uk.co.markg.mimic.database.UserRepository UserRepository}
+   *                    instance
+   * @param messageRepo The {@link uk.co.markg.mimic.database.MessageRepository MessageRepository}
+   *                    instance
+   * @return Embed message of the user's statistics
+   */
   @Cooldown(amount = 5, unit = ChronoUnit.SECONDS, scope = CooldownScope.USER,
       sendCooldownMessage = false)
   @CommandHandler(commandName = "stats", description = "Display statistics of your messages")
@@ -54,6 +68,20 @@ public class MarkovStats {
     return DiscordResponse.of(eb);
   }
 
+  /**
+   * Method held by Disparse to begin command execution. Has cooldown of one minute per channel.
+   * 
+   * Executes the command. Displays all users statistics for number of opted-in users message count,
+   * total tokens, unique words and a list of the most commonly used words. To execute, user must be
+   * opt-ed in.
+   * 
+   * @param request     The discord request dispatched to this command
+   * @param userRepo    The {@link uk.co.markg.mimic.database.UserRepository UserRepository}
+   *                    instance
+   * @param messageRepo The {@link uk.co.markg.mimic.database.MessageRepository MessageRepository}
+   *                    instance
+   * @return Embed message of the server's statistics
+   */
   @Cooldown(amount = 1, unit = ChronoUnit.MINUTES, scope = CooldownScope.CHANNEL,
       sendCooldownMessage = false)
   @CommandHandler(commandName = "allstats", description = "Display statistics for all users")
@@ -79,6 +107,13 @@ public class MarkovStats {
     return DiscordResponse.of(eb);
   }
 
+  /**
+   * Gets the valid token count from list of messages saved.
+   * 
+   * @param messages The list of all {@link net.dv8tion.jda.api.entities.Message Messages} saved
+   * @return The count of valid tokens in the list of {@link net.dv8tion.jda.api.entities.Message
+   *         Messages}
+   */
   private static int getTokenCount(List<String> messages) {
     int count = 0;
     for (String message : messages) {
@@ -88,6 +123,13 @@ public class MarkovStats {
     return count;
   }
 
+  /**
+   * Calculates the frequency of words in the list of messages provided and creates a map of every
+   * word and its frequency in that list.
+   * 
+   * @param messages The list of all {@link net.dv8tion.jda.api.entities.Message Messages} saved
+   * @return The map of words and their frequency
+   */
   private static Map<String, Integer> calculateWordFrequency(List<String> messages) {
     var map = new HashMap<String, Integer>();
     for (String message : messages) {
@@ -103,6 +145,13 @@ public class MarkovStats {
     return map;
   }
 
+  /**
+   * Gets the numOfWords most commonly used from the word map provided.
+   * 
+   * @param wordMap    The map of words and their frequency
+   * @param numOfWords The desired number of most commonly used words
+   * @return The stream of most commonly used words
+   */
   private static List<String> getMostUsedWords(Map<String, Integer> wordMap, int numOfWords) {
     List<Entry<String, Integer>> words = new ArrayList<>(wordMap.entrySet());
     words.sort(Entry.comparingByValue());

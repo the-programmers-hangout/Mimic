@@ -11,6 +11,14 @@ import net.dv8tion.jda.api.EmbedBuilder;
 
 public class About {
 
+  /**
+   * Method held by Disparse to begin command execution. Has a cooldown of one minute per user.
+   * Executes the command. Sends a message containing information about the bot.
+   * 
+   * @param request The {@link disparse.discord.jda.DiscordRequest DiscordRequest} dispatched to
+   *                this command
+   * @return Embed message for the About command
+   */
   @Cooldown(amount = 1, unit = ChronoUnit.MINUTES, scope = CooldownScope.USER,
       sendCooldownMessage = false)
   @CommandHandler(commandName = "about", description = "Displays info about the bot")

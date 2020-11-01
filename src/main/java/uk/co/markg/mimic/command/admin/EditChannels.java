@@ -31,10 +31,12 @@ public class EditChannels {
   /**
    * Command execution method held by Disparse
    * 
-   * @param request     The discord request dispatched to this command
-   * @param req         The parsed flags passed with the command
+   * @param request     The {@link disparse.discord.jda.DiscordRequest DiscordRequest} dispatched to
+   *                    this command
+   * @param req         The parsed {@link disparse.parser.reflection.Flag Flags} passed with the
+   *                    command
    * @param channelRepo The {@link uk.co.markg.mimic.database.ChannelRepository ChannelRepository}
-   *                    instance
+   *                    instance used to communicate with the database
    * @param userRepo    The {@link uk.co.markg.mimic.database.UserRepository UserRepository}
    *                    instance
    * @param messageRepo The {@link uk.co.markg.mimic.database.MessageRepository MessageRepository}
@@ -51,11 +53,11 @@ public class EditChannels {
     this.args = request.getArgs();
   }
 
+  /*
+   * Method held by Disparse to begin command execution. Has a cooldown of five seconds per user.
+   */
   @Cooldown(amount = 5, unit = ChronoUnit.SECONDS, scope = CooldownScope.USER,
       sendCooldownMessage = false)
-  /**
-   * Command execution method held by Disparse
-   */
   @CommandHandler(commandName = "channels.edit",
       description = "Edits added channel permissions. Collects user message history if read permission granted and deletes it if revoked.",
       perms = AbstractPermission.BAN_MEMBERS)
