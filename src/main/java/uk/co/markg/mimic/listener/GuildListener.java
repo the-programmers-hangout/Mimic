@@ -27,6 +27,6 @@ public class GuildListener extends ListenerAdapter {
   public void onGuildLeave(GuildLeaveEvent event) {
     long serverid = event.getGuild().getIdLong();
     logger.info("Bot has left guild: {}, id: {}", event.getGuild().getName(), serverid);
-    deleteService.deleteServer(serverid);
+    // deleteService.deleteServer(serverid);
   }
 }
