@@ -98,7 +98,7 @@ public class MarkovStats {
     EmbedBuilder eb = new EmbedBuilder();
     eb.setTitle("Statistics");
     eb.setColor(Color.decode("#eb7701"));
-    eb.addField("**Total Users**", "```" + userRepo.getCount() + "```", true);
+    eb.addField("**Total Users**", "```" + userRepo.getCount(serverid) + "```", true);
     eb.addBlankField(true);
     eb.addField("**Total Messages**", "```" + messageRepo.getCount(serverid) + "```", true);
     eb.addField("**Total Tokens**", "```" + getTokenCount(messages) + "```", true);

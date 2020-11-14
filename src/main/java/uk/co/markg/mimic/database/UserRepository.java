@@ -37,8 +37,8 @@ public class UserRepository {
    * 
    * @return The number of users
    */
-  public int getCount() {
-    return dsl.selectCount().from(USERS).fetchOne(0, int.class);
+  public int getCount(long serverid) {
+    return dsl.selectCount().from(USERS).where(USERS.SERVERID.eq(serverid)).fetchOne(0, int.class);
   }
 
   /**
