@@ -49,7 +49,8 @@ public class MarkovStats {
       MessageRepository messageRepo) {
     MessageReceivedEvent event = request.getEvent();
     long userid = event.getAuthor().getIdLong();
-    if (!userRepo.isUserOptedIn(userid, event.getGuild().getIdLong())) {
+    long serverid = event.getGuild().getIdLong();
+    if (!userRepo.isUserOptedIn(userid, serverid)) {
       MarkovSender.notOptedIn(event.getChannel());
       return DiscordResponse.noop();
     }
@@ -57,10 +58,11 @@ public class MarkovStats {
     EmbedBuilder eb = new EmbedBuilder();
     eb.setTitle("Statistics");
     eb.setColor(Color.decode("#eb7701"));
-    var userMessages = messageRepo.getByUsers(List.of(userid), event.getGuild().getIdLong());
+    var userMessages = messageRepo.getByUsers(List.of(userid), serverid);
     var userWordMap = calculateWordFrequency(userMessages);
     int userTokens = getTokenCount(userMessages);
-    eb.addField("**Your Messages**", "```" + messageRepo.getCountByUserId(userid, serverid) + "```", true);
+    eb.addField("**Your Messages**", "```" + messageRepo.getCountByUserId(userid, serverid) + "```",
+        true);
     eb.addField("**Your Total Tokens**", "```" + userTokens + "```", true);
     eb.addField("**Your Unique Words**", "```" + userWordMap.size() + "```", true);
     eb.addField("**Your Most Common Words**",
@@ -101,7 +103,8 @@ public class MarkovStats {
     eb.addField("**Total Messages**", "```" + messageRepo.getCount(serverid) + "```", true);
     eb.addField("**Total Tokens**", "```" + getTokenCount(messages) + "```", true);
     eb.addBlankField(true);
-    eb.addField("**Total Unique Words**", "```" + messageRepo.getUniqueWordCount(serverid) + "```", true);
+    eb.addField("**Total Unique Words**", "```" + messageRepo.getUniqueWordCount(serverid) + "```",
+        true);
     eb.addField("**Most Common Words**",
         "```" + String.join(", ", getMostUsedWords(wordMap, 30)) + "```", false);
     return DiscordResponse.of(eb);
