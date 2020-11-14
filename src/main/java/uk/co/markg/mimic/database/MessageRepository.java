@@ -70,22 +70,24 @@ public class MessageRepository {
         .and(MESSAGES.SERVERID.in(serverid)).fetchInto(String.class);
   }
 
-  public int getCount() {
-    return dsl.selectCount().from(MESSAGES).fetchOne(0, int.class);
+  public int getCount(long serverid) {
+    return dsl.selectCount().from(MESSAGES).where(MESSAGES.SERVERID.eq(serverid)).fetchOne(0,
+        int.class);
   }
 
-  public int getUniqueWordCount() {
+  public int getUniqueWordCount(long serverid) {
     Field<?> field = DSL.field("regexp_split_to_table(content, E'\\\\s+\\\\v?')");
-    Table<?> wordTable = dsl.selectDistinct(field).from(MESSAGES).asTable();
+    Table<?> wordTable =
+        dsl.selectDistinct(field).from(MESSAGES).where(MESSAGES.SERVERID.eq(serverid)).asTable();
     return dsl.select(DSL.count()).from(wordTable).fetchOne(0, int.class);
   }
 
   /**
    * 
    */
-  public int getCountByUserId(long userid) {
-    return dsl.selectCount().from(MESSAGES).where(MESSAGES.USERID.eq(userid)).fetchOne(0,
-        int.class);
+  public int getCountByUserId(long userid, long serverid) {
+    return dsl.selectCount().from(MESSAGES).where(MESSAGES.USERID.eq(userid))
+        .and(MESSAGES.SERVERID.eq(serverid)).fetchOne(0, int.class);
   }
 
   /**

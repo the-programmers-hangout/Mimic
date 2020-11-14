@@ -60,7 +60,7 @@ public class MarkovStats {
     var userMessages = messageRepo.getByUsers(List.of(userid), event.getGuild().getIdLong());
     var userWordMap = calculateWordFrequency(userMessages);
     int userTokens = getTokenCount(userMessages);
-    eb.addField("**Your Messages**", "```" + messageRepo.getCountByUserId(userid) + "```", true);
+    eb.addField("**Your Messages**", "```" + messageRepo.getCountByUserId(userid, serverid) + "```", true);
     eb.addField("**Your Total Tokens**", "```" + userTokens + "```", true);
     eb.addField("**Your Unique Words**", "```" + userWordMap.size() + "```", true);
     eb.addField("**Your Most Common Words**",
@@ -98,10 +98,10 @@ public class MarkovStats {
     eb.setColor(Color.decode("#eb7701"));
     eb.addField("**Total Users**", "```" + userRepo.getCount() + "```", true);
     eb.addBlankField(true);
-    eb.addField("**Total Messages**", "```" + messageRepo.getCount() + "```", true);
+    eb.addField("**Total Messages**", "```" + messageRepo.getCount(serverid) + "```", true);
     eb.addField("**Total Tokens**", "```" + getTokenCount(messages) + "```", true);
     eb.addBlankField(true);
-    eb.addField("**Total Unique Words**", "```" + messageRepo.getUniqueWordCount() + "```", true);
+    eb.addField("**Total Unique Words**", "```" + messageRepo.getUniqueWordCount(serverid) + "```", true);
     eb.addField("**Most Common Words**",
         "```" + String.join(", ", getMostUsedWords(wordMap, 30)) + "```", false);
     return DiscordResponse.of(eb);
