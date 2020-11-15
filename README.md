@@ -4,7 +4,7 @@ Mimic Bot is a discord bot built originally for [The Programmer's Hangout](https
 
 ## Add me!
 
-[Invite me!](https://discord.com/api/oauth2/authorize?client_id=751109806722383902&permissions=329728&scope=bot)
+Invite link coming soon!
 
 Server admins/owners will need to run the configuration command before using the bot. If you want to lock the `mimic!opt-in` command behind a role use `mimic!config -o yourRoleName`. If you do not want to lock the opt-in command behind a role use `mimic!config`.
 
