@@ -4,7 +4,7 @@
         "name": "mimic",
         "packages": "uk.co.markg.mimic",
         "ThresholdFilter": {
-            "level": "info"
+            "level": "debug"
         },
         "appenders": {
             "Console": {
@@ -12,14 +12,49 @@
                 "PatternLayout": {
                     "pattern": "%d [%t] %-5p %c - %m%n"
                 }
+            },
+            "RollingFile": {
+                "name": "file-roll",
+                "fileName": "logs/mimic.log",
+                "filePattern": "logs/mimic-%d{yyyy-MM-dd}.%i.log.gz",
+                "ignoreExceptions": false,
+                "PatternLayout": {
+                    "pattern": "%d [%t] %-5p %c - %m%n"
+                },
+                "Policies": {
+                    "SizeBasedTriggeringPolicy": {
+                        "size": "30 MB"
+                    },
+                    "OnStartupTriggeringPolicy": {
+                        "minSize": 0
+                    }
+                },
+                "DefaultRolloverStrategy": {
+                    "max": "20",
+                    "Delete": {
+                        "basePath": "${baseDir}",
+                        "maxDepth": "2",
+                        "IfFileName": {
+                            "glob": "logs/mimic-*.log.gz"
+                        },
+                        "IfLastModified": {
+                            "age": "20d"
+                        }
+                    }
+                }
             }
         },
         "loggers": {
             "root": {
                 "level": "debug",
-                "AppenderRef": {
-                    "ref": "STDOUT"
-                }
+                "AppenderRef": [
+                    {
+                        "ref": "file-roll"
+                    },
+                    {
+                        "ref": "STDOUT"
+                    }
+                ]
             }
         }
     }
