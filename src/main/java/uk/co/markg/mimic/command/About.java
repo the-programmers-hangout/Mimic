@@ -7,6 +7,7 @@ import disparse.discord.jda.DiscordResponse;
 import disparse.parser.dispatch.CooldownScope;
 import disparse.parser.reflection.CommandHandler;
 import disparse.parser.reflection.Cooldown;
+import disparse.parser.reflection.MessageStrategy;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class About {
@@ -20,7 +21,7 @@ public class About {
    * @return Embed message for the About command
    */
   @Cooldown(amount = 1, unit = ChronoUnit.MINUTES, scope = CooldownScope.USER,
-      sendCooldownMessage = false)
+      messageStrategy = MessageStrategy.REACT)
   @CommandHandler(commandName = "about", description = "Displays info about the bot")
   public static DiscordResponse execute(DiscordRequest request) {
     EmbedBuilder eb = new EmbedBuilder();

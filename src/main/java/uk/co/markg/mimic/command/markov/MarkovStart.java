@@ -10,6 +10,7 @@ import disparse.discord.jda.DiscordRequest;
 import disparse.parser.dispatch.CooldownScope;
 import disparse.parser.reflection.CommandHandler;
 import disparse.parser.reflection.Cooldown;
+import disparse.parser.reflection.MessageStrategy;
 import disparse.parser.reflection.Usage;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import uk.co.markg.mimic.database.ChannelRepository;
@@ -41,7 +42,7 @@ public class MarkovStart {
   @Usage(usage = "\"I'm really\"",
       description = "Tells mimic to start generating a sentence with \"I'm really\"")
   @Cooldown(amount = 5, unit = ChronoUnit.SECONDS, scope = CooldownScope.USER,
-      sendCooldownMessage = false)
+      messageStrategy = MessageStrategy.REACT)
   @CommandHandler(commandName = "start",
       description = "Provide the start of a sentence and let mimic finish it! Use quotations around your sentence!")
   public static void execute(DiscordRequest request, ChannelRepository channelRepo,

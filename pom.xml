@@ -17,7 +17,7 @@
     <maven.compiler.release>11</maven.compiler.release>
 
     <junit.version>5.7.0</junit.version>
-    <disparse.version>0.1.7</disparse.version>
+    <disparse.version>cce2d4f</disparse.version>
     <jda.version>4.2.0_206</jda.version>
     <log4j.version>2.13.3</log4j.version>
     <postgres.driver.version>42.2.16</postgres.driver.version>

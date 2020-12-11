@@ -8,6 +8,7 @@ import disparse.discord.jda.DiscordRequest;
 import disparse.parser.dispatch.CooldownScope;
 import disparse.parser.reflection.CommandHandler;
 import disparse.parser.reflection.Cooldown;
+import disparse.parser.reflection.MessageStrategy;
 import disparse.parser.reflection.Populate;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import uk.co.markg.mimic.database.ChannelRepository;
@@ -47,7 +48,7 @@ public class OptIn {
    * user in for their messages to be read. User must have the required opt-in role if it exists.
    */
   @Cooldown(amount = 10, unit = ChronoUnit.SECONDS, scope = CooldownScope.USER,
-      sendCooldownMessage = false)
+      messageStrategy = MessageStrategy.REACT)
   @CommandHandler(commandName = "opt-in", description = "Opt-in for your messages to be read.")
   public void optInCommand() {
     long serverid = event.getGuild().getIdLong();

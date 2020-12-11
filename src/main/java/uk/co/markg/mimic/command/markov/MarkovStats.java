@@ -15,6 +15,7 @@ import disparse.discord.jda.DiscordResponse;
 import disparse.parser.dispatch.CooldownScope;
 import disparse.parser.reflection.CommandHandler;
 import disparse.parser.reflection.Cooldown;
+import disparse.parser.reflection.MessageStrategy;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import uk.co.markg.mimic.database.MessageRepository;
@@ -43,7 +44,7 @@ public class MarkovStats {
    * @return Embed message of the user's statistics
    */
   @Cooldown(amount = 5, unit = ChronoUnit.SECONDS, scope = CooldownScope.USER,
-      sendCooldownMessage = false)
+      messageStrategy = MessageStrategy.REACT)
   @CommandHandler(commandName = "stats", description = "Display statistics of your messages")
   public static DiscordResponse execute(DiscordRequest request, UserRepository userRepo,
       MessageRepository messageRepo) {
@@ -85,7 +86,7 @@ public class MarkovStats {
    * @return Embed message of the server's statistics
    */
   @Cooldown(amount = 1, unit = ChronoUnit.MINUTES, scope = CooldownScope.CHANNEL,
-      sendCooldownMessage = false)
+      messageStrategy = MessageStrategy.REACT)
   @CommandHandler(commandName = "allstats", description = "Display statistics for all users")
   public static DiscordResponse executeAll(DiscordRequest request, UserRepository userRepo,
       MessageRepository messageRepo) {

@@ -9,6 +9,7 @@ import disparse.parser.dispatch.CooldownScope;
 import disparse.parser.reflection.CommandHandler;
 import disparse.parser.reflection.Cooldown;
 import disparse.parser.reflection.Flag;
+import disparse.parser.reflection.MessageStrategy;
 import disparse.parser.reflection.ParsedEntity;
 import disparse.parser.reflection.Populate;
 import uk.co.markg.mimic.database.ServerConfigRepository;
@@ -57,7 +58,7 @@ public class Config {
    * discord.
    */
   @Cooldown(amount = 5, unit = ChronoUnit.SECONDS, scope = CooldownScope.USER,
-      sendCooldownMessage = false)
+      messageStrategy = MessageStrategy.REACT)
   @CommandHandler(commandName = "config", description = "Setup per-server config",
       perms = AbstractPermission.BAN_MEMBERS)
   public void execute() {

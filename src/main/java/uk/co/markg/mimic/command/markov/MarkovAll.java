@@ -11,6 +11,7 @@ import disparse.discord.jda.DiscordRequest;
 import disparse.parser.dispatch.CooldownScope;
 import disparse.parser.reflection.CommandHandler;
 import disparse.parser.reflection.Cooldown;
+import disparse.parser.reflection.MessageStrategy;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import uk.co.markg.mimic.database.ChannelRepository;
 import uk.co.markg.mimic.database.UsageRepository;
@@ -40,7 +41,7 @@ public class MarkovAll {
    *                    instance
    */
   @Cooldown(amount = 5, unit = ChronoUnit.SECONDS, scope = CooldownScope.USER,
-      sendCooldownMessage = false)
+      messageStrategy = MessageStrategy.REACT)
   @CommandHandler(commandName = "all",
       description = "Generate a random number of sentences from all opted in user messages!")
   public void execute(DiscordRequest request, ChannelRepository channelRepo,

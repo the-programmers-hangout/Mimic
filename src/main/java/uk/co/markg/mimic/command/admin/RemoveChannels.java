@@ -10,6 +10,7 @@ import disparse.discord.jda.DiscordRequest;
 import disparse.parser.dispatch.CooldownScope;
 import disparse.parser.reflection.CommandHandler;
 import disparse.parser.reflection.Cooldown;
+import disparse.parser.reflection.MessageStrategy;
 import disparse.parser.reflection.Populate;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import uk.co.markg.mimic.database.ChannelRepository;
@@ -40,7 +41,7 @@ public class RemoveChannels {
    * Method held by Disparse to begin command execution. Has a cooldown of five seconds per user.
    */
   @Cooldown(amount = 5, unit = ChronoUnit.SECONDS, scope = CooldownScope.USER,
-      sendCooldownMessage = false)
+      messageStrategy = MessageStrategy.REACT)
   @CommandHandler(commandName = "channels.remove",
       description = "Remove channels from the database. All related messages are also removed.",
       perms = AbstractPermission.BAN_MEMBERS)

@@ -8,6 +8,7 @@ import disparse.discord.jda.DiscordRequest;
 import disparse.parser.dispatch.CooldownScope;
 import disparse.parser.reflection.CommandHandler;
 import disparse.parser.reflection.Cooldown;
+import disparse.parser.reflection.MessageStrategy;
 import disparse.parser.reflection.Populate;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -37,7 +38,7 @@ public class ListChannels {
    * Command execution method held by Disparse. Has a cooldown of five seconds per user.
    */
   @Cooldown(amount = 5, unit = ChronoUnit.SECONDS, scope = CooldownScope.USER,
-      sendCooldownMessage = false)
+      messageStrategy = MessageStrategy.REACT)
   @CommandHandler(commandName = "channels", description = "Lists all read-only channels registered")
   public void executeList() {
     this.execute();
@@ -47,7 +48,7 @@ public class ListChannels {
    * Command execution method held by Disparse
    */
   @Cooldown(amount = 5, unit = ChronoUnit.SECONDS, scope = CooldownScope.USER,
-      sendCooldownMessage = false)
+      messageStrategy = MessageStrategy.REACT)
   @CommandHandler(commandName = "channels.full", description = "Lists all channels registered",
       perms = AbstractPermission.BAN_MEMBERS)
   public void executeListFull() {
