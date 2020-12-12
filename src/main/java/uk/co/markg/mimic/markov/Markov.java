@@ -122,8 +122,8 @@ public class Markov {
    * @throws IOException If the file is not found
    */
   public static Markov load(File f) throws IOException {
-    logger.info("Loaded from file");
-    Input input = new Input(new FileInputStream(f.getName()));
+    logger.info("Loaded from file {}", f.getAbsolutePath());
+    Input input = new Input(new FileInputStream(f.getAbsolutePath()));
     Markov markov = kryo.readObject(input, Markov.class);
     input.close();
     return markov;

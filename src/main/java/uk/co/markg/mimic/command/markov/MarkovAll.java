@@ -55,7 +55,7 @@ public class MarkovAll {
     UsageRepository.getRepository().save(MarkovAll.class, event);
     event.getChannel().sendTyping().queue();
     long guildid = event.getGuild().getIdLong();
-    File file = new File(guildid + ".markov");
+    File file = new File("markov/servers/" + guildid + ".markov");
     var markov = file.exists() ? loadFromFile(file) : loadChain(event);
     markov.ifPresent(m -> MarkovSender.sendMessage(event, m.generateRandom()));
   }
