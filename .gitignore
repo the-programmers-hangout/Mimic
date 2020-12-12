@@ -211,3 +211,4 @@ buildNumber.properties
 *.markov
 
 logs
+markov/
