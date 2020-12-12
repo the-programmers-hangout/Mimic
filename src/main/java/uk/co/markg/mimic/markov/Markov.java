@@ -1,7 +1,6 @@
 package uk.co.markg.mimic.markov;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,11 +12,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import uk.co.markg.mimic.database.MessageRepository;
 
 public class Markov {
 
@@ -25,7 +22,7 @@ public class Markov {
   private static final WeightedCollection SENTENCE_ENDS = getSentenceEnds();
   private static final String END_WORD = "END_WORD";
   private static final List<String> VALID_END_WORD_STOPS = List.of("?", "!", ".");
-  private static final Kryo kryo = initKryo();
+  static final Kryo kryo = initKryo();
 
   private Map<String, WeightedCollection> wordMap;
   private Set<String> startWords;
@@ -36,7 +33,7 @@ public class Markov {
    * 
    * @param inputs The list of strings to be parsed
    */
-  private Markov(List<String> inputs) {
+  public Markov(List<String> inputs) {
     wordMap = new HashMap<>();
     startWords = new HashSet<>();
     endWords = new HashSet<>();
@@ -80,53 +77,6 @@ public class Markov {
     collection.add(new WeightedElement("!?", 0.0027));
     collection.add(new WeightedElement("...", 0.0965));
     return collection;
-  }
-
-  /**
-   * Creates a new {@link uk.co.markg.mimic.markov.Markov Markov} instance with the saved user
-   * messages loaded from the {@link uk.co.markg.mimic.database.MessageRepository
-   * MessageRepository}.
-   * 
-   * @param userid   The target user
-   * @param serverid The discord server the user is from
-   * @return The {@link uk.co.markg.mimic.markov.Markov Markov} instance containing the saved user
-   *         messages
-   */
-  public static Markov load(long userid, long serverid) {
-    return load(List.of(userid), serverid);
-  }
-
-
-  /**
-   * Creates a new {@link uk.co.markg.mimic.markov.Markov Markov} instance with the saved user
-   * messages loaded from the {@link uk.co.markg.mimic.database.MessageRepository
-   * MessageRepository}. Allows batch loading.
-   * 
-   * @param userids  The list of users
-   * @param serverid The discord server the users are from
-   * @return The {@link uk.co.markg.mimic.markov.Markov Markov} instance containing the saved users
-   *         messages
-   */
-  public static Markov load(List<Long> userids, long serverid) {
-    logger.info("Loaded chain for {}", userids);
-    var inputs = MessageRepository.getRepository().getByUsers(userids, serverid);
-    return new Markov(inputs);
-  }
-
-  /**
-   * Creates a new {@link uk.co.markg.mimic.markov.Markov Markov} instance loaded from the file.
-   * 
-   * @param f The file containing the saved messages
-   * @return The {@link uk.co.markg.mimic.markov.Markov Markov} instance containing the saved users
-   *         messages
-   * @throws IOException If the file is not found
-   */
-  public static Markov load(File f) throws IOException {
-    logger.info("Loaded from file {}", f.getAbsolutePath());
-    Input input = new Input(new FileInputStream(f.getAbsolutePath()));
-    Markov markov = kryo.readObject(input, Markov.class);
-    input.close();
-    return markov;
   }
 
   /**

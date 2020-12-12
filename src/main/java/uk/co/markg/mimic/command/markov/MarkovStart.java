@@ -1,12 +1,7 @@
 package uk.co.markg.mimic.command.markov;
 
-import java.io.File;
-import java.io.IOException;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Optional;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import disparse.discord.jda.DiscordRequest;
 import disparse.parser.dispatch.CooldownScope;
 import disparse.parser.reflection.CommandHandler;
@@ -17,11 +12,10 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import uk.co.markg.mimic.database.ChannelRepository;
 import uk.co.markg.mimic.database.UsageRepository;
 import uk.co.markg.mimic.database.UserRepository;
-import uk.co.markg.mimic.markov.Markov;
+import uk.co.markg.mimic.markov.MarkovLoader;
 import uk.co.markg.mimic.markov.MarkovSender;
 
 public class MarkovStart {
-  private static final Logger logger = LogManager.getLogger(MarkovStart.class);
 
   /**
    * Method held by Disparse to begin command execution. Has a cooldown of five seconds per user.
@@ -60,13 +54,10 @@ public class MarkovStart {
     UsageRepository.getRepository().save(MarkovStart.class, event);
     event.getChannel().sendTyping().queue();
 
-    File file = new File("markov/servers/" + event.getGuild().getIdLong() + ".markov");
-    var markov = file.exists() ? loadFromFile(file) : loadChain(event);
     String lastWord = getLastWord(request.getArgs());
-    markov.ifPresent(m -> {
-      String sentence = buildMessageStart(request.getArgs()) + m.generate(lastWord);
-      MarkovSender.sendMessage(event, sentence);
-    });
+    var markov = MarkovLoader.loadServer(event.getGuild().getIdLong());
+    String sentence = buildMessageStart(request.getArgs()) + markov.generate(lastWord);
+    MarkovSender.sendMessage(event, sentence);
   }
 
   /**
@@ -109,35 +100,4 @@ public class MarkovStart {
       return String.join(" ", args) + " ";
     }
   }
-
-
-  /**
-   * Loads Markov chain from file.
-   * 
-   * @param file The Markov file to be loaded
-   */
-  private Optional<Markov> loadFromFile(File file) {
-    logger.info("Loading chain from file");
-    try {
-      return Optional.of(Markov.load(file));
-    } catch (IOException e) {
-      logger.error(e.getMessage(), e);
-    }
-    return Optional.empty();
-  }
-
-  /**
-   * Loads chain from database.
-   * 
-   * @param event The {@link net.dv8tion.jda.api.events.message.MessageReceivedEvent
-   *              MessageReceivedEvent} instance
-   */
-  private Optional<Markov> loadChain(MessageReceivedEvent event) {
-    logger.info("Loading chain from database");
-    var repo = UserRepository.getRepository();
-    var serverid = event.getGuild().getIdLong();
-    return Optional.of(Markov.load(repo.getAllMarkovCandidateIds(serverid), serverid));
-  }
-
-
 }
