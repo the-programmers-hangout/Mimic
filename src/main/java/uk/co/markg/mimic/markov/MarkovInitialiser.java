@@ -2,11 +2,16 @@ package uk.co.markg.mimic.markov;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import uk.co.markg.mimic.database.MessageRepository;
 import uk.co.markg.mimic.database.ServerConfigRepository;
 
 public class MarkovInitialiser {
 
+  private static final ScheduledExecutorService scheduler =
+      Executors.newSingleThreadScheduledExecutor();
   private MessageRepository messageRepository;
   private ServerConfigRepository serverRepository;
   private static final String SERVER_ROOT = "markov/servers/";
@@ -15,6 +20,7 @@ public class MarkovInitialiser {
   public MarkovInitialiser() {
     messageRepository = MessageRepository.getRepository();
     serverRepository = ServerConfigRepository.getRepository();
+    initChainUpdater();
   }
 
   public void init() {
@@ -68,6 +74,10 @@ public class MarkovInitialiser {
         }
       }
     }
+  }
+
+  private void initChainUpdater() {
+    scheduler.scheduleAtFixedRate(() -> init(), 12, 12, TimeUnit.HOURS);
   }
 
 }
