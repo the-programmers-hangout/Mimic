@@ -41,6 +41,9 @@ public class ModifyMessage extends ListenerAdapter {
    */
   @Override
   public void onGuildMessageUpdate(GuildMessageUpdateEvent event) {
+    if (event.getAuthor().isBot()) {
+      return;
+    }
     if (channelRepo.hasReadPermission(event.getChannel().getIdLong())
         && MessageReader.messageIsValid(event.getMessage())) {
       messageRepo.edit(event.getMessageIdLong(), event.getMessage());

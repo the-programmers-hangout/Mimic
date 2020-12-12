@@ -1,7 +1,9 @@
 package uk.co.markg.mimic.database;
 
+import static org.jooq.impl.DSL.count;
 import static uk.co.markg.mimic.db.tables.Messages.MESSAGES;
 import java.util.List;
+import java.util.stream.Stream;
 import org.jooq.DSLContext;
 import org.jooq.Field;
 import org.jooq.Table;
@@ -17,6 +19,7 @@ import uk.co.markg.mimic.db.tables.records.MessagesRecord;
  */
 public class MessageRepository {
 
+  private static final int HIGH_CAPACITY_LIMIT = 1_000;
   private DSLContext dsl;
 
   /**
@@ -67,8 +70,29 @@ public class MessageRepository {
    */
   public List<String> getByUsers(List<Long> userids, long serverid) {
     return dsl.select(MESSAGES.CONTENT).from(MESSAGES).where(MESSAGES.USERID.in(userids))
-        .and(MESSAGES.SERVERID.in(serverid)).orderBy(MESSAGES.MESSAGEID.desc()).limit(400_000)
-        .fetchInto(String.class);
+        .and(MESSAGES.SERVERID.in(serverid)).orderBy(MESSAGES.MESSAGEID.desc())
+        .limit(HIGH_CAPACITY_LIMIT).fetchInto(String.class);
+  }
+
+  public Stream<String> getByServerid(long server) {
+    return dsl.select(MESSAGES.CONTENT).from(MESSAGES).where(MESSAGES.SERVERID.eq(server))
+        .orderBy(MESSAGES.MESSAGEID.desc()).fetchStreamInto(String.class);
+  }
+
+  public Stream<String> getByUserid(long user, long server) {
+    return dsl.select(MESSAGES.CONTENT).from(MESSAGES).where(MESSAGES.USERID.eq(user))
+        .and(MESSAGES.SERVERID.eq(server)).orderBy(MESSAGES.MESSAGEID.desc())
+        .fetchStreamInto(String.class);
+  }
+
+  public List<Long> getHighCapacityServers() {
+    return dsl.select(MESSAGES.SERVERID).from(MESSAGES).groupBy(MESSAGES.SERVERID)
+        .having(count().gt(HIGH_CAPACITY_LIMIT)).fetchInto(Long.class);
+  }
+
+  public List<Long> getHighCapacityUsers(long serverid) {
+    return dsl.select(MESSAGES.USERID).from(MESSAGES).where(MESSAGES.SERVERID.eq(serverid))
+        .groupBy(MESSAGES.USERID).having(count().gt(HIGH_CAPACITY_LIMIT)).fetchInto(Long.class);
   }
 
   public int getCount(long serverid) {
@@ -116,6 +140,7 @@ public class MessageRepository {
   }
 
   public int edit(long messageid, Message newMessage) {
+    System.out.println("Updating message");
     return dsl.update(MESSAGES).set(MESSAGES.CONTENT, newMessage.getContentRaw())
         .where(MESSAGES.MESSAGEID.eq(messageid)).execute();
   }

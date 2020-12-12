@@ -4,6 +4,7 @@ import org.jooq.DSLContext;
 import disparse.parser.reflection.Injectable;
 import uk.co.markg.mimic.db.tables.pojos.ServerConfig;
 import static uk.co.markg.mimic.db.tables.ServerConfig.SERVER_CONFIG;
+import java.util.List;
 
 /**
  * A {@link org.jooq.DSLContext DSLContext} implementation to access the
@@ -28,6 +29,10 @@ public class ServerConfigRepository {
     dsl = JooqConnection.getJooqContext();
   }
 
+  public List<Long> getAllServerIds() {
+    return dsl.select(SERVER_CONFIG.SERVERID).from(SERVER_CONFIG).fetchInto(Long.class);
+  }
+  
   /**
    * Gets the server config from the database.
    * 

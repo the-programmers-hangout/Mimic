@@ -18,6 +18,7 @@ import uk.co.markg.mimic.listener.GuildListener;
 import uk.co.markg.mimic.listener.MemberLeave;
 import uk.co.markg.mimic.listener.MessageReader;
 import uk.co.markg.mimic.listener.ModifyMessage;
+import uk.co.markg.mimic.markov.MarkovInitialiser;
 
 /**
  * Hello world!
@@ -31,6 +32,7 @@ public class App {
     if (args.length == 1 && "--generate".equals(args[0])) {
       JooqConnection.executeGeneration();
     }
+    new MarkovInitialiser().init();
     launchBot();
   }
 

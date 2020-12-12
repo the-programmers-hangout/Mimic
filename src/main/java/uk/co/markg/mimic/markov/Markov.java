@@ -59,7 +59,10 @@ public class Markov {
     return kryo;
   }
 
-  private Markov() {
+  public Markov() {
+    wordMap = new HashMap<>();
+    startWords = new HashSet<>();
+    endWords = new HashSet<>();
   }
 
   /**
@@ -132,8 +135,10 @@ public class Markov {
    * @param file The file
    * @throws IOException
    */
-  public void save(File file) throws IOException {
-    Output output = new Output(new FileOutputStream(file.getName()));
+  public void save(String file) throws IOException {
+    var f = new File(file + ".markov");
+    logger.info("Saving file {}", f.getAbsolutePath());
+    Output output = new Output(new FileOutputStream(new File(file + ".markov")));
     kryo.writeObject(output, this);
     output.close();
   }
@@ -230,7 +235,7 @@ public class Markov {
    * 
    * @param input The sentence to parse
    */
-  private void parseInput(String input) {
+  public void parseInput(String input) {
     String[] tokens = input.split("\\s+\\v?");
     if (tokens.length < 3) {
       throw new IllegalArgumentException(

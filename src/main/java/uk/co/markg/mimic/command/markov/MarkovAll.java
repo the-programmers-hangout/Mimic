@@ -3,8 +3,7 @@ package uk.co.markg.mimic.command.markov;
 import java.io.File;
 import java.io.IOException;
 import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import disparse.discord.jda.DiscordRequest;
@@ -21,8 +20,6 @@ import uk.co.markg.mimic.markov.MarkovSender;
 
 public class MarkovAll {
   private static final Logger logger = LogManager.getLogger(MarkovAll.class);
-  private static final int TWO_HOURS_MILLIS = 7_200_000;
-  private static Map<Long, Long> cacheTimes = new HashMap<>();
 
   /**
    * Method held by Disparse to begin command execution. Has a cooldown of five seconds per user.
@@ -59,79 +56,37 @@ public class MarkovAll {
     event.getChannel().sendTyping().queue();
     long guildid = event.getGuild().getIdLong();
     File file = new File(guildid + ".markov");
-    if (file.exists() && !cacheExpired(guildid)) {
-      loadFromFileAndSend(event, file);
-    } else {
-      loadChainAndSave(event, file);
-    }
+    var markov = file.exists() ? loadFromFile(file) : loadChain(event);
+    markov.ifPresent(m -> MarkovSender.sendMessage(event, m.generateRandom()));
   }
 
   /**
-   * Loads Markov chain from file and sends message.
+   * Loads Markov chain from file.
    * 
-   * @param event The {@link net.dv8tion.jda.api.events.message.MessageReceivedEvent
-   *              MessageReceivedEvent} instance
-   * @param file  The Markov file to be loaded
+   * @param file The Markov file to be loaded
    */
-  private void loadFromFileAndSend(MessageReceivedEvent event, File file) {
+  private Optional<Markov> loadFromFile(File file) {
     logger.info("Loading chain from file");
     try {
-      Markov markov = Markov.load(file);
-      MarkovSender.sendMessage(event, markov.generateRandom());
+      return Optional.of(Markov.load(file));
     } catch (IOException e) {
       logger.error(e.getMessage(), e);
     }
+    return Optional.empty();
   }
 
   /**
-   * Loads chain from database and sends message. Saves chain in the Markov file.
+   * Loads chain from database.
    * 
    * @param event The {@link net.dv8tion.jda.api.events.message.MessageReceivedEvent
    *              MessageReceivedEvent} instance
-   * @param file  The Markov file to be loaded
    */
-  private void loadChainAndSave(MessageReceivedEvent event, File file) {
+  private Optional<Markov> loadChain(MessageReceivedEvent event) {
     logger.info("Loading chain from database");
-    Markov markov = updateMarkovChain(event.getGuild().getIdLong());
-    MarkovSender.sendMessage(event, markov.generateRandom());
-    try {
-      markov.save(file);
-    } catch (IOException e) {
-      logger.error(e.getMessage(), e);
-    }
-  }
-
-  /**
-   * Updates the cache for the server and gets the Markov chain.
-   * 
-   * @param serverid The target server
-   * @return The loaded Markov chain for the server
-   */
-  private Markov updateMarkovChain(long serverid) {
-    logger.info("Updated cache for {}", serverid);
-    cacheTimes.put(serverid, System.currentTimeMillis());
-    return getMarkovChain(serverid);
-  }
-
-  /**
-   * Checks whether the cache time for a specific server is expired.
-   * 
-   * @param serverid The target server
-   * @return True if cache is expired
-   */
-  private boolean cacheExpired(long serverid) {
-    long cacheTime = cacheTimes.getOrDefault(serverid, 0L);
-    return System.currentTimeMillis() - cacheTime > TWO_HOURS_MILLIS;
-  }
-
-  /**
-   * Gets the Markov chain generated from all candidate users in the server.
-   * 
-   * @param serverid The target server
-   * @return The generated Markov chain
-   */
-  public Markov getMarkovChain(long serverid) {
     var repo = UserRepository.getRepository();
-    return Markov.load(repo.getAllMarkovCandidateIds(serverid), serverid);
+    var serverid = event.getGuild().getIdLong();
+    return Optional.of(Markov.load(repo.getAllMarkovCandidateIds(serverid), serverid));
   }
+
+
 }
