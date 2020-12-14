@@ -24,7 +24,6 @@ public interface Markov {
    * @return The collection of sentence ends
    */
   private static WeightedCollection getSentenceEnds() {
-    System.out.println("Markov" + FILE_END);
     var collection = new WeightedCollection();
     collection.add(new WeightedElement(".", 0.4369));
     collection.add(new WeightedElement("!", 0.1660));
@@ -64,7 +63,7 @@ public interface Markov {
   public void parseInput(String input);
 
   public void save(String file) throws IOException;
-  
+
   public String getFileEnd();
 
 }

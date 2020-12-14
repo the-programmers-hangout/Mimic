@@ -140,7 +140,6 @@ public class MessageRepository {
   }
 
   public int edit(long messageid, Message newMessage) {
-    System.out.println("Updating message");
     return dsl.update(MESSAGES).set(MESSAGES.CONTENT, newMessage.getContentRaw())
         .where(MESSAGES.MESSAGEID.eq(messageid)).execute();
   }
