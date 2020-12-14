@@ -211,4 +211,5 @@ buildNumber.properties
 *.markov
 
 logs
-markov/
+markov/users/
+markov/servers/

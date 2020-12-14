@@ -19,7 +19,7 @@ import uk.co.markg.mimic.db.tables.records.MessagesRecord;
  */
 public class MessageRepository {
 
-  private static final int HIGH_CAPACITY_LIMIT = 100_000;
+  private static final int HIGH_CAPACITY_LIMIT = 50_000;
   private DSLContext dsl;
 
   /**
