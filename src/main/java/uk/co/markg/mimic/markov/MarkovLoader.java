@@ -13,30 +13,48 @@ public class MarkovLoader {
 
   private static final Logger logger = LogManager.getLogger(MarkovLoader.class);
 
+  private Class<? extends Markov> clazz;
+  private final String fileEnd;
+
+  public static MarkovLoader of(Class<? extends Markov> clazz) {
+    return new MarkovLoader(clazz);
+  }
+
+  private MarkovLoader(Class<? extends Markov> clazz) {
+    this.clazz = clazz;
+    String fileSuffix = "";
+    try {
+      fileSuffix = clazz.getDeclaredConstructor().newInstance().getFileEnd();
+    } catch (ReflectiveOperationException | IllegalArgumentException | SecurityException e) {
+      e.printStackTrace();
+    }
+    this.fileEnd = fileSuffix;
+  }
+
   /**
-   * Creates a new {@link uk.co.markg.mimic.markov.Markov Markov} instance loaded from the file.
+   * Creates a new {@link uk.co.markg.mimic.markov.Bigram Markov} instance loaded from the file.
    * 
    * @param f The file containing the saved messages
-   * @return The {@link uk.co.markg.mimic.markov.Markov Markov} instance containing the saved users
+   * @return The {@link uk.co.markg.mimic.markov.Bigram Markov} instance containing the saved users
    *         messages
    * @throws IOException If the file is not found
    */
-  public static Markov from(File f) throws IOException {
+  public Markov from(File f) throws IOException {
     logger.info("Loaded from file {}", f.getAbsolutePath());
     Input input = new Input(new FileInputStream(f.getAbsolutePath()));
-    Markov markov = Markov.kryo.readObject(input, Markov.class);
+    Markov markov = Markov.kryo.readObject(input, clazz);
     input.close();
     return markov;
   }
 
-  public static Markov loadServer(long serverid) {
-    File file = new File("markov/servers/" + serverid + ".markov");
+  public Markov loadServer(long serverid) {
+    File file = new File("markov/servers/" + serverid + fileEnd);
     var markov = file.exists() ? loadFromFile(file) : loadChain(serverid);
     return markov.orElseThrow(RuntimeException::new);
   }
 
-  public static Markov loadUser(long userid, long serverid) {
-    File file = new File("markov/users/" + serverid + "/" + userid + ".markov");
+  public Markov loadUser(long userid, long serverid) {
+    File file = new File("markov/users/" + serverid + "/" + userid + fileEnd);
     var markov = file.exists() ? loadFromFile(file) : loadUserChain(userid, serverid);
     return markov.orElseThrow(RuntimeException::new);
   }
@@ -46,10 +64,10 @@ public class MarkovLoader {
    * 
    * @param file The Markov file to be loaded
    */
-  private static Optional<Markov> loadFromFile(File file) {
+  private Optional<Markov> loadFromFile(File file) {
     logger.info("Loading chain from file {}", file.getAbsolutePath());
     try {
-      return Optional.of(MarkovLoader.from(file));
+      return Optional.of(from(file));
     } catch (IOException e) {
       logger.error(e.getMessage(), e);
     }
@@ -62,14 +80,19 @@ public class MarkovLoader {
    * @param event The {@link net.dv8tion.jda.api.events.message.MessageReceivedEvent
    *              MessageReceivedEvent} instance
    */
-  private static Optional<Markov> loadChain(long serverid) {
+  private Optional<Markov> loadChain(long serverid) {
     logger.info("Loading chain from database");
     var repo = MessageRepository.getRepository();
-    Markov chain = new Markov();
-    try (var messages = repo.getByServerid(serverid)) {
-      messages.forEach(x -> chain.parseInput(x));
+    try {
+      Markov chain = clazz.getDeclaredConstructor().newInstance();
+      try (var messages = repo.getByServerid(serverid)) {
+        messages.forEach(x -> chain.parseInput(x));
+      }
+      return Optional.of(chain);
+    } catch (ReflectiveOperationException | IllegalArgumentException | SecurityException e) {
+      e.printStackTrace();
     }
-    return Optional.of(chain);
+    return Optional.empty();
   }
 
   /**
@@ -78,14 +101,19 @@ public class MarkovLoader {
    * @param event The {@link net.dv8tion.jda.api.events.message.MessageReceivedEvent
    *              MessageReceivedEvent} instance
    */
-  private static Optional<Markov> loadUserChain(long userid, long serverid) {
+  private Optional<Markov> loadUserChain(long userid, long serverid) {
     logger.info("Loading chain from database");
     var repo = MessageRepository.getRepository();
-    Markov chain = new Markov();
-    try (var messages = repo.getByUserid(userid, serverid)) {
-      messages.forEach(x -> chain.parseInput(x));
+    try {
+      Markov chain = clazz.getDeclaredConstructor().newInstance();
+      try (var messages = repo.getByUserid(userid, serverid)) {
+        messages.forEach(x -> chain.parseInput(x));
+      }
+      return Optional.of(chain);
+    } catch (ReflectiveOperationException | IllegalArgumentException | SecurityException e) {
+      e.printStackTrace();
     }
-    return Optional.of(chain);
+    return Optional.empty();
   }
 
 }

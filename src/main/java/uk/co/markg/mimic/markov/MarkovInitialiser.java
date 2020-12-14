@@ -44,7 +44,7 @@ public class MarkovInitialiser {
   private void initHighCapacityServers() {
     var highCapactityServers = messageRepository.getHighCapacityServers();
     for (Long server : highCapactityServers) {
-      Markov markov = new Markov();
+      Markov markov = new Bigram();
       try (var messages = messageRepository.getByServerid(server)) {
         messages.forEach(x -> markov.parseInput(x));
       }
@@ -61,7 +61,7 @@ public class MarkovInitialiser {
     for (Long server : servers) {
       var users = messageRepository.getHighCapacityUsers(server);
       for (Long user : users) {
-        Markov markov = new Markov();
+        Markov markov = new Bigram();
         try (var messages = messageRepository.getByUserid(user, server)) {
           messages.forEach(x -> markov.parseInput(x));
         }

@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import uk.co.markg.mimic.database.ChannelRepository;
 import uk.co.markg.mimic.database.UsageRepository;
 import uk.co.markg.mimic.database.UserRepository;
+import uk.co.markg.mimic.markov.Bigram;
 import uk.co.markg.mimic.markov.MarkovLoader;
 import uk.co.markg.mimic.markov.MarkovSender;
 
@@ -54,7 +55,8 @@ public class MarkovRand {
     int noOfSentences = ThreadLocalRandom.current().nextInt(5) + 1;
     for (int i = 0; i < noOfSentences; i++) {
       long targetUser = users.get(ThreadLocalRandom.current().nextInt(users.size()));
-      sb.append(MarkovLoader.loadUser(targetUser, event.getGuild().getIdLong()).generate()).append(" ");
+      sb.append(MarkovLoader.of(Bigram.class).loadUser(targetUser, event.getGuild().getIdLong())
+          .generate()).append(" ");
     }
     MarkovSender.sendMessage(event, sb.toString());
   }

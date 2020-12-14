@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import uk.co.markg.mimic.database.ChannelRepository;
 import uk.co.markg.mimic.database.UsageRepository;
 import uk.co.markg.mimic.database.UserRepository;
+import uk.co.markg.mimic.markov.Bigram;
 import uk.co.markg.mimic.markov.MarkovLoader;
 import uk.co.markg.mimic.markov.MarkovSender;
 
@@ -52,7 +53,7 @@ public class MarkovSelf {
     }
     UsageRepository.getRepository().save(MarkovSelf.class, event);
     event.getChannel().sendTyping().queue();
-    var markov = MarkovLoader.loadUser(userid, event.getGuild().getIdLong());
+    var markov = MarkovLoader.of(Bigram.class).loadUser(userid, event.getGuild().getIdLong());
     MarkovSender.sendMessage(event, markov.generateRandom());
   }
 }
