@@ -9,6 +9,16 @@ Generate a random number of sentences from all opted in user messages!
 * `-h`, `--help` : show usage of a particular command
 
 #### Usage
+## experimental
+
+Trigram experiment
+* **Cooldown:** 1 seconds per user
+* **Required Permission:** N/A
+* **Required Role:** N/A
+#### Arguments
+* `-h`, `--help` : show usage of a particular command
+
+#### Usage
 ## channels.edit
 
 Edits added channel permissions. Collects user message history if read permission granted and deletes it if revoked.

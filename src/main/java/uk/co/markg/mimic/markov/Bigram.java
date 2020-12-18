@@ -18,7 +18,6 @@ import org.apache.logging.log4j.Logger;
 public class Bigram implements Markov {
 
   private static final Logger logger = LogManager.getLogger(Bigram.class);
-  private static final String END_WORD = "END_WORD";
   private static final String FILE_END = ".markov";
   private Map<String, WeightedCollection<String>> wordMap;
   private Set<String> startWords;
@@ -139,20 +138,7 @@ public class Bigram implements Markov {
     }
   }
 
-  /**
-   * Checks whether a word can be matched as an end word. i.e. the word ends a sentence.
-   * 
-   * @param word The word to check
-   * @return True if the word can be matched as an end word
-   */
-  private boolean isEndWord(String word) {
-    for (String stop : VALID_END_WORD_STOPS) {
-      if (word.endsWith(stop)) {
-        return true;
-      }
-    }
-    return false;
-  }
+  
 
   /**
    * Inserts a new word and follow word into the wordMap

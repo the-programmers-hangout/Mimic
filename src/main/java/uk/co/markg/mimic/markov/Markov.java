@@ -11,6 +11,7 @@ public interface Markov {
   static final List<String> VALID_END_WORD_STOPS = List.of("?", "!", ".");
   static final Kryo kryo = initKryo();
   static String FILE_END = ".m";
+  static String END_WORD = "END_WORD";
 
   private static Kryo initKryo() {
     Kryo kryo = new Kryo();
@@ -56,6 +57,21 @@ public interface Markov {
    */
   default public String generate() {
     return generate("");
+  }
+  
+  /**
+   * Checks whether a word can be matched as an end word. i.e. the word ends a sentence.
+   * 
+   * @param word The word to check
+   * @return True if the word can be matched as an end word
+   */
+  default boolean isEndWord(String word) {
+    for (String stop : VALID_END_WORD_STOPS) {
+      if (word.endsWith(stop)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public String generate(String start);

@@ -1,6 +1,7 @@
 package uk.co.markg.mimic.markov;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
@@ -83,6 +84,10 @@ public class WeightedCollection<T> {
       }
     }
     return Optional.empty();
+  }
+  
+  public List<WeightedElement<T>> getAll() {
+    return Collections.unmodifiableList(collection);
   }
 
   /**
