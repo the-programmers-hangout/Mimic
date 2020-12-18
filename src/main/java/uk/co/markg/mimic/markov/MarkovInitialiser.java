@@ -44,12 +44,15 @@ public class MarkovInitialiser {
   private void initHighCapacityServers() {
     var highCapactityServers = messageRepository.getHighCapacityServers();
     for (Long server : highCapactityServers) {
-      Markov markov = new Bigram();
+      Markov bigram = new Bigram();
+      Markov trigram = new Trigram();
       try (var messages = messageRepository.getByServerid(server)) {
-        messages.forEach(x -> markov.parseInput(x));
+        messages.forEach(x -> bigram.parseInput(x));
+        messages.forEach(x -> trigram.parseInput(x));
       }
       try {
-        markov.save(SERVER_ROOT + server);
+        bigram.save(SERVER_ROOT + server);
+        trigram.save(SERVER_ROOT + server);
       } catch (IOException e) {
         e.printStackTrace();
       }
