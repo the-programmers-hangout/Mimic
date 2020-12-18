@@ -7,9 +7,12 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import uk.co.markg.mimic.database.MessageRepository;
 import uk.co.markg.mimic.database.ServerConfigRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class MarkovInitialiser {
 
+  private static final Logger logger = LogManager.getLogger(MarkovInitialiser.class);
   private static final ScheduledExecutorService scheduler =
       Executors.newSingleThreadScheduledExecutor();
   private MessageRepository messageRepository;
@@ -45,13 +48,23 @@ public class MarkovInitialiser {
     var highCapactityServers = messageRepository.getHighCapacityServers();
     for (Long server : highCapactityServers) {
       Markov bigram = new Bigram();
-      Markov trigram = new Trigram();
+      logger.info("Saving bigram for server: {}", server);
       try (var messages = messageRepository.getByServerid(server)) {
         messages.forEach(x -> bigram.parseInput(x));
-        messages.forEach(x -> trigram.parseInput(x));
       }
       try {
         bigram.save(SERVER_ROOT + server);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+    for (Long server : highCapactityServers) {
+      Markov trigram = new Trigram();
+      logger.info("Saving trigam for server: {}", server);
+      try (var messages = messageRepository.getByServerid(server)) {
+        messages.forEach(x -> trigram.parseInput(x));
+      }
+      try {
         trigram.save(SERVER_ROOT + server);
       } catch (IOException e) {
         e.printStackTrace();
@@ -64,6 +77,7 @@ public class MarkovInitialiser {
     for (Long server : servers) {
       var users = messageRepository.getHighCapacityUsers(server);
       for (Long user : users) {
+        logger.info("Saving bigram for user {} in server {}.", user, server);
         Markov markov = new Bigram();
         try (var messages = messageRepository.getByUserid(user, server)) {
           messages.forEach(x -> markov.parseInput(x));

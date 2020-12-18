@@ -2,8 +2,10 @@ package uk.co.markg.mimic.markov;
 
 public class Pair {
 
-  private final String first;
-  private final String second;
+  private String first;
+  private String second;
+  
+  private Pair(){}
 
   public Pair(String first, String second) {
     this.first = first;
