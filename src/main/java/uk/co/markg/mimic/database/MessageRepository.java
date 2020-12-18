@@ -70,8 +70,7 @@ public class MessageRepository {
    */
   public List<String> getByUsers(List<Long> userids, long serverid) {
     return dsl.select(MESSAGES.CONTENT).from(MESSAGES).where(MESSAGES.USERID.in(userids))
-        .and(MESSAGES.SERVERID.in(serverid)).orderBy(MESSAGES.MESSAGEID.desc())
-        .limit(HIGH_CAPACITY_LIMIT).fetchInto(String.class);
+        .and(MESSAGES.SERVERID.in(serverid)).fetchInto(String.class);
   }
 
   public Stream<String> getByServerid(long server) {
