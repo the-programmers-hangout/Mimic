@@ -20,7 +20,7 @@ public class Bigram implements Markov {
   private static final Logger logger = LogManager.getLogger(Bigram.class);
   private static final String END_WORD = "END_WORD";
   private static final String FILE_END = ".markov";
-  private Map<String, WeightedCollection> wordMap;
+  private Map<String, WeightedCollection<String>> wordMap;
   private Set<String> startWords;
   private Set<String> endWords;
 
@@ -161,8 +161,8 @@ public class Bigram implements Markov {
    * @param followWord The follow word
    */
   private void insertWordFrequency(String word, String followWord) {
-    var wc = new WeightedCollection();
-    wc.add(new WeightedElement(followWord, 1));
+    var wc = new WeightedCollection<String>();
+    wc.add(new WeightedElement<String>(followWord, 1));
     wordMap.put(word, wc);
   }
 
@@ -176,7 +176,7 @@ public class Bigram implements Markov {
     var followFrequency = wordMap.get(key);
     followFrequency.get(followWord).ifPresentOrElse(
         fw -> followFrequency.update(fw, fw.getWeight() + 1),
-        () -> followFrequency.add(new WeightedElement(followWord, 1)));
+        () -> followFrequency.add(new WeightedElement<String>(followWord, 1)));
   }
 
   @Override

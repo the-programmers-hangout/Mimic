@@ -1,8 +1,8 @@
 package uk.co.markg.mimic.markov;
 
-public class WeightedElement {
+public class WeightedElement<T> {
 
-  private final String element;
+  private final T element;
 
   private double weight;
 
@@ -10,10 +10,10 @@ public class WeightedElement {
    * Required for serialisation.
    */
   private WeightedElement() {
-    element = "";
+    element = null;
   }
 
-  public WeightedElement(String element, double weight) {
+  public WeightedElement(T element, double weight) {
     this.element = element;
     this.weight = weight;
   }
@@ -23,7 +23,7 @@ public class WeightedElement {
    * 
    * @return The element name
    */
-  public String getElement() {
+  public T getElement() {
     return element;
   }
 
@@ -86,6 +86,8 @@ public class WeightedElement {
       return false;
     return true;
   }
+
+  
 
 
 }

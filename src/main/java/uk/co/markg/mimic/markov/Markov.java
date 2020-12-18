@@ -7,7 +7,7 @@ import com.esotericsoftware.kryo.Kryo;
 
 public interface Markov {
 
-  static final WeightedCollection SENTENCE_ENDS = getSentenceEnds();
+  static final WeightedCollection<String> SENTENCE_ENDS = getSentenceEnds();
   static final List<String> VALID_END_WORD_STOPS = List.of("?", "!", ".");
   static final Kryo kryo = initKryo();
   static String FILE_END = ".m";
@@ -23,15 +23,15 @@ public interface Markov {
    * 
    * @return The collection of sentence ends
    */
-  private static WeightedCollection getSentenceEnds() {
-    var collection = new WeightedCollection();
-    collection.add(new WeightedElement(".", 0.4369));
-    collection.add(new WeightedElement("!", 0.1660));
-    collection.add(new WeightedElement("?", 0.2733));
-    collection.add(new WeightedElement("!!", 0.0132));
-    collection.add(new WeightedElement("??", 0.0114));
-    collection.add(new WeightedElement("!?", 0.0027));
-    collection.add(new WeightedElement("...", 0.0965));
+  private static WeightedCollection<String> getSentenceEnds() {
+    var collection = new WeightedCollection<String>();
+    collection.add(new WeightedElement<String>(".", 0.4369));
+    collection.add(new WeightedElement<String>("!", 0.1660));
+    collection.add(new WeightedElement<String>("?", 0.2733));
+    collection.add(new WeightedElement<String>("!!", 0.0132));
+    collection.add(new WeightedElement<String>("??", 0.0114));
+    collection.add(new WeightedElement<String>("!?", 0.0027));
+    collection.add(new WeightedElement<String>("...", 0.0965));
     return collection;
   }
 

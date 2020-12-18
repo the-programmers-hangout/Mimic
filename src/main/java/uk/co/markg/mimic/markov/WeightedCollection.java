@@ -5,16 +5,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class WeightedCollection {
+public class WeightedCollection<T> {
 
-  private List<WeightedElement> collection;
+  private List<WeightedElement<T>> collection;
   private double weightedSum;
 
   public WeightedCollection() {
     collection = new ArrayList<>();
   }
 
-  public WeightedCollection(List<WeightedElement> collection, double weightedSum) {
+  public WeightedCollection(List<WeightedElement<T>> collection, double weightedSum) {
     this.collection = collection;
     this.weightedSum = weightedSum;
   }
@@ -25,7 +25,7 @@ public class WeightedCollection {
    * 
    * @param weightedElement The weightedElement to be added
    */
-  public void add(WeightedElement weightedElement) {
+  public void add(WeightedElement<T> weightedElement) {
     collection.add(weightedElement);
     weightedSum += weightedElement.getWeight();
   }
@@ -37,7 +37,7 @@ public class WeightedCollection {
    * @param element   The name of the weightedElement you want to update
    * @param newWeight The new weight of the element
    */
-  public void update(String element, double newWeight) {
+  public void update(T element, double newWeight) {
     var item = get(element);
     item.ifPresentOrElse(i -> update(i, newWeight),
         () -> new IllegalArgumentException("No such element"));
@@ -51,7 +51,7 @@ public class WeightedCollection {
    *                  you want to update
    * @param newWeight The new weight of the element
    */
-  public void update(WeightedElement element, double newWeight) {
+  public void update(WeightedElement<T> element, double newWeight) {
     updateElement(element, newWeight);
   }
 
@@ -63,7 +63,7 @@ public class WeightedCollection {
    *                  you want to update
    * @param newWeight The new weight of the element
    */
-  private void updateElement(WeightedElement element, double newWeight) {
+  private void updateElement(WeightedElement<T> element, double newWeight) {
     double diff = newWeight - element.getWeight();
     element.setWeight(newWeight);
     weightedSum += diff;
@@ -76,8 +76,8 @@ public class WeightedCollection {
    * @param element The name of the WeightedElement
    * @return The weightedElement instance if it exists, null otherwise
    */
-  public Optional<WeightedElement> get(String element) {
-    for (WeightedElement weightedElement : collection) {
+  public Optional<WeightedElement<T>> get(T element) {
+    for (WeightedElement<T> weightedElement : collection) {
       if (element.equals(weightedElement.getElement())) {
         return Optional.of(weightedElement);
       }
@@ -91,9 +91,9 @@ public class WeightedCollection {
    * @return A random {@link uk.co.markg.mimic.markov.WeightedElement WeightedElement} or null if
    *         the collection is empty.
    */
-  public Optional<WeightedElement> getRandom() {
+  public Optional<WeightedElement<T>> getRandom() {
     var rand = ThreadLocalRandom.current().nextDouble(weightedSum);
-    for (WeightedElement weightedElement : collection) {
+    for (WeightedElement<T> weightedElement : collection) {
       rand -= weightedElement.getWeight();
       if (rand <= 0) {
         return Optional.of(weightedElement);
