@@ -25,13 +25,13 @@ public interface Markov {
    */
   private static WeightedCollection<String> getSentenceEnds() {
     var collection = new WeightedCollection<String>();
-    collection.add(new WeightedElement<String>(".", 0.4369));
-    collection.add(new WeightedElement<String>("!", 0.1660));
-    collection.add(new WeightedElement<String>("?", 0.2733));
-    collection.add(new WeightedElement<String>("!!", 0.0132));
-    collection.add(new WeightedElement<String>("??", 0.0114));
-    collection.add(new WeightedElement<String>("!?", 0.0027));
-    collection.add(new WeightedElement<String>("...", 0.0965));
+    collection.add(new WeightedElement<String>(".", 4369));
+    collection.add(new WeightedElement<String>("!", 1660));
+    collection.add(new WeightedElement<String>("?", 2733));
+    collection.add(new WeightedElement<String>("!!", 132));
+    collection.add(new WeightedElement<String>("??", 114));
+    collection.add(new WeightedElement<String>("!?", 27));
+    collection.add(new WeightedElement<String>("...", 965));
     return collection;
   }
 

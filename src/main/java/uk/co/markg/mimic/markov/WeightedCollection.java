@@ -8,13 +8,13 @@ import java.util.concurrent.ThreadLocalRandom;
 public class WeightedCollection<T> {
 
   private List<WeightedElement<T>> collection;
-  private double weightedSum;
+  private int weightedSum;
 
   public WeightedCollection() {
     collection = new ArrayList<>();
   }
 
-  public WeightedCollection(List<WeightedElement<T>> collection, double weightedSum) {
+  public WeightedCollection(List<WeightedElement<T>> collection, int weightedSum) {
     this.collection = collection;
     this.weightedSum = weightedSum;
   }
@@ -37,7 +37,7 @@ public class WeightedCollection<T> {
    * @param element   The name of the weightedElement you want to update
    * @param newWeight The new weight of the element
    */
-  public void update(T element, double newWeight) {
+  public void update(T element, int newWeight) {
     var item = get(element);
     item.ifPresentOrElse(i -> update(i, newWeight),
         () -> new IllegalArgumentException("No such element"));
@@ -51,7 +51,7 @@ public class WeightedCollection<T> {
    *                  you want to update
    * @param newWeight The new weight of the element
    */
-  public void update(WeightedElement<T> element, double newWeight) {
+  public void update(WeightedElement<T> element, int newWeight) {
     updateElement(element, newWeight);
   }
 
@@ -63,7 +63,7 @@ public class WeightedCollection<T> {
    *                  you want to update
    * @param newWeight The new weight of the element
    */
-  private void updateElement(WeightedElement<T> element, double newWeight) {
+  private void updateElement(WeightedElement<T> element, int newWeight) {
     double diff = newWeight - element.getWeight();
     element.setWeight(newWeight);
     weightedSum += diff;

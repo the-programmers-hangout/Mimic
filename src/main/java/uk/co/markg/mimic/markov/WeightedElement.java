@@ -4,7 +4,7 @@ public class WeightedElement<T> {
 
   private final T element;
 
-  private double weight;
+  private int weight;
 
   /**
    * Required for serialisation.
@@ -13,7 +13,7 @@ public class WeightedElement<T> {
     element = null;
   }
 
-  public WeightedElement(T element, double weight) {
+  public WeightedElement(T element, int weight) {
     this.element = element;
     this.weight = weight;
   }
@@ -32,7 +32,7 @@ public class WeightedElement<T> {
    * 
    * @return The element's weight
    */
-  public double getWeight() {
+  public int getWeight() {
     return weight;
   }
 
@@ -41,7 +41,7 @@ public class WeightedElement<T> {
    * 
    * @param weight The weight to set
    */
-  public void setWeight(double weight) {
+  public void setWeight(int weight) {
     this.weight = weight;
   }
 
@@ -56,9 +56,7 @@ public class WeightedElement<T> {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((element == null) ? 0 : element.hashCode());
-    long temp;
-    temp = Double.doubleToLongBits(weight);
-    result = prime * result + (int) (temp ^ (temp >>> 32));
+    result = prime * result + weight;
     return result;
   }
 
@@ -82,12 +80,8 @@ public class WeightedElement<T> {
         return false;
     } else if (!element.equals(other.element))
       return false;
-    if (Double.doubleToLongBits(weight) != Double.doubleToLongBits(other.weight))
+    if (weight != other.weight)
       return false;
     return true;
   }
-
-  
-
-
 }
