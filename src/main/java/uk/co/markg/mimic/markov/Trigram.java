@@ -37,7 +37,7 @@ public class Trigram implements Markov {
     sentence.add(word);
     boolean endWordHit = false;
     var currentPair = wordMap.get(word);
-    var pair = currentPair.getRandom().map(WeightedElement<Pair>::getElement).orElse(Pair.empty());
+    var pair = currentPair.getRandom().getElement();
     sentence.add(pair.getFirst());
     while (!endWordHit) {
       String secondWord = pair.getFirst();
@@ -66,14 +66,14 @@ public class Trigram implements Markov {
     String s = String.join(" ", sentence);
     logger.debug("Generated: {}", s);
     if (s.matches("(.*[^.!?`+>\\-=_+:@~;'#\\[\\]{}\\(\\)\\/\\|\\\\]$)")) {
-      s = s + SENTENCE_ENDS.getRandom().map(WeightedElement::getElement).orElse("");
+      s = s + SENTENCE_ENDS.getRandom().getElement();
     }
     if (!start.isEmpty() && !s.startsWith(start)) {
       s = start + " " + s;
     }
     return s;
   }
-  
+
   private String getStartWord(String start) {
     if (!start.isEmpty() && wordMap.containsKey(start)) {
       return start;
@@ -149,7 +149,7 @@ public class Trigram implements Markov {
     }
     var pair = new Pair(second, third);
     followFrequency.get(pair).ifPresentOrElse(fw -> followFrequency.update(fw, fw.getWeight() + 1),
-    () -> followFrequency.add(new WeightedElement<Pair>(pair, 1)));
+        () -> followFrequency.add(new WeightedElement<Pair>(pair, 1)));
     wordMap.put(word, followFrequency);
   }
 

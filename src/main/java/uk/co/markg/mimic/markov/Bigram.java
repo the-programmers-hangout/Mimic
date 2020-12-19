@@ -78,7 +78,7 @@ public class Bigram implements Markov {
     boolean endWordHit = false;
     while (!endWordHit) {
       var nextEntry = wordMap.get(word);
-      word = nextEntry.getRandom().map(WeightedElement::getElement).orElse("");
+      word = nextEntry.getRandom().getElement();
       if (endWords.contains(word)) {
         endWordHit = true;
       }
@@ -90,7 +90,7 @@ public class Bigram implements Markov {
     String s = String.join(" ", sentence);
     logger.debug("Generated: {}", s);
     if (s.matches("(.*[^.!?`+>\\-=_+:@~;'#\\[\\]{}\\(\\)\\/\\|\\\\]$)")) {
-      s = s + SENTENCE_ENDS.getRandom().map(WeightedElement::getElement).orElse("@@@@@@@");
+      s = s + SENTENCE_ENDS.getRandom().getElement();
     }
     if (!start.isEmpty() && !s.startsWith(start)) {
       s = start + " " + s;

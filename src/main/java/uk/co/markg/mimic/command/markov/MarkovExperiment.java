@@ -1,7 +1,6 @@
 package uk.co.markg.mimic.command.markov;
 
 import java.time.temporal.ChronoUnit;
-import disparse.discord.AbstractPermission;
 import disparse.discord.jda.DiscordRequest;
 import disparse.parser.dispatch.CooldownScope;
 import disparse.parser.reflection.CommandHandler;
@@ -20,7 +19,7 @@ public class MarkovExperiment {
   @Cooldown(amount = 5, unit = ChronoUnit.SECONDS, scope = CooldownScope.USER,
       messageStrategy = MessageStrategy.REACT)
   @CommandHandler(commandName = "experimental",
-      description = "Trigram experiment. [this command may change or disappear over time]")
+      description = "Trigram experiment. [this command may change, break, or disappear over time]")
   public void execute(DiscordRequest request, ChannelRepository channelRepo,
       UserRepository userRepo) {
     MessageReceivedEvent event = request.getEvent();

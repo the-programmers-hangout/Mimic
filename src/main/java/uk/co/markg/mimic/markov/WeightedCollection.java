@@ -1,21 +1,24 @@
 package uk.co.markg.mimic.markov;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class WeightedCollection<T> {
 
-  private List<WeightedElement<T>> collection;
+  private Map<WeightedElement<T>, WeightedElement<T>> collection;
   private int weightedSum;
 
   public WeightedCollection() {
-    collection = new ArrayList<>();
+    collection = new HashMap<>();
   }
 
-  public WeightedCollection(List<WeightedElement<T>> collection, int weightedSum) {
+  public WeightedCollection(Map<WeightedElement<T>, WeightedElement<T>> collection,
+      int weightedSum) {
     this.collection = collection;
     this.weightedSum = weightedSum;
   }
@@ -27,7 +30,7 @@ public class WeightedCollection<T> {
    * @param weightedElement The weightedElement to be added
    */
   public void add(WeightedElement<T> weightedElement) {
-    collection.add(weightedElement);
+    collection.put(weightedElement, weightedElement);
     weightedSum += weightedElement.getWeight();
   }
 
@@ -66,8 +69,11 @@ public class WeightedCollection<T> {
    */
   private void updateElement(WeightedElement<T> element, int newWeight) {
     double diff = newWeight - element.getWeight();
-    element.setWeight(newWeight);
     weightedSum += diff;
+    // element.setWeight(newWeight);
+    var item = collection.get(element);
+    item.setWeight(newWeight);
+
   }
 
   /**
@@ -78,16 +84,14 @@ public class WeightedCollection<T> {
    * @return The weightedElement instance if it exists, null otherwise
    */
   public Optional<WeightedElement<T>> get(T element) {
-    for (WeightedElement<T> weightedElement : collection) {
-      if (element.equals(weightedElement.getElement())) {
-        return Optional.of(weightedElement);
-      }
+    if (collection.containsKey(element)) {
+      return Optional.of(collection.get(element));
     }
     return Optional.empty();
   }
-  
-  public List<WeightedElement<T>> getAll() {
-    return Collections.unmodifiableList(collection);
+
+  public Set<WeightedElement<T>> getAll() {
+    return Collections.unmodifiableSet(collection.keySet());
   }
 
   /**
@@ -96,14 +100,21 @@ public class WeightedCollection<T> {
    * @return A random {@link uk.co.markg.mimic.markov.WeightedElement WeightedElement} or null if
    *         the collection is empty.
    */
-  public Optional<WeightedElement<T>> getRandom() {
-    var rand = ThreadLocalRandom.current().nextDouble(weightedSum);
-    for (WeightedElement<T> weightedElement : collection) {
-      rand -= weightedElement.getWeight();
-      if (rand <= 0) {
-        return Optional.of(weightedElement);
+  public WeightedElement<T> getRandom() {
+    var rand = ThreadLocalRandom.current().nextInt(weightedSum);
+    Iterator<WeightedElement<T>> iter = collection.keySet().iterator();
+    for (int i = 0; i < rand;) {
+      if (iter.hasNext()) {
+        var item = iter.next();
+        i += item.getWeight();
+      } else {
+        return collection.keySet().iterator().next();
       }
     }
-    return Optional.empty();
+    if (iter.hasNext()) {
+      return iter.next();
+    } else {
+      return collection.keySet().iterator().next();
+    }
   }
 }

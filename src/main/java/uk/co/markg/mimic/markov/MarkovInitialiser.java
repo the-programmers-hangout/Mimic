@@ -70,6 +70,7 @@ public class MarkovInitialiser {
         e.printStackTrace();
       }
     }
+    logger.info("Completed saving high capacity server files");
   }
 
   private void initHighCapacityUsers() {
