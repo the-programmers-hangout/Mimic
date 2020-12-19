@@ -12,7 +12,7 @@ Generate a random number of sentences from all opted in user messages!
 ## experimental
 
 Trigram experiment. [this command may change, break, or disappear over time]
-* **Cooldown:** 5 seconds per user
+* **Cooldown:** 1 seconds per user
 * **Required Permission:** N/A
 * **Required Role:** N/A
 #### Arguments

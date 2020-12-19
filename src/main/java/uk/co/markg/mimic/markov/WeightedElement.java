@@ -56,7 +56,6 @@ public class WeightedElement<T> {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((element == null) ? 0 : element.hashCode());
-    result = prime * result + weight;
     return result;
   }
 
@@ -80,8 +79,9 @@ public class WeightedElement<T> {
         return false;
     } else if (!element.equals(other.element))
       return false;
-    if (weight != other.weight)
-      return false;
     return true;
   }
+  
+  
+  
 }

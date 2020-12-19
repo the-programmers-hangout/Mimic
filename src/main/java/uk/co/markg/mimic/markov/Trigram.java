@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.Map.Entry;
 import java.util.concurrent.ThreadLocalRandom;
 import com.esotericsoftware.kryo.io.Output;
 import org.apache.logging.log4j.LogManager;
@@ -23,6 +24,14 @@ public class Trigram implements Markov {
   private Map<String, WeightedCollection<Pair>> wordMap;
   private Set<String> startWords;
   private Set<String> endWords;
+
+  public void findWord() {
+    for (Entry<String, WeightedCollection<Pair>> entry : wordMap.entrySet()) {
+      if (entry.getValue().getAll().size() > 10000) {
+        System.out.println(entry.getKey() + " " + entry.getValue().getAll().size());
+      }
+    }
+  }
 
   public Trigram() {
     wordMap = new HashMap<>();
@@ -37,12 +46,24 @@ public class Trigram implements Markov {
     sentence.add(word);
     boolean endWordHit = false;
     var currentPair = wordMap.get(word);
+    logger.debug(word);
     var pair = currentPair.getRandom().getElement();
-    sentence.add(pair.getFirst());
+    if (pair.getFirst().equals(END_WORD)) {
+      endWordHit = true;
+    } else {
+      sentence.add(pair.getFirst());
+    }
     while (!endWordHit) {
+      if (sentence.size() > 300) {
+        break;
+      }
       String secondWord = pair.getFirst();
       var secondWordCollection = wordMap.get(secondWord);
       String thirdWord = pair.getSecond();
+
+      if (thirdWord == secondWord && secondWord == word) {
+        break;
+      }
 
       if (secondWord == null || secondWord.equals(END_WORD)) {
         break;
@@ -59,9 +80,6 @@ public class Trigram implements Markov {
       } else {
         break;
       }
-      // iterate through new pairs
-      // if pair starts with third word use it
-      // else get map for third word
     }
     String s = String.join(" ", sentence);
     logger.debug("Generated: {}", s);
@@ -146,11 +164,20 @@ public class Trigram implements Markov {
       followFrequency = wordMap.get(word);
     } else {
       followFrequency = new WeightedCollection<Pair>();
+      wordMap.put(word, followFrequency);
     }
     var pair = new Pair(second, third);
-    followFrequency.get(pair).ifPresentOrElse(fw -> followFrequency.update(fw, fw.getWeight() + 1),
-        () -> followFrequency.add(new WeightedElement<Pair>(pair, 1)));
-    wordMap.put(word, followFrequency);
+
+    // followFrequency.get(pair).ifPresentOrElse(fw -> followFrequency.update(fw, fw.getWeight() +
+    // 1),
+    // () -> followFrequency.add(new WeightedElement<Pair>(pair, 1)));
+
+    var element = followFrequency.get(pair);
+    if (element.isPresent()) {
+      followFrequency.update(element.get(), element.get().getWeight() + 1);
+    } else {
+      followFrequency.add(new WeightedElement<Pair>(pair, 1));
+    }
   }
 
   @Override
