@@ -81,5 +81,9 @@ public interface Markov {
   public void save(String file) throws IOException;
 
   public String getFileEnd();
+  
+  public Long getLastMessageId();
+  
+  public void setLastMessageId(long messageid);
 
 }

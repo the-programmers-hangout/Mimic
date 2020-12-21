@@ -24,7 +24,8 @@ public class Trigram implements Markov {
   private Map<String, WeightedCollection<Pair>> wordMap;
   private Set<String> startWords;
   private Set<String> endWords;
-
+  private long lastMessageId;
+  
   public void findWord() {
     for (Entry<String, WeightedCollection<Pair>> entry : wordMap.entrySet()) {
       if (entry.getValue().getAll().size() > 10000) {
@@ -37,6 +38,11 @@ public class Trigram implements Markov {
     wordMap = new HashMap<>();
     startWords = new HashSet<>();
     endWords = new HashSet<>();
+  }
+  
+  @Override
+  public void setLastMessageId(long lastMessageId) {
+    this.lastMessageId = lastMessageId;
   }
 
   @Override
@@ -192,6 +198,11 @@ public class Trigram implements Markov {
   @Override
   public String getFileEnd() {
     return FILE_END;
+  }
+  
+  @Override
+  public Long getLastMessageId() {
+    return lastMessageId;
   }
 
 }

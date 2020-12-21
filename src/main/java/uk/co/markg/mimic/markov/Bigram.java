@@ -22,6 +22,7 @@ public class Bigram implements Markov {
   private Map<String, WeightedCollection<String>> wordMap;
   private Set<String> startWords;
   private Set<String> endWords;
+  private Long lastMessageId;
 
   public Bigram() {
     wordMap = new HashMap<>();
@@ -138,8 +139,6 @@ public class Bigram implements Markov {
     }
   }
 
-  
-
   /**
    * Inserts a new word and follow word into the wordMap
    * 
@@ -168,5 +167,15 @@ public class Bigram implements Markov {
   @Override
   public String getFileEnd() {
     return FILE_END;
+  }
+
+  @Override
+  public Long getLastMessageId() {
+    return lastMessageId;
+  }
+
+  @Override
+  public void setLastMessageId(long lastMessageId) {
+    this.lastMessageId = lastMessageId;
   }
 }

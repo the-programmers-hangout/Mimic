@@ -2,6 +2,7 @@ package uk.co.markg.mimic.markov;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -46,31 +47,64 @@ public class MarkovInitialiser {
 
   private void initHighCapacityServers() {
     var highCapactityServers = messageRepository.getHighCapacityServers();
-    for (Long server : highCapactityServers) {
-      Markov bigram = new Bigram();
-      logger.info("Saving bigram for server: {}", server);
-      try (var messages = messageRepository.getByServerid(server)) {
-        messages.forEach(x -> bigram.parseInput(x));
-      }
-      try {
-        bigram.save(SERVER_ROOT + server);
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    }
-    for (Long server : highCapactityServers) {
-      Markov trigram = new Trigram();
-      logger.info("Saving trigam for server: {}", server);
-      try (var messages = messageRepository.getByServerid(server)) {
-        messages.forEach(x -> trigram.parseInput(x));
-      }
-      try {
-        trigram.save(SERVER_ROOT + server);
-      } catch (IOException e) {
-        e.printStackTrace();
+    List<Class<? extends Markov>> chainTypes = List.of(Bigram.class, Trigram.class);
+    for (Class<? extends Markov> chainClass : chainTypes) {
+      for (Long server : highCapactityServers) {
+        String fileEnd = getFileEnd(chainClass);
+        var file = new File(SERVER_ROOT + server + fileEnd);
+        logger.info(file.getAbsolutePath());
+        if (!file.exists()) {
+          loadComplete(chainClass, server);
+        } else {
+          loadPartial(chainClass, file, server);
+        }
       }
     }
     logger.info("Completed saving high capacity server files");
+  }
+  
+  private String getFileEnd(Class<? extends Markov> chainClass) {
+    try {
+      return chainClass.getDeclaredConstructor().newInstance().getFileEnd();
+    } catch (ReflectiveOperationException e) {
+      e.printStackTrace();
+    }
+    return Markov.FILE_END;
+  }
+
+  private void loadComplete(Class<? extends Markov> chainClass, long server) {
+    try {
+      Markov ngram = chainClass.getDeclaredConstructor().newInstance();
+      logger.info("Saving {} for server: {}", chainClass.getSimpleName(), server);
+      try (var messages = messageRepository.getByServerid(server)) {
+        messages.forEach(x -> ngram.parseInput(x));
+      }
+      ngram.setLastMessageId(messageRepository.getLatestServerMessage(server));
+      try {
+        ngram.save(SERVER_ROOT + server);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    } catch (ReflectiveOperationException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void loadPartial(Class<? extends Markov> chainClass, File file, long server) {
+    try {
+      Markov ngram = MarkovLoader.of(chainClass).from(file);
+      if (messageRepository.getLatestServerMessage(server) > ngram.getLastMessageId()) {
+        try (var messages =
+            messageRepository.getByServeridFromMessage(server, ngram.getLastMessageId())) {
+          messages.forEach(x -> ngram.parseInput(x));
+        }
+        ngram.save(SERVER_ROOT + server);
+      } else {
+        logger.info("{} chain for server {} is up to date", chainClass.getSimpleName(), server);
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   private void initHighCapacityUsers() {

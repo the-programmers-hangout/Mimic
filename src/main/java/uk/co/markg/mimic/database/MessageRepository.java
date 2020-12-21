@@ -78,6 +78,16 @@ public class MessageRepository {
         .orderBy(MESSAGES.MESSAGEID.desc()).fetchStreamInto(String.class);
   }
 
+  public Stream<String> getByServeridFromMessage(long server, long lastMessageId) {
+    return dsl.select(MESSAGES.CONTENT).from(MESSAGES).where(MESSAGES.SERVERID.eq(server))
+        .and(MESSAGES.MESSAGEID.gt(lastMessageId)).orderBy(MESSAGES.MESSAGEID.desc())
+        .fetchStreamInto(String.class);
+  }
+  
+  public Long getLatestServerMessage(long server) {
+    return dsl.select(MESSAGES.MESSAGEID).from(MESSAGES).orderBy(MESSAGES.MESSAGEID.desc()).limit(1).fetchOneInto(Long.class);
+  }
+
   public Stream<String> getByUserid(long user, long server) {
     return dsl.select(MESSAGES.CONTENT).from(MESSAGES).where(MESSAGES.USERID.eq(user))
         .and(MESSAGES.SERVERID.eq(server)).orderBy(MESSAGES.MESSAGEID.desc())
