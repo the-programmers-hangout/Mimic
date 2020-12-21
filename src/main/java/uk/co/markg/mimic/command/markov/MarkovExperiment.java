@@ -16,7 +16,7 @@ import uk.co.markg.mimic.markov.Trigram;
 
 public class MarkovExperiment {
 
-  @Cooldown(amount = 1, unit = ChronoUnit.SECONDS, scope = CooldownScope.USER,
+  @Cooldown(amount = 5, unit = ChronoUnit.SECONDS, scope = CooldownScope.USER,
       messageStrategy = MessageStrategy.REACT)
   @CommandHandler(commandName = "experimental",
       description = "Trigram experiment. [this command may change, break, or disappear over time]")
