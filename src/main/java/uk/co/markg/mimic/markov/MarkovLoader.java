@@ -3,6 +3,7 @@ package uk.co.markg.mimic.markov;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import com.esotericsoftware.kryo.io.Input;
 import org.apache.logging.log4j.LogManager;
@@ -45,6 +46,19 @@ public class MarkovLoader {
     Markov markov = Markov.kryo.readObject(input, clazz);
     input.close();
     return markov;
+  }
+
+  public Markov from(List<String> strings) {
+    try {
+      Markov chain = clazz.getDeclaredConstructor().newInstance();
+      for (String string : strings) {
+        chain.parseInput(string);
+      }
+      return chain;
+    } catch (ReflectiveOperationException e) {
+      e.printStackTrace();
+    }
+    throw new RuntimeException();
   }
 
   public Markov loadServer(long serverid) {

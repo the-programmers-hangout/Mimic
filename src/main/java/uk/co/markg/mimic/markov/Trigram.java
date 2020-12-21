@@ -153,7 +153,7 @@ public class Trigram implements Markov {
       }
       if (i == tokens.length - 2) {
         insertOrUpdate(word, second, END_WORD);
-        break;
+        continue;
       }
       String third = tokens[i + 2];
       insertOrUpdate(word, second, third);
