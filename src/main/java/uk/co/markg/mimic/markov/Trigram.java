@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.Map.Entry;
 import java.util.concurrent.ThreadLocalRandom;
 import com.esotericsoftware.kryo.io.Output;
 import org.apache.logging.log4j.LogManager;
@@ -21,25 +20,17 @@ public class Trigram implements Markov {
 
   private static final Logger logger = LogManager.getLogger(Trigram.class);
   private static final String FILE_END = ".trigram";
-  private Map<String, WeightedCollection<Pair>> wordMap;
+  private Map<String, WeightedCollection<String>> wordMap;
   private Set<String> startWords;
   private Set<String> endWords;
   private long lastMessageId;
-  
-  public void findWord() {
-    for (Entry<String, WeightedCollection<Pair>> entry : wordMap.entrySet()) {
-      if (entry.getValue().getAll().size() > 10000) {
-        System.out.println(entry.getKey() + " " + entry.getValue().getAll().size());
-      }
-    }
-  }
 
   public Trigram() {
     wordMap = new HashMap<>();
     startWords = new HashSet<>();
     endWords = new HashSet<>();
   }
-  
+
   @Override
   public void setLastMessageId(long lastMessageId) {
     this.lastMessageId = lastMessageId;
@@ -53,19 +44,19 @@ public class Trigram implements Markov {
     boolean endWordHit = false;
     var currentPair = wordMap.get(word);
     logger.debug(word);
-    var pair = currentPair.getRandom().getElement();
-    if (pair.getFirst().equals(END_WORD)) {
+    String[] pair = currentPair.getRandom().getElement().split(" ");
+    if (pair[0].equals(END_WORD)) {
       endWordHit = true;
     } else {
-      sentence.add(pair.getFirst());
+      sentence.add(pair[0]);
     }
     while (!endWordHit) {
       if (sentence.size() > 300) {
         break;
       }
-      String secondWord = pair.getFirst();
+      String secondWord = pair[0];
       var secondWordCollection = wordMap.get(secondWord);
-      String thirdWord = pair.getSecond();
+      String thirdWord = pair[1];
 
       if (thirdWord == secondWord && secondWord == word) {
         break;
@@ -82,7 +73,7 @@ public class Trigram implements Markov {
 
       var secondPair = findPair(secondWordCollection, thirdWord);
       if (secondPair.isPresent()) {
-        pair = secondPair.get().getElement();
+        pair = secondPair.get().getElement().split(" ");
       } else {
         break;
       }
@@ -110,10 +101,10 @@ public class Trigram implements Markov {
     return itr.next();
   }
 
-  private Optional<WeightedElement<Pair>> findPair(WeightedCollection<Pair> wc, String word) {
+  private Optional<WeightedElement<String>> findPair(WeightedCollection<String> wc, String word) {
     var pairs = wc.getAll();
-    for (WeightedElement<Pair> weightedElement : pairs) {
-      if (weightedElement.getElement().getFirst().equals(word)) {
+    for (WeightedElement<String> weightedElement : pairs) {
+      if (weightedElement.getElement().split(" ")[0].equals(word)) {
         return Optional.of(weightedElement);
       }
     }
@@ -136,7 +127,7 @@ public class Trigram implements Markov {
 
       if (i == 0) {
         startWords.add(word);
-      } else if (isEndWord(word)) {
+      } else if (i == tokens.length - 1 || isEndWord(word)) {
         endWords.add(word);
         insertOrUpdate(word, END_WORD);
         continue;
@@ -165,24 +156,20 @@ public class Trigram implements Markov {
   }
 
   private void insertOrUpdate(String word, String second, String third) {
-    WeightedCollection<Pair> followFrequency;
+    WeightedCollection<String> followFrequency;
     if (wordMap.containsKey(word)) {
       followFrequency = wordMap.get(word);
     } else {
-      followFrequency = new WeightedCollection<Pair>();
+      followFrequency = new WeightedCollection<String>();
       wordMap.put(word, followFrequency);
     }
-    var pair = new Pair(second, third);
-
-    // followFrequency.get(pair).ifPresentOrElse(fw -> followFrequency.update(fw, fw.getWeight() +
-    // 1),
-    // () -> followFrequency.add(new WeightedElement<Pair>(pair, 1)));
+    String pair = String.join(" ", second, third);
 
     var element = followFrequency.get(pair);
     if (element.isPresent()) {
       followFrequency.update(element.get(), element.get().getWeight() + 1);
     } else {
-      followFrequency.add(new WeightedElement<Pair>(pair, 1));
+      followFrequency.add(new WeightedElement<String>(pair, 1));
     }
   }
 
@@ -199,7 +186,7 @@ public class Trigram implements Markov {
   public String getFileEnd() {
     return FILE_END;
   }
-  
+
   @Override
   public Long getLastMessageId() {
     return lastMessageId;

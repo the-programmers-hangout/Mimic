@@ -27,7 +27,7 @@ public class MarkovLoader {
     try {
       fileSuffix = clazz.getDeclaredConstructor().newInstance().getFileEnd();
     } catch (ReflectiveOperationException | IllegalArgumentException | SecurityException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(), e);
     }
     this.fileEnd = fileSuffix;
   }
@@ -56,7 +56,7 @@ public class MarkovLoader {
       }
       return chain;
     } catch (ReflectiveOperationException e) {
-      e.printStackTrace();
+      logger.error(e.getMessage(), e);
     }
     throw new RuntimeException();
   }

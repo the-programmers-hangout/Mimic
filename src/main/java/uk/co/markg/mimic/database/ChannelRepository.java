@@ -34,8 +34,8 @@ public class ChannelRepository {
    * database.
    * 
    * @param channelid The discord channel id
-   * @param read      Whether the bot has read access to the channel
-   * @param write     Whether the bot has write access to the channel
+   * @param read Whether the bot has read access to the channel
+   * @param write Whether the bot has write access to the channel
    * @return The number of inserted rows
    */
   public int save(String channelid, Boolean read, Boolean write, Long serverid) {
@@ -89,8 +89,8 @@ public class ChannelRepository {
    * Updates the bot's read and write permissions to an existing channel in the database.
    * 
    * @param channelid The target channel
-   * @param read      Whether the bot should have read access to the channel
-   * @param write     Whether the bot should have write access to the channel
+   * @param read Whether the bot should have read access to the channel
+   * @param write Whether the bot should have write access to the channel
    */
   public void updatePermissions(long channelid, boolean read, boolean write) {
     dsl.update(CHANNELS).set((CHANNELS.READ_PERM), read).set((CHANNELS.WRITE_PERM), write)
